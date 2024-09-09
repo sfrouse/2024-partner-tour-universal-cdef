@@ -1,0 +1,12 @@
+{
+  "name": "@contentful-demos/design-tokens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "node ./scripts/build.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

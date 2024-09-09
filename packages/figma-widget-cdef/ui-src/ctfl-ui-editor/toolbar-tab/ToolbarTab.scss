@@ -1,0 +1,71 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-tab, .cui-toolbar-label * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-tab{
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  appearance: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  user-select: none;
+  outline: none;
+
+  font-family: vars.$ctfl-type-font-stack-primary;
+  font-size: vars.$ctfl-type-font-size-s;
+  line-height: vars.$ctfl-type-line-height-xs;
+
+  padding: vars.$ctfl-spacing-xs vars.$ctfl-spacing-s;
+
+  color: vars.$ctfl-foreground-text-subtle;
+  background-color: vars.$ctfl-foreground-default;
+  border: 1px solid vars.$ctfl-foreground-border-default;
+  border-radius: vars.$ctfl-corner-radius-m;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+
+  &:hover:not(:disabled) {
+    background-color: vars.$ctfl-foreground-hover;
+  }
+
+  &:focus-visible:not(:disabled), 
+  &:focus-visible:active:not(:disabled) {
+    border-color: vars.$ctfl-foreground-border-active;
+    box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+  }
+
+  &:disabled {
+    color: vars.$ctfl-foreground-text-disabled;
+    border-color: vars.$ctfl-foreground-border-disabled;
+  }
+
+  &:not(.selected) {
+    background-color: vars.$ctfl-foreground-subtle;
+    border-bottom: 1px solid vars.$ctfl-foreground-border-default;
+  }
+
+  &:not(:first-child) {
+    border-left: 0;
+  }
+
+  &.secondary {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 0;
+    font-size: vars.$ctfl-type-font-size-xs;
+    line-height: vars.$ctfl-type-line-height-s;
+    background-color: vars.$ctfl-foreground-default;
+
+    &.selected {
+      color: vars.$ctfl-foreground-text-primary-default;
+      border-bottom: 2px solid vars.$ctfl-foreground-border-primary-default;
+    }
+  }
+}

@@ -1,0 +1,141 @@
+@use 'tokens' as wc;
+
+:host {
+  a, button {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    appearance: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    user-select: none;
+    border: none;
+
+    font: wc.$wc-type-label-md;
+    padding: wc.$wc-padding-1x wc.$wc-padding-2x;
+    border-radius: wc.$wc-border-radius-md;
+    color: wc.$wc-text-inverted;
+    background-color: wc.$wc-background-primary-default;
+    border: wc.$wc-border-width-md solid wc.$wc-background-primary-default;
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-inverted;
+      background-color: wc.$wc-background-primary-hover;
+      border-color: wc.$wc-background-primary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-inverted;
+      background-color: wc.$wc-background-primary-pressed;
+      border-color: wc.$wc-background-primary-pressed;
+    }
+    // &:disabled {
+    //   cursor: default;
+    //   color: wc.$wc-text-disabled;
+    //   background-color: wc.$wc-background-disabled;
+    //   border-color: wc.$wc-background-disabled;
+    // }
+  }
+}
+
+:host([disabled]) {
+  a, button {
+    cursor: default !important;
+    user-select: none !important;
+    color: wc.$wc-text-disabled !important;
+    background-color: wc.$wc-background-disabled !important;
+    border-color: wc.$wc-background-disabled !important;
+  }
+}
+
+:host([emphasis='subtle']) {
+  a, button {
+    color: wc.$wc-text-primary-default;
+    background-color: transparent;
+    border: wc.$wc-border-width-md solid wc.$wc-background-primary-default;
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-primary-hover;
+      border-color: wc.$wc-border-primary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-primary-hover;
+      border-color: wc.$wc-border-primary-hover;
+    }
+  }
+}
+
+:host([emphasis='minimal']) {
+  a, button {
+    color: wc.$wc-text-primary-default;
+    background-color: transparent;
+    border: wc.$wc-border-width-md solid rgba(0,0,0,0);
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-primary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-primary-hover;
+    }
+  }
+}
+
+/* ================================ */
+/* SECONDARY */
+/* ================================ */
+:host([design='secondary']) {
+  a, button {
+    color: wc.$wc-text-inverted;
+    background-color: wc.$wc-background-secondary-default;
+    border: wc.$wc-border-width-md solid wc.$wc-background-secondary-default;
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-inverted;
+      background-color: wc.$wc-background-secondary-hover;
+      border-color: wc.$wc-background-secondary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-inverted;
+      background-color: wc.$wc-background-secondary-pressed;
+      border-color: wc.$wc-background-secondary-pressed;
+    }
+  }
+}
+
+:host([emphasis='subtle'][design='secondary']) {
+  a, button {
+    color: wc.$wc-text-secondary-default;
+    background-color: transparent;
+    border: wc.$wc-border-width-md solid wc.$wc-background-secondary-default;
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-secondary-hover;
+      border-color: wc.$wc-border-secondary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-secondary-hover;
+      border-color: wc.$wc-border-secondary-hover;
+    }
+  }
+}
+
+:host([emphasis='minimal'][design='secondary']) {
+  a, button {
+    color: wc.$wc-text-secondary-default;
+    background-color: transparent;
+
+    &:hover {
+      cursor: pointer;
+      color: wc.$wc-text-secondary-hover;
+    }
+    &:active {
+      color: wc.$wc-text-secondary-hover;
+    }
+  }
+}

@@ -1,0 +1,153 @@
+@use 'tokens' as wc;
+
+:host {
+  * {
+    box-sizing: border-box;
+  }
+}
+
+:host([hide-text]) {
+  .page {
+    display: none;
+  }
+}
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 400px;
+
+  background-color: wc.$wc-surface-default;
+  background-position: center;
+  background-size: cover;
+
+  overflow: hidden;
+}
+
+  .page {
+    position: absolute;
+    top: 0; bottom: 0;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    width: 100%;
+
+    // gap: vars.$ds-wc-promotional-banner-gap;
+    // max-width: vars.$ds-wc-promotional-banner-size-max-width;
+
+    // padding: 
+    //   vars.$ds-wc-promotional-banner-padding-top
+    //   vars.$ds-wc-promotional-banner-padding-right
+    //   vars.$ds-wc-promotional-banner-padding-bottom
+    //   vars.$ds-wc-promotional-banner-padding-left;
+  }
+
+    // resets
+    h1, p {
+      margin: 0; padding: 0;
+    }
+
+    .content {
+      // border: 1px solid blue;
+      flex: 1;
+      position: absolute;
+
+      h1 {
+        // color: vars.$ds-wc-promotional-banner-header-color;
+        // font-size: vars.$ds-type-size-800;// vars.$ds-wc-promotional-banner-header-size;
+        // font-family: vars.$ds-wc-promotional-banner-header-family;
+        // font-weight: vars.$ds-wc-promotional-banner-header-weight;
+      }
+
+      p {
+        // color: vars.$ds-wc-promotional-banner-body-color;
+        // font-size: vars.$ds-wc-promotional-banner-body-size;
+        // font-family: vars.$ds-wc-promotional-banner-body-family;
+        // font-weight: vars.$ds-wc-promotional-banner-body-weight;
+      }
+    }
+
+    .image {
+      flex: 1;
+      // background-color: vars.$ds-color-gray-800;
+      background-position: center;
+      background-size: cover;
+      // min-height: vars.$ds-wc-promotional-banner-size-min-height;
+    }
+
+:host([inverse]) {
+  .content {
+    color: white;
+    h1, p {
+      color: white;
+    }
+  }
+}
+
+// :host([image-left]) {
+//   .page {
+//     flex-direction: row-reverse;
+//   }
+// }
+
+// IMAGES
+.imageLayers {
+  position: absolute;
+  height: 100%;
+  width: calc( 100% - 40px );
+  margin: 0 auto;
+}
+
+slot::slotted(img) {
+  // position: absolute;
+  // top: 0; bottom: 0; left: 0; right: 0;
+  // max-height: 100%;
+  // max-width: 100%;
+  box-sizing: border-box;
+}
+
+slot[name='backgroundImage']::slotted(img),
+slot[name='backgroundImage'] img {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  object-fit: cover;
+}
+
+slot[name='image']::slotted(img),
+slot[name='image'] img {
+  position: absolute;
+  top: 0; bottom: 0;
+  right: 20%;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+slot[name='callToActions'] {
+  display: flex;
+  gap: 10px;
+}
+
+
+@media screen and (min-width: wc.$wc-breakpoint-lg) {
+  .page {
+    flex-direction: column-reverse;
+  }
+
+  :host([image-left]) {
+    .page {
+      flex-direction: column-reverse;
+    }
+  }
+}

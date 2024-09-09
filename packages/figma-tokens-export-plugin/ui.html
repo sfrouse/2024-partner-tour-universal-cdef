@@ -1,0 +1,37 @@
+<div style="
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100vh; width: 100vw;
+  padding: 10px;">
+  <h2>Token Creator</h2>
+  <button id="generateTokens">Generate</button>
+  <textarea id="output" style="
+    flex: 1;
+    font-size: 10px;
+  "></textarea>
+</div>
+
+<style>
+  html, body {
+    width: 100vw; height: 100vh;
+  }
+  * {
+    padding: 0; margin: 0;
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+
+document.getElementById('generateTokens').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'generateTokens' } }, '*')
+}
+
+onmessage = (evt) => {
+  const msg = evt.data.pluginMessage;
+  console.log('msg', msg);
+  document.getElementById('output').value = JSON.stringify(msg.tokenSheet, null, 2);
+}
+
+</script>

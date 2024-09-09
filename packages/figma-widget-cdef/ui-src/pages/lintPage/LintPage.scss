@@ -1,0 +1,118 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+
+.lint-page {
+    width: 100%;
+    height: 100%;
+
+    &.no-selection {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: vars.$ctfl-type-font-size-s;
+        padding-bottom: vars.$ctfl-spacing-3-xl;
+        color: vars.$ctfl-background-text-subtle;
+    }
+
+    .properties {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .body {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 0; right: 0;
+            overflow-y: scroll;
+            padding-left: vars.$ctfl-spacing-s;
+
+            .properties-list {
+                margin-bottom: vars.$ctfl-spacing-l;
+            }
+        }
+    }
+
+    .property-row {
+        display: flex;
+        flex-direction: column;
+        // &:not(:last-child) {
+            border-bottom: 1px solid vars.$ctfl-foreground-border-default;
+        // }
+
+        .property {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            padding: 8px 6px;// vars.$ctfl-spacing-s;
+            background-color: vars.$ctfl-foreground-subtle;
+            color: vars.$ctfl-foreground-text-default;
+
+            .name {
+                font-size: vars.$ctfl-type-font-size-s;
+                font-weight: vars.$ctfl-type-weight-demi-bold;
+                flex: 1;
+
+                span {
+                    font-size: vars.$ctfl-type-font-size-2-xs;
+                    color: vars.$ctfl-foreground-text-subtle;
+                }
+            }
+
+            .result {
+                font-size: vars.$ctfl-type-font-size-2-xs;
+                color: vars.$ctfl-background-text-subtle;
+            }  
+
+            &.invalid {
+                color: vars.$ctfl-foreground-text-default;
+                background-color: vars.$ctfl-foreground-default;
+                // padding-bottom: 0;
+                &:hover {
+                    background-color: vars.$ctfl-foreground-hover;
+                    cursor: pointer;
+                }
+
+                .result {
+                    color: vars.$ctfl-foreground-text-warning;
+                }
+            }
+        }
+
+        .errors {
+            padding: 0 6px 8px vars.$ctfl-spacing-l;
+            margin: vars.$ctfl-spacing-xs 0;
+
+            .error {
+                display: block;
+                font-size: vars.$ctfl-type-font-size-xs;
+                line-height: vars.$ctfl-type-line-height-xs;
+                margin: vars.$ctfl-spacing-2-xs 0;
+            }
+        } 
+    }
+
+    .indicator-box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        align-self: stretch;
+        // margin-right: vars.$ctfl-spacing-xs;
+
+        margin-top: 3px;
+        margin-left: vars.$ctfl-spacing-xs;
+
+        .indicator {
+            width: 6px; height: 6px;
+            border-radius: 10px;
+            &.valid {
+                background-color: vars.$ctfl-foreground-text-positive;
+            }
+            &.invalid {
+                background-color: vars.$ctfl-foreground-text-warning;
+            }
+        }
+    }
+}
+

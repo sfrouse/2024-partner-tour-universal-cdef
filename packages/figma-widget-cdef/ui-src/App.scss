@@ -1,0 +1,38 @@
+@use './tokens/output/scss/variables' as vars;
+
+.app {
+
+  .error-msg {
+    border-top: 1px solid vars.$ctfl-background-border-primary-subtle;
+    padding: vars.$ctfl-spacing-s;
+    font-size: vars.$ctfl-type-font-size-s;
+    color: vars.$ctfl-foreground-text-subtle;
+    background-color: #ff00000a;
+  }
+
+  .cdef-root-url {
+    border-top: 1px solid vars.$ctfl-background-border-primary-subtle;
+    padding: vars.$ctfl-spacing-xs;
+    font-size: 10px;
+    line-height: normal;
+    color: vars.$ctfl-foreground-text-subtle;
+  }
+
+  
+}
+
+
+.scroll-bar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+  
+  .scroll-bar::-webkit-scrollbar-track {
+  box-shadow: none;/*inset 0 0 6px rgba(0, 0, 0, 0.3);*/
+}
+  
+  .scroll-bar::-webkit-scrollbar-thumb {
+  background-color: vars.$ctfl-color-gray-300;
+  border-radius: 6px;
+  border: 3px solid white;
+}

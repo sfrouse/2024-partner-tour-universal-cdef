@@ -1,0 +1,6 @@
+@use 'tokens' as wc;
+
+:host {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,27 @@
+{
+  "name": "2024-partner-tour-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "packages/demo",
+    "packages/dmo-design-tokens",
+    "packages/dmo-web-components",
+    "packages/component-definitions",
+    "packages/figma-tokens-export-plugin",
+    "packages/app-ai-dsys",
+    "packages/api-ai"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.99.0",
+    "@figma/widget-typings": "^1.9.1",
+    "@types/json-patch": "^0.0.33",
+    "lerna": "^8.1.8",
+    "type-fest": "^4.26.0"
+  }
+}

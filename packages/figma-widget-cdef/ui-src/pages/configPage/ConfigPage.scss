@@ -1,0 +1,12 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+
+.config-page {
+
+    .error-display {
+        font-size: vars.$ctfl-type-font-size-xs;
+        line-height: normal;
+        margin: vars.$ctfl-spacing-m 0;
+        color: vars.$ctfl-foreground-text-warning;
+    }
+}

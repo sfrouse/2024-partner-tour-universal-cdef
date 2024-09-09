@@ -1,0 +1,100 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-slider, .cui-toolbar-slider * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-slider {
+
+  &.long {
+    .track .knob .knob-label {
+      font-size: 10px;
+    }
+  }
+
+  .track {
+    width: 100%;
+    height: 30px;
+    position: relative;
+
+    &::before {
+      content: ' ';
+      position: absolute;
+      top: 10px; height: 10px;
+      left: 0px; right: 0px;
+      border: 1px solid vars.$ctfl-background-border-default;
+      background-color: vars.$ctfl-background-default;
+      border-radius: 99999px;
+    }
+
+    .knob {
+      width: 40px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 3px; left: 0;
+      border: 2px solid vars.$ctfl-background-border-default;
+      background-color: vars.$ctfl-background-default;
+      border-radius: 99999px;
+      transition: border-color 0.2s ease-in-out 0s, box-shadow 0.1s ease-in-out 0s;
+
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: ellipsis;
+
+      &:hover:not(:disabled) {
+        background-color: vars.$ctfl-foreground-hover;
+
+        // .knob-label {
+        //   top: -20px;
+        // }
+      }
+    
+      &:focus-visible:not(:disabled), &:active:not(:disabled) {
+        border-color: vars.$ctfl-foreground-border-active;
+        box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+        .knob-label {
+          top: -20px;
+        }
+      }
+    
+      &:disabled {
+        color: vars.$ctfl-foreground-text-disabled;
+        border-color: vars.$ctfl-foreground-border-disabled;
+      }
+
+      &::after {
+        content: 'test' attr('data-value');
+        position: absolute;
+        top: -20px;
+      }
+
+      .knob-label {
+        position: absolute;
+        top: 0; bottom: -2px;
+        left: 0; right: 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: vars.$ctfl-foreground-text-subtle;
+        transition: top 0.3s;
+      }
+    }
+
+    // .hint {
+    //   position: absolute;
+    //   display: none;
+    //   bottom: 24px; left: 10px; width: 40px;
+    //   font-size: 11px;
+    //   text-align: center;
+    //   // border: 1px solid vars.$ctfl-background-border-default;
+    //   transform: translate(-50%);
+    //   color: vars.$ctfl-foreground-text-subtle;
+    //   background-color: rgba(255, 255, 255, 0.3);
+    // }
+  }
+
+}
+
+

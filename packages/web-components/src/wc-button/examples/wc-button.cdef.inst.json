@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../dist/cdef/wc-button.cdef.json",
+    "disabled": false,
+    "emphasis": "bold",
+    "label": "test",
+    "url": "https://www.google.com"
+  }

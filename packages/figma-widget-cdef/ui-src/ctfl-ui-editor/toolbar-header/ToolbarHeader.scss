@@ -1,0 +1,44 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-header, .cui-toolbar-header * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: vars.$ctfl-spacing-2-xs 0;
+  gap: vars.$ctfl-spacing-xs;
+  border-bottom: 1px solid vars.$ctfl-foreground-border-default;
+  margin-bottom: vars.$ctfl-spacing-2-xs;
+
+  & > *:first-child {
+    flex: 1;
+  }
+
+  & .titles {
+    display: flex;
+    flex-direction: column;
+
+    & > * {
+      padding: 0;
+    }
+
+    &.clickable {
+      cursor: pointer;
+    }
+  }
+
+  & .slot {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &.app-style {
+    background-color: vars.$ctfl-background-subtle;
+    padding: vars.$ctfl-spacing-s;
+    margin: 0;
+    border: 0;
+  }
+}

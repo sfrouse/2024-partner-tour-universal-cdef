@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../dist/cdef/ex-button.cdef.json",
+    "disabled": false,
+    "design": "primary",
+    "label": "test",
+    "url": "https://www.google.com"
+  }

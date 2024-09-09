@@ -1,0 +1,34 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+
+.contentful-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .entries {
+        flex: 1;
+        position: relative;
+
+        .body {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 0; right: 0;
+            overflow: auto;
+        }
+
+        .entry {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: vars.$ctfl-spacing-xs 0;
+            border-bottom: 1px solid vars.$ctfl-foreground-border-default;
+    
+            .title {
+                flex: 1;
+            }
+        }
+    }
+
+    
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Component Definition",
+  "id": "widget-id-aYg2qOZKqt",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "permissions": ["teamlibrary"],
+  "containsWidget": true,
+  "main": "dist/code.js",
+  "ui": "dist/index.html",
+  "widgetApi": "1.0.0"
+}

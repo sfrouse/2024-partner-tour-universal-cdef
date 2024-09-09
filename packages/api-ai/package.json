@@ -1,0 +1,20 @@
+{
+  "name": "api-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.mjs",
+    "dev": "nodemon ./src/server.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4",
+    "openai": "^4.58.1",
+    "puppeteer": "^23.3.0"
+  }
+}

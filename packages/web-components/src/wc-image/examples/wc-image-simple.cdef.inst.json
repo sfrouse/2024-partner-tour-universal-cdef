@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../dist/cdef/wc-image.cdef.json",
+    "hide": false,
+    "sizePercent": 100,
+    "sizeDirection": "height",
+    "horizontalOffset": 0,
+    "verticalOffset": 0,
+    "position": "bottom-right",
+    "title": "Tesla Model 3 ",
+    "image": {
+      "$schema": "cdef-image",
+      "url": "https://images.ctfassets.net/cvvf6wkrdo0e/1bpjUjPbgDDM94ZEB4dTGQ/3384513604f618199b4e3d5de319c112/tesla-1.png",
+      "title": "tesla-1",
+      "contentType": "image/png"
+    }
+  }
