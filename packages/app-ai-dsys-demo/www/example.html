@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lit Example</title>
+    <!-- <script type="module">
+        // my-component.js
+        import { LitElement, html, css } from 'https://cdn.skypack.dev/lit';
+
+        class MyComponent extends LitElement {
+            static styles = css`
+                :host {
+                    display: block;
+                    padding: 16px;
+                    background-color: lightblue;
+                }
+            `;
+
+            static properties = {
+                name: { type: String }
+            };
+
+            constructor() {
+                super();
+                this.name = 'World';
+            }
+
+            render() {
+                return html`
+                    <p>Hello, ${this.name}!</p>
+                    <button @click=${this._changeName}>Change Name</button>
+                `;
+            }
+
+            _changeName() {
+                this.name = 'Lit User';
+            }
+        }
+
+        customElements.define('my-component', MyComponent);
+    </script> -->
+</head>
+<body>
+    <!-- <my-component></my-component> -->
+    <link rel="stylesheet" href="http://localhost:1234/tokens/tokens.css">
+    <script type="module" src="http://localhost:1234/index.js"></script>        
+    <!-- INSTANCE -->
+    <dmo-button design="primary">Click Me!</dmo-button>
+    <script>
+        document.currentScript.previousElementSibling.addEventListener('click', () => {
+            alert('hello, world');
+        });
+    </script>
+
+    <wc-promotional-banner>ss</wc-promotional-banner>
+    <wc-button design="primary">Click Me!</wc-button>
+</body>
+</html>

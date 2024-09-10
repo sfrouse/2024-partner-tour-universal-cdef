@@ -1,5 +1,5 @@
 import { CDefInstance } from "@contentful-demos/component-definitions";
-import { findExposedChildren } from "@contentful-demos/component-definitions/dist";
+import { findExposedChildren } from "@contentful-demos/component-definitions/dist/index.js";
 
 export function applyProperties(
     figmaInstance: InstanceNode,

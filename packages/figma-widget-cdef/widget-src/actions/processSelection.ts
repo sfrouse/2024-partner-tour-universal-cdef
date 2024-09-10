@@ -2,7 +2,7 @@ import {
   definitionInstanceToWebInstance,
   figmaInstanceToDefinitionInstance,
   lintFigmaComponent
-} from "@contentful-demos/component-definitions/dist";
+} from "@contentful-demos/component-definitions/dist/index.js";
 import { MessageRequest } from "../../shared-src/types.js";
 
 export default async function processSelection(widgetNodeId: string) {

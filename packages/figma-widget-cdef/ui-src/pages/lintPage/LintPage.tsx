@@ -4,7 +4,7 @@ import {
     CDEF_LAYOUT_VALUE_TYPES,
     CDefLintResult,
     cDefToString
-} from "@contentful-demos/component-definitions/dist";
+} from "@contentful-demos/component-definitions/dist/index.js";
 import './LintPage.scss';
 import CUIToolbarLabel from "../../ctfl-ui-editor/toolbar-label/ToolbarLabel.js";
 import { ExternalLinkTrimmedIcon } from '@contentful/f36-icons';

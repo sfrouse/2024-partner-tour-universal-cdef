@@ -3,7 +3,7 @@ import {
     CDefInstance,
     CDefLayoutValue
 } from "@contentful-demos/component-definitions";
-import { findLayoutValue } from "@contentful-demos/component-definitions/dist";
+import { findLayoutValue } from "@contentful-demos/component-definitions/dist/index.js";
 
 /*  ======== LAYOUT MODE AND FIXED SIZES ============ */
 export function applyLayoutModeAndFixedSizes(

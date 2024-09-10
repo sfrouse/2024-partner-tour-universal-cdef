@@ -1,0 +1,28 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-read-only-row, .cui-toolbar-read-only-row * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-read-only-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: vars.$ctfl-spacing-2-xs 0;
+  gap: vars.$ctfl-spacing-xs;
+
+  & > *:first-child {
+    flex: 1;
+  }
+  & > *:last-child {
+    flex: 1.5;
+
+    font-family: vars.$ctfl-type-font-stack-primary;
+    font-size: vars.$ctfl-type-font-size-m;
+    line-height: vars.$ctfl-type-line-height-s;
+    padding: vars.$ctfl-spacing-xs 0;
+    color: vars.$ctfl-background-text-disabled;
+    text-align: right;
+    font-style: italic;
+  }
+}

@@ -207,7 +207,7 @@ function Widget() {
             fontFamily="Inter"
             fontSize={16}
             fill="#333">
-            Component Definition
+            CDef
           </Text>
           <Text
             fontFamily="Inter"

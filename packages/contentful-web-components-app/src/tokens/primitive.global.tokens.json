@@ -1,0 +1,346 @@
+{
+  "color": {
+    "blue": {
+      "100": {
+        "$type": "color",
+        "$value": "#e8f5ff"
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#ceecff"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#98cbff"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#40a0ff"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#036fe3"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#0059c8"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#0041ab"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#003298"
+      },
+      "blue-900": {
+        "$type": "color",
+        "$value": "#002a8e"
+      }
+    },
+    "white": {
+      "$type": "color",
+      "$value": "#ffffff"
+    },
+    "gray": {
+      "100": {
+        "$type": "color",
+        "$value": "#f7f9fa"
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#e7ebee"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#cfd9e0"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#aec1cc"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#67728a"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#5a657c"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#414d63"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#1b273a"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#111b2b"
+      }
+    },
+    "black": {
+      "$type": "color",
+      "$value": "#0c141c"
+    },
+    "green": {
+      "100": {
+        "$type": "color",
+        "$value": "#eaf9e8"
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#cdf3c6"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#9ed696"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#5db057"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#008539"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#006d23"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#00550c"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#004700"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#003f00"
+      }
+    },
+    "clear": {
+      "$type": "color",
+      "$value": "#00000000"
+    }
+  },
+  "spacing": {
+    "2Xs": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "Xs": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "S": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "M": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "L": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "Xl": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "2Xl": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "3Xl": {
+      "$type": "dimension",
+      "$value": "64px"
+    },
+    "4Xl": {
+      "$type": "dimension",
+      "$value": "80px"
+    },
+    "none": {
+      "$type": "dimension",
+      "$value": "0px"
+    }
+  },
+  "type": {
+    "weight": {
+      "normal": {
+        "$type": "dimension",
+        "$value": "400px"
+      },
+      "medium": {
+        "$type": "dimension",
+        "$value": "500px"
+      },
+      "demiBold": {
+        "$type": "dimension",
+        "$value": "600px"
+      },
+      "bold": {
+        "$type": "dimension",
+        "$value": "700px"
+      }
+    },
+    "lineHeight": {
+      "default": {
+        "$type": "dimension",
+        "$value": "1.5px"
+      },
+      "condensed": {
+        "$type": "dimension",
+        "$value": "1.25px"
+      },
+      "4Xl": {
+        "$type": "dimension",
+        "$value": "3.5px"
+      },
+      "3Xl": {
+        "$type": "dimension",
+        "$value": "3px"
+      },
+      "2Xl": {
+        "$type": "dimension",
+        "$value": "2.25px"
+      },
+      "Xl": {
+        "$type": "dimension",
+        "$value": "2px"
+      },
+      "L": {
+        "$type": "dimension",
+        "$value": "1.5px"
+      },
+      "M": {
+        "$type": "dimension",
+        "$value": "1.23px"
+      },
+      "Xs": {
+        "$type": "dimension",
+        "$value": "0.88px"
+      },
+      "S": {
+        "$type": "dimension",
+        "$value": "1px"
+      }
+    },
+    "fontSize": {
+      "S": {
+        "$type": "dimension",
+        "$value": "0.75px"
+      },
+      "M": {
+        "$type": "dimension",
+        "$value": "0.88px"
+      },
+      "L": {
+        "$type": "dimension",
+        "$value": "1px"
+      },
+      "Xl": {
+        "$type": "dimension",
+        "$value": "1.25px"
+      },
+      "2Xl": {
+        "$type": "dimension",
+        "$value": "1.75px"
+      },
+      "3Xl": {
+        "$type": "dimension",
+        "$value": "2.25px"
+      },
+      "4Xl": {
+        "$type": "dimension",
+        "$value": "3px"
+      },
+      "default": {
+        "$type": "dimension",
+        "$value": "16px"
+      }
+    }
+  },
+  "cornerRadius": {
+    "M": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "L": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "S": {
+      "$type": "dimension",
+      "$value": "2px"
+    },
+    "none": {
+      "$type": "dimension",
+      "$value": "0px"
+    }
+  },
+  "figma-component": {
+    "$type": "color",
+    "$value": "#9747ff"
+  },
+  "zIndex": {
+    "negative": {
+      "$type": "dimension",
+      "$value": "-1px"
+    },
+    "workbench": {
+      "$type": "dimension",
+      "$value": "0px"
+    },
+    "default": {
+      "$type": "dimension",
+      "$value": "1px"
+    },
+    "workbenchHeader": {
+      "$type": "dimension",
+      "$value": "10px"
+    },
+    "modal": {
+      "$type": "dimension",
+      "$value": "100px"
+    },
+    "modalContent": {
+      "$type": "dimension",
+      "$value": "101px"
+    },
+    "dropdown": {
+      "$type": "dimension",
+      "$value": "1000px"
+    },
+    "tooltip": {
+      "$type": "dimension",
+      "$value": "10000px"
+    },
+    "notification": {
+      "$type": "dimension",
+      "$value": "100000px"
+    }
+  },
+  "focusSize": {
+    "$type": "dimension",
+    "$value": "3px"
+  },
+  "icon": {
+    "M": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "L": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "S": {
+      "$type": "dimension",
+      "$value": "16px"
+    }
+  }
+}

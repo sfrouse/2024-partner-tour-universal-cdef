@@ -1,0 +1,20 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-slider-row, .cui-toolbar-slider-row * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-slider-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: vars.$ctfl-spacing-2-xs 0;
+  gap: vars.$ctfl-spacing-xs;
+
+  & > *:first-child {
+    flex: 1;
+  }
+  & > *:last-child {
+    flex: 1.5;
+  }
+}

@@ -2,18 +2,19 @@
 import './Page.css';
 import '../tokens/dist/ctfl/css/tokens.css';
 import React, { useState, useEffect } from 'react';
-import findActionPrompt from '../utils/findActionPrompt';
+import findActionPrompts from '../utils/findActionPrompts';
 
-const AI_SERVICE_URL = 'http://localhost:3001';
+const AI_SERVICE_URL = 'http://localhost:3005';
 
 function Page() {
 
-    const [actionsInfo, setActionsInfo] = useState(null);
-    const [actionInfo, setActionInfo] = useState(null);
-    const [action, setAction] = useState(null);
+    const [actionList, setActionList] = useState(null);
+    const [actionId, setActionId] = useState(null);
+    // const [action, setAction] = useState(null);
+    // const [action, setAction] = useState(null);
     // const [actionRender, setActionRender] = useState(null);
-    const [actionResult, setActionResult] = useState(null);
-    const [prompt, setPrompt] = useState(null);
+    const [action, setAction] = useState(null);
+    const [prompts, setPrompts] = useState(null);
     const [actionToRun, setActionToRun] = useState(null);
     const [actionToReset, setActionToReset] = useState(null);
 
@@ -24,7 +25,7 @@ function Page() {
     const establishActionInfo = () => {
       const actionId = window.location.pathname.substring(1);
       // const action = actionsIndex.find(actionIndex => actionIndex.id === actionId);
-      setActionInfo(actionId);
+      setActionId(actionId);
     }
 
     // Load Actions
@@ -52,8 +53,8 @@ function Page() {
           }
           return response.json();
         })
-        .then((actionsInfo) => {
-          setActionsInfo(actionsInfo);
+        .then((actionList) => {
+          setActionList(actionList);
           setLoading(false);
         })
         .catch((error) => {
@@ -64,8 +65,8 @@ function Page() {
 
     // Load Action
     useEffect(() => {
-      if (actionInfo) {
-        const apiResultUrl = `${AI_SERVICE_URL}/action/${actionInfo}`;
+      if (actionId) {
+        const apiResultUrl = `${AI_SERVICE_URL}/action/${actionId}`;
         fetch(apiResultUrl)
           .then((response) => {
             if (!response.ok) {
@@ -73,20 +74,20 @@ function Page() {
             }
             return response.json();
           })
-          .then((actionResult) => {
-            setActionResult(actionResult.result);
-            setPrompt(findActionPrompt(actionResult))
+          .then((action) => {
+            setAction(action);
+            setPrompts(findActionPrompts(action))
           })
           .catch((error) => {
             setError(`result: ${error.message} ${apiResultUrl}`);
           });
       }
     }, [
-      actionInfo,
-      setAction,
-      setPrompt,
+      actionId,
+      // setAction,
+      setPrompts,
       // setActionRender,
-      setActionResult
+      setAction
     ]);
 
     // Run Action
@@ -101,9 +102,9 @@ function Page() {
               }
               return response.json();
             })
-            .then((results) => {
+            .then((action) => {
               setIsRunning(false);
-              setActionResult(results.result);
+              setAction(action);
               setActionToRun(null);
             })
             .catch((error) => {
@@ -114,7 +115,7 @@ function Page() {
     }, [
       actionToRun,
       setIsRunning,
-      setActionResult,
+      setAction,
       setError,
       setLoading
     ]);
@@ -140,7 +141,13 @@ function Page() {
               setLoading(false);
             });
       }
-    }, [actionToReset, setActionToReset, setIsRunning, setError, setLoading]);
+    }, [
+      actionToReset,
+      setActionToReset,
+      setIsRunning,
+      setError,
+      setLoading
+    ]);
 
     if (loading) {
       return <div>Loading...</div>;
@@ -152,10 +159,12 @@ function Page() {
     
     return (
         <div className="Page">
+
+          {/* ACTIONS NAV */}
           <div className='page-actions-list'>
-            <h2>Prompts</h2>
-            <div className='page-actions-pane'>
-              {actionsInfo?.actions.map(action => {
+            <h2>Actions</h2>
+            <div className='page-actions-pane scroll-bar'>
+              {actionList?.actions.map(action => {
                 if (action.group) {
                   return (
                     <div className='page-action-group'
@@ -165,15 +174,15 @@ function Page() {
                   );
                 }
                 return (
-                  <div className={`page-action-item ${actionInfo?.id === action.id ? 'selected' : ''}`}
+                  <div className={`page-action-item ${actionId === action.id ? 'selected' : ''}`}
                     key={action.id}
                     onClick={() => {
                       const newUrl = `${window.location.origin}/${action.id}`;
-                      window.history.pushState({ path: newUrl }, '', newUrl);
-                      // setActionInfo(action);
-                      setActionResult(null);
-                      setActionToRun(null);
-                      // setActionRender(null);
+                      if (newUrl !== window.location.href) {
+                        window.history.pushState({ path: newUrl }, '', newUrl);
+                        setAction(null);
+                        setActionToRun(null);
+                      }
                     }}>
                     {action.name}
                   </div>
@@ -181,34 +190,42 @@ function Page() {
               })}
             </div>
           </div>
+
+          {/* PROMPTS */}
           <div className="page-prompt-box">
               <h2>Prompt</h2>
               <div className="page-prompt-display">
-                {prompt}
+                {prompts}
               </div>
               <div className="page-prompt-nav">
                 <div className="page-prompt-button clear"
                   onClick={() => {
-                    setActionToReset(actionInfo);
+                    setActionToReset(actionId);
                   }}>
                   Clear
                 </div>
                 <div className="page-prompt-button run"
                   onClick={() => {
-                    setActionToRun(actionInfo);
+                    setActionToRun(actionId);
                   }}>
                   Run
                 </div>
               </div>
           </div>
+          
+          {/* RESULTS */}
           <div className="page-result-box">
               <h2>Result</h2>
               {/* <div className="page-result-display">
                 {isRunning ? 'running...' : actionRender || 
                   (<div className="empty">(empty)</div>)}
               </div> */}
+              <div className="page-result-display">
+                <iframe title="dog" srcDoc={action?.rendered} style={{width: '100%', height: '100%'}}></iframe>
+              </div>
               <div className="page-result-display code">
-                {isRunning ? 'running...' : actionResult ||
+                {isRunning ? 'running...' : 
+                  action?.rendered ||
                   (<div className="empty">(empty)</div>)}
               </div>
           </div>

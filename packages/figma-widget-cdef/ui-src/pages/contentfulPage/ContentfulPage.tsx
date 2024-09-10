@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Flex, IconButton, Spinner } from '@contentful/f36-components';
 import { ExternalLinkTrimmedIcon } from '@contentful/f36-icons';
-import { CDefManifest } from "@contentful-demos/component-definitions/dist";
+import { CDefManifest } from "@contentful-demos/component-definitions/dist/index.js";
 import * as contentful from 'contentful';
 import * as cma from 'contentful-management';
 import './ContentfulPage.scss';

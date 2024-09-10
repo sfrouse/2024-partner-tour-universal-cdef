@@ -1,5 +1,5 @@
 
-import './wc-button/WCButton';
+import './dmo-button/DMOButton';
 import './wc-promotional-banner/WCPromotionalBanner';
 import './wc-image/WCImage';
 import './wc-page/WCPage';

@@ -4,7 +4,7 @@ import {
     definitionInstanceToFigmaInstance,
     getComponentDefinition,
     schemaToIdentifier
-} from '@contentful-demos/component-definitions/dist';
+} from '@contentful-demos/component-definitions/dist/index.js';
 import { applyProperties } from '../applyProperties.js';
 import { processSlots } from '../processSlots.js';
 import {

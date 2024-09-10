@@ -1,0 +1,71 @@
+@use '../../../tokens/output/scss/variables' as vars;
+
+.wc-examples {
+  padding: vars.$ctfl-spacing-s;
+  container-type: inline-size;
+  container-name: exampleComp;
+
+  .examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: vars.$ctfl-spacing-s;// tis weird with wrapping
+  }
+
+  .wc-example {
+    width: calc( 33% - vars.$ctfl-spacing-s );
+    border: 1px solid vars.$ctfl-background-border-disabled;
+    padding: vars.$ctfl-spacing-s vars.$ctfl-spacing-m;
+    border-radius: vars.$ctfl-corner-radius-m;
+    font-family: vars.$ctfl-type-font-stack-primary;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    appearance: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    user-select: none;
+    text-align: left;
+    background-color: vars.$ctfl-foreground-default;
+    gap: vars.$ctfl-spacing-2-xs;
+
+    .name {
+      font-size: vars.$ctfl-type-font-size-l;
+      line-height: vars.$ctfl-type-line-height-l;
+      color: vars.$ctfl-foreground-text-default;
+    }
+
+    .description {
+      font-size: vars.$ctfl-type-font-size-s;
+      line-height: vars.$ctfl-type-line-height-s;
+      color: vars.$ctfl-foreground-text-subtle;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: vars.$ctfl-foreground-hover;
+      cursor: pointer;
+    }
+  
+    &:focus-visible:not(:disabled), &:active:not(:disabled) {
+      border-color: vars.$ctfl-foreground-border-active;
+      box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+    }
+  
+    &:disabled {
+      color: vars.$ctfl-foreground-text-disabled;
+      border-color: vars.$ctfl-foreground-border-disabled;
+    }
+  }
+}
+
+@container exampleComp (max-width: 500px) {
+  .wc-examples .wc-example {
+    width: calc( 50% - vars.$ctfl-spacing-s );
+  }
+}
+
+@container exampleComp (max-width: 300px) {
+  .wc-examples .wc-example {
+    width: 100%;
+  }
+}

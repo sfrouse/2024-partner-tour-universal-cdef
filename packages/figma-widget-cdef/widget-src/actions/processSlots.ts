@@ -2,7 +2,7 @@ import { CDefDefinition, CDefInstance } from "@contentful-demos/component-defini
 import * as contentful from 'contentful';
 import runPromisesInSequence from "../utils/runPromisesInSequence.js";
 import processSlot from "./processSlots/processSlot.js";
-import { findFigmaSlots } from "@contentful-demos/component-definitions/dist";
+import { findFigmaSlots } from "@contentful-demos/component-definitions/dist/index.js";
 import findDefinitionSlots from "./processSlots/findDefinitionSlots.js";
 
 export async function processSlots(

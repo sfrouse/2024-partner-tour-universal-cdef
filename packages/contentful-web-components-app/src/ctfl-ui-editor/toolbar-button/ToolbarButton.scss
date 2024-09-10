@@ -1,0 +1,43 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-button, .cui-toolbar-label * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-button{
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  appearance: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  user-select: none;
+  outline: none;
+
+  font-family: vars.$ctfl-type-font-stack-primary;
+  font-size: vars.$ctfl-type-font-size-s;
+  line-height: vars.$ctfl-type-line-height-xs;
+
+  padding: vars.$ctfl-spacing-xs vars.$ctfl-spacing-s;
+
+  color: vars.$ctfl-foreground-text-subtle;
+  background-color: vars.$ctfl-foreground-default;
+  border: 1px solid vars.$ctfl-foreground-border-default;
+  border-radius: vars.$ctfl-corner-radius-m;
+
+  &:hover:not(:disabled) {
+    background-color: vars.$ctfl-foreground-hover;
+  }
+
+  &:focus-visible:not(:disabled), &:active:not(:disabled) {
+    border-color: vars.$ctfl-foreground-border-active;
+    box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+  }
+
+  &:disabled {
+    color: vars.$ctfl-foreground-text-disabled;
+    border-color: vars.$ctfl-foreground-border-disabled;
+  }
+}

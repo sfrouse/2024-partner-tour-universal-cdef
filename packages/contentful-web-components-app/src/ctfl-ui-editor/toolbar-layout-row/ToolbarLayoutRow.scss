@@ -1,0 +1,55 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-layout-row, .cui-toolbar-layout-row * {
+  box-sizing: border-box;
+
+  hr {
+    border: none;
+    height: 1px; width: 100%;
+    display: block;
+    background-color: vars.$ctfl-foreground-border-subtle;
+  }
+}
+
+.input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: vars.$ctfl-spacing-2-xs 0;
+  gap: vars.$ctfl-spacing-xs;
+
+  & > *:first-child {
+    flex: 1;
+  }
+  & > *:last-child {
+    flex: 1.5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: vars.$ctfl-spacing-xs;
+
+    & > * {
+      flex: 1;
+    }
+    
+    .top-bottom-padding {
+      display: flex;
+      flex-direction: column;
+      gap: vars.$ctfl-spacing-xs;
+    }
+  }
+
+  .size-unit {
+    width: 80px;
+    flex: none;
+  }
+
+  .fill-input {
+    width: 80px;
+    flex: none;
+  }
+}
+
+
+
+

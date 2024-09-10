@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex } from '@contentful/f36-components';
-import { CDefManifest } from "@contentful-demos/component-definitions/dist";
+// import { CDefManifest } from "@contentful-demos/component-definitions/dist/index.js";
 import './CodePage.scss';
 
 const CodePage = (

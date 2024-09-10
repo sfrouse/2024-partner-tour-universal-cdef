@@ -8,7 +8,7 @@ import loadFileAsText from './prompts/utils/loadFileAsText.mjs';
 import pullHTMLComponent from './pullHTMLComponent.mjs';
 
 const app = express();
-const port = 3001;
+const port = 3005;
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -43,6 +43,35 @@ app.get('/cssTricks', async (req, res) => {
   });
 });
 
+
+
+// LIST OF ACTIONS
+app.get('/actions', (req, res) => {
+  res.json({
+    actions: actionsIndex
+  });
+});
+
+// ACTION INFO
+app.get('/action/:actionId', async (req, res) => {
+  return await getAction(req.params.actionId, res);
+});
+
+// RUN AI
+app.get('/ai/:actionId', async (req, res) => {
+    const action = actionsIndex.find(action => action.id === req.params.actionId);
+    if (action) {
+      await aiApi(action);
+      return await getAction(req.params.actionId, res);
+    }else{
+      return res.status(400).json({
+        success: false,
+        error: 'Action not found',
+        actionId: req.params.actionId
+      });
+    }
+});
+
 app.get('/resetlist', async (req, res) => {
   const output = [`<a href="/reset">ALL</a>`];
   actionsIndex.map((action) => {
@@ -71,76 +100,45 @@ app.get('/reset/:actionId', async (req, res) => {
   }
 });
 
-app.get('/actions', (req, res) => {
-  res.json({
-    actions: actionsIndex
-  });
-});
-
-app.get('/action/:actionId', async (req, res) => {
-  return await getAction(req.params.actionId, res);
-});
-
-app.get('/ai/:actionId', async (req, res) => {
-    const action = actionsIndex.find(action => action.id === req.params.actionId);
-    if (action) {
-      await aiApi(action);
-      return await getAction(req.params.actionId, res);
-    }else{
-      return res.status(400).json({
-        success: false,
-        error: 'Action not found',
-        actionId: req.params.actionId
-      });
-    }
-});
-
-app.get('/result/:actionId', async (req, res) => {
-  let result = '';
-  try {
-    result = await loadFileAsText(
-      `./src/generatedCode/${req.params.actionId}-compiled.mjs`
-    );
-  }catch(err) {}// nada
-  res.json({
-    success: true,
-    result
-  });
-});
-
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
 async function deleteAction(action) {
-  const outputFile = `./src/generatedCode/${action.id}.mjs`;
+  const outputFile = `./src/generatedCode/${action.id}.json`;
   await writeStringToFile(
     outputFile,
     ``
   );
-  const outputFileCompiled = `./src/generatedCode/${action.id}-compiled.mjs`;
-  await writeStringToFile(
-    outputFileCompiled,
-    ``
-  );
+  // const outputFileCompiled = `./src/generatedCode/${action.id}-compiled.json`;
+  // await writeStringToFile(
+  //   outputFileCompiled,
+  //   ``
+  // );
 }
 
 async function getAction(actionId, res) {
   const action = actionsIndex.find(action => action.id === actionId);
   if (action) {
-    let result = '';
+    let results = '';
     try {
-      result = await loadFileAsText(
-        `./src/generatedCode/${action.name}-compiled.mjs`
+      results = await loadFileAsText(
+        `./src/generatedCode/${action.id}.json`
       );
+      results = JSON.parse(results);
     }catch(err) {
       console.log('err', err);
     }// nada
-    res.json({
+
+    const finalAction = {
       ...action,
-      prompt: await action.prompt(),
-      result
+      prompts: await action.prompts(),
+      results
+    }
+    res.json({
+      ...finalAction,
+      rendered: await action.render(finalAction)
     });
   }else{
     return res.status(400).json({
@@ -149,3 +147,4 @@ async function getAction(actionId, res) {
     });
   }
 }
+
