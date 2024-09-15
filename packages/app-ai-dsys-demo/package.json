@@ -1,5 +1,5 @@
 {
-  "name": "app-ai-dsys-demo",
+  "name": "@partner-tour-2024/app-ai-dsys-demo",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,9 +15,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3080 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "PORT=3080 craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "server:example": "http-server ./www -p 8083"
   },
@@ -38,5 +38,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0"
   }
 }

@@ -34,10 +34,12 @@ import CUIToolbarPanels from "./ctfl-ui-editor/toolbar-panels/ToolbarPanels.js";
 import ConfigPage from "./pages/configPage/ConfigPage.js";
 import HtmlPage from "./pages/htmlPage/HtmlPage.js";
 import CodePage from "./pages/codePage/CodePage.js";
+import ImportPage from "./pages/importPage/ImportPage.js";
 import LoadingPage from "./pages/loadingPage/loadingPage.js";
 import LintPage from "./pages/lintPage/LintPage.js";
 import ContentfulPage from "./pages/contentfulPage/ContentfulPage.js";
 import * as contentful from 'contentful-management';
+import WebSocketManager from "./utils/WebSocketManager.js";
 // import "web-components/dist/tokens/dmo/tokens.css";
 
 function App() {
@@ -66,6 +68,24 @@ function App() {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [environment, setEnvironment] = useState<contentful.Environment | void>();
   const [contentTypes, setContentTypes] = useState<contentful.ContentType[] | void>();
+
+  const [webSocket, setWebSocket] = useState<WebSocketManager | null>(null);
+  const [importCode, setImportCode] = useState<string>('<dmo-button label="test"></dmo-button>');
+
+  useEffect(() => {
+    // Connect to the WebSocket server
+    const ws = new WebSocketManager('ws://localhost:8060');
+    ws.addListener((evt) => {
+      console.log('ROOT', evt);
+      try {
+        const data = JSON.parse(evt.data);
+        if (data.type === 'import') {
+            setImportCode(data.code);
+        }
+      }catch(err){ console.error(err) }
+    });
+    setWebSocket(ws);
+  }, []);
 
   // Initialization
   useEffect(() => {
@@ -250,7 +270,7 @@ function App() {
                   onToggle={() => setPageSize(PageSize.default)}
                 />
               <ToggleButton
-                  icon={<icons.ArrowForwardTrimmedIcon />}
+                  icon={<icons.ArrowForwardIcon />}
                   aria-label='Wide Display'
                   size="small"
                   isActive={pageSize === PageSize.wide}
@@ -306,9 +326,6 @@ function App() {
                     label={`${LintPageId.ctfl} ${ctflLintResults ? `(${ctflLintResults?.totalErrors})` : ''}`}
                     tabId={LintPageId.ctfl} />
                 </CUIToolbarTabs>
-                {/* <div style={{flex: '1',  position:'relative'}}>
-                    
-                </div> */}
                 <CUIToolbarPanels
                   selectedPanel={selectedLintPageId}>
                   <CUIToolbarPanel panelId={LintPageId.figma}>
@@ -340,6 +357,9 @@ function App() {
                   <CUIToolbarTab secondary
                     label={CodePageId.preview}
                     tabId={CodePageId.preview} />
+                  <CUIToolbarTab secondary
+                    label={CodePageId.import}
+                    tabId={CodePageId.import} />
                 </CUIToolbarTabs>
                 <CUIToolbarPanels
                   selectedPanel={selectedCodePageId}>
@@ -352,6 +372,13 @@ function App() {
                       cDefRootUrl={cDefRootUrl}
                       manifest={manifest}
                       exampleCode={exampleCode} />
+                  </CUIToolbarPanel>
+                  <CUIToolbarPanel panelId={CodePageId.import}>
+                    <ImportPage
+                      cDefRootUrl={cDefRootUrl}
+                      webSocket={webSocket}
+                      importCode={importCode}
+                      setImportCode={setImportCode} />
                   </CUIToolbarPanel>
                 </CUIToolbarPanels>
               </div>

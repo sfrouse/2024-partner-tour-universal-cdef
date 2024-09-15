@@ -4,10 +4,10 @@
   "private": true,
   "proxy": "https://web-components.colorfuldemo.com/",
   "scripts": {
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env BROWSER=none craco start",
+    "build": "craco build",
     "build:tokens": "node ./scripts/tokens/buildTokens.mjs",
-    "test": "react-scripts test",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "create-app-definition": "contentful-app-scripts create-app-definition",
     "upload": "contentful-app-scripts upload --bundle-dir ./build",
@@ -57,11 +57,12 @@
     "@contentful/f36-components": "4.52.3",
     "@contentful/f36-tokens": "4.0.2",
     "@contentful/react-apps-toolkit": "1.2.16",
+    "@craco/craco": "^7.1.0",
     "component-definitions": "file:.yalc/component-definitions",
     "contentful-management": "10.46.4",
     "emotion": "10.0.27",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-scripts": "5.0.1"
   },
   "homepage": "."

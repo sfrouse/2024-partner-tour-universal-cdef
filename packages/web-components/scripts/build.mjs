@@ -8,9 +8,7 @@ import { distPath, srcPath } from "./config.mjs";
     entryPoints: [
       `${srcPath}/index.ts`,
       `${srcPath}/dmo-button/DMOButton.ts`,
-      `${srcPath}/wc-promotional-banner/WCPromotionalBanner.ts`,
-      `${srcPath}/wc-image/WCImage.ts`,
-      `${srcPath}/web-components-react/src/dmo-button/DMOButton.ts`,
+      `${srcPath}/dmo-container/DMOContainer.ts`,
     ],
     sassIncludePaths: [
         // `./dist/tokens/scss`, 

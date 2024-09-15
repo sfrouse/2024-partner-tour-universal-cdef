@@ -1,11 +1,12 @@
 import express from 'express';
-import aiApi from './aiApi.mjs';
 // import { exec } from 'child_process';
 import cors from 'cors';
 import actionsIndex from './actionsIndex.mjs';
 import writeStringToFile from './prompts/utils/writeStringToFile.mjs';
 import loadFileAsText from './prompts/utils/loadFileAsText.mjs';
 import pullHTMLComponent from './pullHTMLComponent.mjs';
+import { uploadImage } from './services/uploadService.mjs';
+import aiApi from './services/aiApi.mjs';
 
 const app = express();
 const port = 3005;
@@ -42,8 +43,6 @@ app.get('/cssTricks', async (req, res) => {
     success: true
   });
 });
-
-
 
 // LIST OF ACTIONS
 app.get('/actions', (req, res) => {
@@ -99,6 +98,27 @@ app.get('/reset/:actionId', async (req, res) => {
     });
   }
 });
+
+// IMAGE HANDLING
+app.post('/upload', (req, res) => {
+  uploadImage(req, res, (err) => {
+    if (err) {
+      res.status(400).send({ message: err });
+    } else {
+      if (req.file === undefined) {
+        res.status(400).send({ message: 'No file selected!' });
+      } else {
+        res.send({
+          message: 'Image uploaded successfully!',
+          filePath: `/uploads/${req.file.filename}`,
+        });
+      }
+    }
+  });
+});
+
+// Serve the uploaded images statically
+app.use('/uploads', express.static('uploads'));
 
 // Start the server
 app.listen(port, () => {

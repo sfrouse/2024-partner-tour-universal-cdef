@@ -21,6 +21,8 @@ import {
   saveToWidgetStorage
 } from "./actions/storage.js";
 import renderFigmaComponent from "./actions/renderFigmaComponent.js";
+import renderFigmaComponentFromCDef from "./actions/renderFigmaComponentFromCDef.js";
+// import figma from '@figma/plugin-typings';
 
 const { widget } = figma;
 const {
@@ -150,6 +152,15 @@ function Widget() {
               );
               break;
             } 
+            case MessageRequest.renderFigmaComponentFromCDef: {
+              renderFigmaComponentFromCDef(
+                message.importCode,
+                message.cDefRootUrl,
+                nodeId
+              );
+              console.log('message', message);
+              break;
+            } 
           }
           break;
       }
@@ -207,7 +218,7 @@ function Widget() {
             fontFamily="Inter"
             fontSize={16}
             fill="#333">
-            CDef
+            Component Definition
           </Text>
           <Text
             fontFamily="Inter"

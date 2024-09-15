@@ -7,7 +7,7 @@ import {
 } from "@contentful-demos/component-definitions/dist/index.js";
 import './LintPage.scss';
 import CUIToolbarLabel from "../../ctfl-ui-editor/toolbar-label/ToolbarLabel.js";
-import { ExternalLinkTrimmedIcon } from '@contentful/f36-icons';
+import { ExternalLinkIcon } from '@contentful/f36-icons';
 
 const LintPage = (
     args: {
@@ -44,7 +44,7 @@ const LintPage = (
                     medium strong />
                 {link ? (
                     <IconButton
-                        icon={<ExternalLinkTrimmedIcon />}
+                        icon={<ExternalLinkIcon />}
                         aria-label="Lint Entry"
                         as="a"
                         href={link}

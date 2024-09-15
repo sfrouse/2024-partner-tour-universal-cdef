@@ -1,0 +1,37 @@
+.spinner {
+    display: inline-block;
+    animation: rotate 1s linear infinite; /* Define the rotation animation */
+    width: 20px;
+}
+  
+@keyframes rotate {
+100% {
+    transform: rotate(360deg); /* Rotates the element 360 degrees */
+}
+}
+
+svg {
+display: block;
+}
+
+circle {
+stroke-dasharray: 90, 150; /* Gives the dashed look to the circle */
+stroke-dashoffset: 0;
+stroke-linecap: round;
+animation: dash 1.5s ease-in-out infinite; /* Animation for the dash effect */
+}
+
+@keyframes dash {
+0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+}
+50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+}
+100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -125;
+}
+}

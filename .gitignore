@@ -158,3 +158,6 @@ dist
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+packages/api-ai/uploads/

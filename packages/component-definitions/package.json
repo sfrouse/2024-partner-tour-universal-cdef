@@ -16,7 +16,7 @@
   ],
   "types": "./dist/types.d.ts",
   "scripts": {
-    "build:ts": "nodemon --watch ./src --watch ./www --watch scripts -e ts,html,mjs ./scripts/build.mjs",
+    "dev": "nodemon --watch ./src --watch ./www --watch scripts -e ts,html,mjs ./scripts/build.mjs",
     "build": "tsc --declaration && node ./scripts/build.mjs",
     "server": "http-server ./dist -p 8082"
   },

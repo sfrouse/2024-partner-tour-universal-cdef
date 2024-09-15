@@ -7,9 +7,24 @@ export default function findActionPrompts(action) {
         action.prompts
     ) {
         action.prompts.map(prompt => {
+            if (prompt.type === 'message') {
+                prompts.push(prompt.message);
+                return false;
+            }
             const userMessage = prompt.messages.find(msg => msg.role === 'user');
             if (userMessage) {
-                prompts.push(cleanString(userMessage.content));
+                if (Array.isArray(userMessage.content)) {
+                    userMessage.content.map(content => {
+                        if (content.type === 'LAST_UPLOADED_IMAGE') {
+                            prompts.push("(upload last image)");
+                        }else if (content.type === 'text') {
+                            prompts.push(cleanString(content.text));
+                        }
+                        return true;
+                    })
+                }else{
+                    prompts.push(cleanString(userMessage.content));
+                }
             }
             return false;
         });
@@ -29,11 +44,7 @@ function cleanString(input) {
         if (index % 2 === 0) {
             return part;
         } else {
-            return <div style={{
-                fontSize: 9,
-                lineHeight: `130%`,
-                color: '#888'
-            }} key={index}>{part}</div>;
+            return <div className="prompt-code" key={index}>{part}</div>;
         }
     });
 

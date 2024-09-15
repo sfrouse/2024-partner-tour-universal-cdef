@@ -3,33 +3,26 @@
 ## Servers / Watches
 ```
 # http://localhost:3005
-cd ./packages/api-ai
-npm run dev
+npm run local:start:api-ai
 
 # http://localhost:3080
-cd ./packages/app-ai-dsys-demo
-npm run start
+npm run local:start:app-ai-dsys-demo
 
 # http://localhost:1234
-cd ./packages/web-components
-npm run server
+npm run local:server:web-components
 
 # http://localhost:3000
-cd ./packages/contentful-web-components-app
-npm run start
+npm run local:start:contentful-web-components-app
 
-# revert to project base
-cd ../../
-```
+# web-socket (communicate between Figma and App)
+npm run local:start:web-socket
 
 ### Optional Watches
 ```
 # http://localhost:3001   (?)
-cd ./packages/figma-widget-cdef
-npm run start
+npm run local:start:figma-widget-cdef
 
-cd ./packages/web-components
-npm run start
+npm run local:start:web-components
 ```
 
 ### Builds

@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "workspaces": [
-    "packages/demo",
-    "packages/dmo-design-tokens",
-    "packages/dmo-web-components",
-    "packages/component-definitions",
-    "packages/figma-tokens-export-plugin",
-    "packages/app-ai-dsys",
-    "packages/api-ai"
+    "packages/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "local:dev:api-ai": "npm run dev --workspace=packages/api-ai",
+    "local:start:app-ai-dsys-demo": "npm run start --workspace=packages/app-ai-dsys-demo",
+    "local:dev:component-definitions": "npm run dev --workspace=packages/component-definitions",
+    "local:server:web-components": "npm run server --workspace=packages/web-components",
+    "local:start:web-components": "npm run start --workspace=packages/web-components",
+    "local:start:contentful-web-components-app": "npm run start --workspace=packages/contentful-web-components-app",
+    "local:start:web-socket": "npm run start --workspace=packages/web-socket",
+    "local:start:figma-widget-cdef": "npm run start --workspace=packages/figma-widget-cdef",
+    "local": "concurrently \"npm run local:dev:api-ai\" \"npm run local:dev:component-definitions\" \"npm run local:start:app-ai-dsys-demo\" \"npm run local:server:web-components\" \"npm run local:start:web-components\" \"npm run local:start:contentful-web-components-app\"",
+    "local:test": ""
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +26,8 @@
     "@types/json-patch": "^0.0.33",
     "lerna": "^8.1.8",
     "type-fest": "^4.26.0"
+  },
+  "dependencies": {
+    "concurrently": "^9.0.1"
   }
 }

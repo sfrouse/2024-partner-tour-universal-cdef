@@ -8,11 +8,14 @@ import defineComponent, {
   CDefDesignProperty
 } from './decorators/defineComponent';
 import webCompObjToString from './preview/webCompObjToString';
+
 import propertyHasOneExternalRef from './transformers/utils/propertyHasOneExternalRef';
 import definitionInstanceToWebInstance from './transformers/definitionInstanceToWebInstance';
 import contentfulInstanceToDefinitionInstance from './transformers/contentfulInstanceToDefinitionInstance';
 import figmaInstanceToDefinitionInstance from './transformers/figmaInstanceToDefinitionInstance';
 import definitionInstanceToFigmaInstance from './transformers/definitionInstanceToFigmaInstance';
+import htmlInstanceToDefinitionInstance from './transformers/clientSide/htmlInstanceToDefinitionInstance';
+
 import lintFigmaComponent from './linters/lintFigmaComponent';
 import lintContentfulComponent from './linters/lintContentfulComponent';
 import cDefToString from './decorators/utils/cDefToString';
@@ -63,6 +66,7 @@ export {
   definitionInstanceToFigmaInstance,
   contentfulInstanceToDefinitionInstance,
   figmaInstanceToDefinitionInstance,
+  htmlInstanceToDefinitionInstance,
   lintFigmaComponent,
   lintContentfulComponent,
   schemaToIdentifier,

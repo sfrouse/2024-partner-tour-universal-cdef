@@ -79,15 +79,20 @@ export class DMOButton extends LitElement {
 
   @define('Emphasis', {
     options: DMOButtonEmphasisEnum,
-    description: 'How noticable the button is on the page'
+    description: `
+      This controls how visually prominate the button will show up.
+      This generally aligns with the importance of the element on the page`
   })
   @property({reflect: true})
     emphasis: DMOButtonEmphasisEnum = DMOButtonEmphasisEnum.Bold;
 
-  @define('Design', {options: DMOButtonDesignEnum})
+  @define('Design', {
+    options: DMOButtonDesignEnum,
+    description: `This controls the visual appearance of the button for use in different visual contexts.
+      It does not change the general importance or emphasis of the button.`
+  })
   @property({reflect: true})
     design: DMOButtonDesignEnum = DMOButtonDesignEnum.Primary;
-
 
   handleClick(e: MouseEvent) {
     e.stopPropagation();

@@ -22,7 +22,8 @@ export enum MessageRequest {
   saveToClientStorage = 'saveToClientStorage',
   getFromClientStorage = 'getFromClientStorage',
   clearAllStorage = 'clearAllStorage',
-  renderFigmaComponent = 'renderFigmaComponent'
+  renderFigmaComponent = 'renderFigmaComponent',
+  renderFigmaComponentFromHTML = 'renderFigmaComponentFromHTML'
 }
 
 export enum PageSize {
@@ -49,4 +50,5 @@ export enum LintPageId {
 export enum CodePageId {
   html = 'HTML',
   preview = 'Preview',
+  import = 'Import'
 }
