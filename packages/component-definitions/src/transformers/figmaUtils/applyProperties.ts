@@ -44,7 +44,12 @@ export function applyProperties(
         );
     }
 
-    figmaInstance.setProperties(newProps);
+    try {
+        figmaInstance.setProperties(newProps);
+    }catch(err) {
+        console.error(`[applyProperties]`, newProps, err)
+    }
+    
 }
 
 function processComponentProperty(
@@ -53,28 +58,32 @@ function processComponentProperty(
     compPropDefs: any,
     newProps: {[key:string]: string}
 ) {
-    let finalNameArr = name.split('#');
-    finalNameArr.length > 1 ? finalNameArr.pop() : null;
-    const finalName = finalNameArr.join('');
-    const defInstanceValue = defInstance[finalName];
-    if (defInstanceValue !== undefined) {
-        const compProp = compPropDefs[finalName];
-        const value = `${defInstanceValue}`;
-        if (compProp && compProp.type === 'VARIANT') {
-            if (
-                compProp.variantOptions &&
-                compProp.type === 'VARIANT' &&
-                compProp.variantOptions.includes(value)
-            ) {
-                newProps[name] = `${defInstanceValue}`;
+    try {
+        let finalNameArr = name.split('#');
+        finalNameArr.length > 1 ? finalNameArr.pop() : null;
+        const finalName = finalNameArr.join('');
+        const defInstanceValue = defInstance[finalName];
+        if (defInstanceValue !== undefined) {
+            const compProp = compPropDefs[finalName];
+            const value = `${defInstanceValue}`;
+            if (compProp && compProp.type === 'VARIANT') {
+                if (
+                    compProp.variantOptions &&
+                    compProp.type === 'VARIANT' &&
+                    compProp.variantOptions.includes(value)
+                ) {
+                    newProps[name] = `${defInstanceValue}`;
+                }else{
+                    console.warn(`[processComponentProperty] Variation not found in Figma component ${finalName}`);
+                    // figma.notify(`Variation not found in Figma component ${finalName}`, {error: true})
+                }
             }else{
-                console.error(`Variation not found in Figma component ${finalName}`);
-                // figma.notify(`Variation not found in Figma component ${finalName}`, {error: true})
+                newProps[name] = `${defInstanceValue}`;
             }
         }else{
-            newProps[name] = `${defInstanceValue}`;
+            console.warn(`[processComponentProperty] did not find defInstance for "${finalName}"`)
         }
-    }else{
-        console.error(`Did not find defInstance for "${finalName}"`)
+    }catch(err) {
+        console.error(`[processComponentProperty] ERROR`, err);
     }
 }

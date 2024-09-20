@@ -20,6 +20,7 @@ export enum DMOButtonEmphasisEnum {
 export enum DMOButtonDesignEnum {
   Primary = 'primary',
   Secondary = 'secondary',
+  // Neutral = 'neutral'
 }
 
 @defineHidden('Interactive', 'interactive')
@@ -51,32 +52,6 @@ export class DMOButton extends LitElement {
 
   static styles = styles; 
 
-  @define('Label', {content: true})
-  @property({reflect: true})
-    label: string = '';
-
-
-  @define('URL', {
-    content: true,
-    description: 'This is the url used to link to...'
-  })
-  @property({reflect: true})
-    url: string = '';
-  
-
-  @define('Disabled')
-  @property({type: Boolean, reflect: true})
-    disabled: boolean = false;
-
-
-  @define('Target')
-  @property({reflect: true})
-    target: string;
-
-  // @define('Boolean Example')
-  // @property({type: Boolean, reflect: true, attribute: 'boolean-example'})
-  //   booleanExample: boolean = false;
-
   @define('Emphasis', {
     options: DMOButtonEmphasisEnum,
     description: `
@@ -93,6 +68,32 @@ export class DMOButton extends LitElement {
   })
   @property({reflect: true})
     design: DMOButtonDesignEnum = DMOButtonDesignEnum.Primary;
+
+  @define('Disabled')
+  @property({type: Boolean, reflect: true})
+    disabled: boolean = false;
+
+  @define('Label', {content: true})
+  @property({reflect: true})
+    label: string = '';
+
+  @define('Target')
+  @property({reflect: true})
+    target: string;
+
+  @define('URL', {
+    content: true,
+    description: 'This is the url used to link to...'
+  })
+  @property({reflect: true})
+    url: string = '';
+
+
+  // @define('Boolean Example')
+  // @property({type: Boolean, reflect: true, attribute: 'boolean-example'})
+  //   booleanExample: boolean = false;
+
+  
 
   handleClick(e: MouseEvent) {
     e.stopPropagation();

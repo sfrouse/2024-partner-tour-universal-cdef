@@ -4,23 +4,24 @@ import {
     findFigmaCompositePropViaTokenLookup,
     findFigmaPropViaTokenLookup
 } from "../../utils/findViaTokenLookup";
+import findSlotChildren from "../utils/findSlotChildren";
 
 export async function applyStyleProperties(
     figmaInstance: InstanceNode,
     defInstance: CDefInstance,
     tokenLookup: CDefTokenLookup | undefined,
     allVarsLookup: {[name:string]: {}[]},
-    figma: any, // Figma API
+    figma: any, // Figma API,
+    isRoot: boolean
 ) {
-    // get variables once
-    // const allVarsLookup = await getAllVariablesLookup(figma);
 
-    // external library styles don't work...
-    // let allStyles: any[] = [];
-    // allStyles = [...allStyles, ...await figma.getLocalPaintStylesAsync()];
-    // allStyles = [...allStyles, ...await figma.getLocalTextStylesAsync()];
-    // allStyles = [...allStyles, ...await figma.getLocalEffectStylesAsync()];
-    // allStyles = [...allStyles, ...await figma.getLocalGridStylesAsync()];
+    // Need to apply this AFTER changing other things...
+    // Is applied after the switch
+    let layoutSizingVertical: "FIXED" | "HUG" | "FILL" = 'HUG';
+    let layoutSizingHorizontal: "FIXED" | "HUG" | "FILL" = 'HUG';
+    // only applied if layout is Fixed;
+    let width: number = 500;
+    let height: number = 500;
 
     const defInstanceEntries = Object.entries(defInstance);
     for (const [key, value] of defInstanceEntries) {
@@ -149,17 +150,133 @@ export async function applyStyleProperties(
                 }
                 break;
             }
+            // NADA
             // case CDefDesignProperty.BORDER_STYLE : {
-            //     // TODO: split into four...
-            //     const figmaProp = findFigmaPropViaTokenLookup(`${value}`, tokenLookup);
-            //     const figmaPropVar = await findPropertyObjectVariable(figmaProp, allVarsLookup, figma);
-            //     if (figmaPropVar) {
-            //         figmaInstance.setBoundVariable('strokeTopWeight', figmaPropVar);
+            //     if (value && `${value}`.toLowerCase() === 'dashed') {
+            //         // const strokes = JSON.parse(JSON.stringify(figmaInstance.strokes));
+            //         // if (strokes.length > 0) {
+            //         //     strokes[0].strokeDashes = [10, 5];
+            //         // }
+            //         // figmaInstance.strokes = strokes;
             //     }
+            //     console.log('figmaInstance', figmaInstance);
             //     break;
             // }
+            case CDefDesignProperty.LAYOUT_DIRECTION : {
+                const slotChildren = findSlotChildren(figmaInstance);
+                if (slotChildren) {
+                    slotChildren.map(slotChild => {
+                        // Can't change layoutmode in instance...
+                        // slotChild.layoutMode = "VERTICAL";
+                        // this is a myopic stopgap....
+                        // TODO: create slots from scratch
+                        if (slotChild.componentProperties.layoutDirection) {
+                            (slotChild as InstanceNode).setProperties({
+                                layoutDirection: `${value}`.toLowerCase() === 'column' ?
+                                    'vertical' : 'horizontal'
+                            });
+                        }
+                    });
+                }
+                break;
+            }
+            case CDefDesignProperty.HORIZONTAL_RESIZING : {
+                switch (`${value}`.toLowerCase()) {
+                    case 'hug' : {
+                        layoutSizingHorizontal = 'HUG';
+                        break;
+                    }
+                    case 'fixed' : {
+                        layoutSizingHorizontal = 'FIXED';
+                        break;
+                    }
+                    case 'fill' : {
+                        layoutSizingHorizontal = 'FILL';
+                        break;
+                    }
+                }
+                break;
+            }
+            case CDefDesignProperty.VERTICAL_RESIZING : {
+                switch (`${value}`.toLowerCase()) {
+                    case 'hug' : {
+                        layoutSizingVertical = 'HUG';
+                        break;
+                    }
+                    case 'fixed' : {
+                        layoutSizingVertical = 'FIXED';
+                        break;
+                    }
+                    case 'fill' : {
+                        layoutSizingVertical = 'FILL';
+                        break;
+                    }
+                }
+                break;
+            }
+            // Figma doesn't really have this...need fixed with page
+            // case CDefDesignProperty.VERTICAL_FLEX_GROW : { break; }
+            // case CDefDesignProperty.HORIZONTAL_FLEX_GROW : { break; }
+            case CDefDesignProperty.WIDTH : {
+                width = parseInt(`${value}`.replace(/[^0-9]+/g, ""));
+                break;
+            }
+            case CDefDesignProperty.HEIGHT : {
+                height = parseInt(`${value}`.replace(/[^0-9]+/g, ""));
+                break;
+            }
+            case CDefDesignProperty.ALIGN_ITEMS: {
+                console.log('ALIGN_ITEMS', value);
+                switch ( value ) {
+                    case 'start' : {
+                        
+                        break;
+                    }
+                    case 'center' : {
+                        figmaInstance.primaryAxisAlignItems = 'CENTER';
+                        figmaInstance.counterAxisAlignItems = 'CENTER';
+                        break;
+                    }
+                }
+                break;
+            }
+            case CDefDesignProperty.JUSTIFY_CONTENT: {
+                console.log('JUSTIFY_CONTENT', value);
+                break;
+            }
         }
+    }
 
+    if ((figmaInstance?.parent as any)?.layoutMode !== "NONE") {
+        figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
+        figmaInstance.layoutSizingVertical = layoutSizingVertical;
+        // TODO: take child slot along for the ride...
+    }
+
+    if (
+        layoutSizingHorizontal === 'FIXED' &&
+        layoutSizingVertical === 'FIXED'
+    ) {
+        figmaInstance.resize( width, height );
+    }else{
+        if (layoutSizingHorizontal === 'FIXED') {
+            figmaInstance.resize(
+                width,
+                figmaInstance.height
+            );
+        }else if (layoutSizingVertical === 'FIXED') {
+            figmaInstance.resize(
+                figmaInstance.width,
+                height
+            );
+        }
+    }
+
+    if (isRoot && layoutSizingHorizontal === "FILL" && figmaInstance.parent) {
+        figmaInstance.resize(
+            (figmaInstance.parent as FrameNode).width - 100,
+            figmaInstance.height
+        )
     }
 }
 
@@ -195,6 +312,25 @@ export async function getAllVariablesLookup(figma: any) {
     localVariables.map((localVar: any) => {
         if (!allVarsLookup[localVar.name]) allVarsLookup[localVar.name] = [];
         allVarsLookup[localVar.name].push(localVar); // could be dups...just using first however...
+    })
+    return allVarsLookup;
+}
+
+export async function getAllVariablesLookupViaId(figma: any) {
+    const allVarsLookup: {[name:string]: {}[]}= {};
+    const localVariables = await figma.variables.getLocalVariablesAsync();
+    const libraryVariableCollections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+    for (const libraryVarCollection of libraryVariableCollections) {
+        const teamVariables = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(libraryVarCollection.key);
+        teamVariables.map((teamVar: any) => {
+            if (!allVarsLookup[teamVar.id]) allVarsLookup[teamVar.id] = [];
+            allVarsLookup[teamVar.id].push(teamVar); // could be dups...just using first however...
+        });
+    }
+    // put local as last...
+    localVariables.map((localVar: any) => {
+        if (!allVarsLookup[localVar.id]) allVarsLookup[localVar.id] = [];
+        allVarsLookup[localVar.id].push(localVar); // could be dups...just using first however...
     })
     return allVarsLookup;
 }

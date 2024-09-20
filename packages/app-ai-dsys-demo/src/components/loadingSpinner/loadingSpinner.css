@@ -11,14 +11,14 @@
 }
 
 svg {
-display: block;
+    display: block;
 }
 
 circle {
-stroke-dasharray: 90, 150; /* Gives the dashed look to the circle */
-stroke-dashoffset: 0;
-stroke-linecap: round;
-animation: dash 1.5s ease-in-out infinite; /* Animation for the dash effect */
+    stroke-dasharray: 90, 150; /* Gives the dashed look to the circle */
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite; /* Animation for the dash effect */
 }
 
 @keyframes dash {

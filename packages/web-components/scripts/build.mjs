@@ -9,6 +9,7 @@ import { distPath, srcPath } from "./config.mjs";
       `${srcPath}/index.ts`,
       `${srcPath}/dmo-button/DMOButton.ts`,
       `${srcPath}/dmo-container/DMOContainer.ts`,
+      `${srcPath}/dmo-text/DMOText.ts`,
     ],
     sassIncludePaths: [
         // `./dist/tokens/scss`, 

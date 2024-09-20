@@ -1,0 +1,52 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-label, .cui-toolbar-label * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-label {
+  font-family: vars.$ctfl-type-font-stack-primary;
+  font-size: vars.$ctfl-type-font-size-s;
+  line-height: vars.$ctfl-type-line-height-xs;
+  padding: vars.$ctfl-spacing-xs 0;
+  color: vars.$ctfl-background-text-subtle;
+
+  &.strong {
+    color: vars.$ctfl-background-text-default;
+  }
+
+  &.disabled {
+    color: vars.$ctfl-background-text-disabled;
+  }
+
+  &.large {
+    font-size: vars.$ctfl-type-font-size-l;
+    font-weight: vars.$ctfl-type-weight-demi-bold;
+    line-height: vars.$ctfl-type-line-height-l;
+  }
+
+  &.medium {
+    font-size: vars.$ctfl-type-font-size-m;
+    font-weight: vars.$ctfl-type-weight-demi-bold;
+    line-height: vars.$ctfl-type-line-height-m;
+  }
+
+  &.tiny {
+    font-size: 9px;
+    line-height: auto;
+  }
+
+  &.no-select {
+    user-select: none;
+  }
+
+  &.uppercase {
+    text-transform: uppercase;
+  }
+
+  &.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

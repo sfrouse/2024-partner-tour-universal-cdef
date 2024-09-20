@@ -4,13 +4,13 @@ import {
     // CDefDefinition,
     CDefInstance,
     CDefLayout,
-    CDefTokenLookup,
+    // CDefTokenLookup,
     // CDefInstanceImage,
     // CDefInstanceRichText
 } from "../types";
-import { findCSSViaTokenLookup } from "../utils/findViaTokenLookup";
+// import { findCSSViaTokenLookup } from "../utils/findViaTokenLookup";
 import getComponentDefinition from "./utils/getComponentDefinition";
-import getComponentDefinitionTokenLookup from "./utils/getComponentDefinitionTokenLookup";
+// import getComponentDefinitionTokenLookup from "./utils/getComponentDefinitionTokenLookup";
 import isObject from "./utils/isObject";
 
 // const DESIGN_PROPERTY_ATTR_PREFIX = 'data-cdef-';
@@ -25,7 +25,7 @@ export default async function definitionInstanceToWebInstance(
 
     if (!definitionInst) return;
 
-    const tokenLookup = await getComponentDefinitionTokenLookup(cDefPath);
+    // const tokenLookup = await getComponentDefinitionTokenLookup(cDefPath);
     const compDefinition = await getComponentDefinition(
         cDefPath,
         definitionInst.$schema as string | undefined
@@ -49,16 +49,25 @@ export default async function definitionInstanceToWebInstance(
     const slots: string[] = [];
 
     styles.push(`--parent-layout: ${parentLayout};`);
+    const layout = getLayout(definitionInst);;
 
     if (!compDefinition.properties) return;
     await Promise.all(
         Object.entries(compDefinition.properties).map(propertyInfo => {
             return (async() => {
                 const name = propertyInfo[0];
-                if (name === "$schema") return;
-                if (name === "$identifier") return;
                 const property = propertyInfo[1];
                 const value = definitionInst[name];
+
+                if (name === "$schema") {
+                    attrs.push(`data-schema="${value}"`)
+                    return;
+                }
+                if (name === "$identifier") {
+                    attrs.push(`data-entry-id="${(value as any)['contentful']}"`)
+                    return;
+                }
+                
                 const propXDef = property["x-cdef"];
                 const webConfig = propXDef?.output?.webComponent;
                 const attrName = webConfig?.attribute || name;
@@ -66,8 +75,7 @@ export default async function definitionInstanceToWebInstance(
                 const slotName = isSlot ? name : undefined;
                 const slotAttr = webConfig?.defaultSlot === true ? '' : ` slot="${slotName}"`;
                 const designProp = propXDef?.design === true;
-                const layout = getLayout(definitionInst);
-
+                
                 if (value === undefined) return;
     
                 // ARRAY
@@ -99,14 +107,7 @@ export default async function definitionInstanceToWebInstance(
                         }
                     }else{
                         if (designProp) {
-                            toStyles(
-                                styles,
-                                attrName,
-                                childArr.join(''),
-                                propXDef,
-                                tokenLookup,
-                                parentLayout
-                            );
+                            toAttr(attrs, attrName, childArr.join('\n'));
                         }else{
                             toAttr(attrs, attrName, childArr.join('\n'));
                         }
@@ -167,14 +168,7 @@ export default async function definitionInstanceToWebInstance(
                             return;
                         }
                         if (designProp) {
-                            toStyles(
-                                styles,
-                                attrName,
-                                value,
-                                propXDef,
-                                tokenLookup,
-                                parentLayout
-                            );
+                            toAttr(attrs, attrName, value);
                         }else{
                             toAttr(attrs, attrName, value);
                         }
@@ -215,60 +209,6 @@ function toAttr(attrs: string[], attr: string, value: any) {
     }
 }
 
-function toStyles(
-    styles: string[],
-    name: string,
-    value: any,
-    propXDef: any,
-    tokenLookup?: CDefTokenLookup,
-    parentLayout: CDefLayout = CDefLayout.NONE
-) {
-    const cssPropName = propXDef?.output?.webComponent?.cssProperty || 'missing-css-property';
-    const finalValue = findCSSViaTokenLookup(value, tokenLookup);
-
-    // some style props have larger side effects
-    if (name === CDefDesignProperty.HORIZONTAL_RESIZING) {
-        if (finalValue === 'hug') {
-            if (parentLayout === CDefLayout.NONE) {
-                styles.push('display: inline-flex;');
-            }
-        }else if (finalValue === 'fixed') {
-        }else if (finalValue === 'fill') {
-            if (parentLayout === CDefLayout.NONE) {
-                // styles.push('display: inline-flex;');
-            }else if (parentLayout === CDefLayout.COLUMN) {
-                styles.push(`self-align: stretch;`);
-            }else if (parentLayout === CDefLayout.ROW) {
-                styles.push(`flex: 1;`);
-            }
-        }
-    }
-
-    if (name === CDefDesignProperty.VERTICAL_RESIZING) {
-        if (finalValue === 'hug') {
-            if (parentLayout === CDefLayout.NONE) {
-            }else if (parentLayout === CDefLayout.COLUMN) {
-                styles.push(`flex: 0;`);
-            }else if (parentLayout === CDefLayout.ROW) {
-            }
-        }else if (finalValue === 'fixed') {
-        }else if (finalValue === 'fill') {
-            if (parentLayout === CDefLayout.NONE) {
-                // styles.push('display: inline-flex;');
-            }else if (parentLayout === CDefLayout.COLUMN) {
-                styles.push(`flex: 1;`);
-            }else if (parentLayout === CDefLayout.ROW) {
-                styles.push(`self-align: stretch;`);
-            }
-        }
-    }
-
-    const finalStyle = `${cssPropName}: ${finalValue}; /* ${parentLayout} */`;
-    if (name === CDefDesignProperty.VERTICAL_RESIZING)
-        console.log('CSS FINAL VALUE', value, finalValue, cssPropName);
-    if (finalValue) styles.push(finalStyle);
-}
-
 function getLayout(
     definitionInst: CDefInstance
 ): CDefLayout {
@@ -281,5 +221,5 @@ function getLayout(
             return CDefLayout.COLUMN;
         }
     }
-    return CDefLayout.NONE;
+    return CDefLayout.COLUMN;
 }

@@ -1,0 +1,75 @@
+@use './tokens/output/scss/variables' as vars;
+
+.app {
+
+  .error-msg {
+    border-top: 1px solid vars.$ctfl-background-border-primary-subtle;
+    padding: vars.$ctfl-spacing-s;
+    font-size: vars.$ctfl-type-font-size-s;
+    color: vars.$ctfl-foreground-text-subtle;
+    background-color: #ff00000a;
+  }
+
+  .cdef-root-url {
+    border-top: 1px solid vars.$ctfl-background-border-primary-subtle;
+    padding: vars.$ctfl-spacing-xs;
+    font-size: 10px;
+    line-height: normal;
+    color: vars.$ctfl-foreground-text-subtle;
+  }
+
+  .websocket-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #eee;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .fill {
+    flex: 1;
+  }
+  
+}
+
+.scroll-bar::-webkit-scrollbar,
+.scroll-bar-grey::-webkit-scrollbar,
+.scroll-bar-dark::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+  
+.scroll-bar::-webkit-scrollbar-track,
+.scroll-bar-grey::-webkit-scrollbar-track,
+.scroll-bar-dark::-webkit-scrollbar-track {
+  box-shadow: none;/*inset 0 0 6px rgba(0, 0, 0, 0.3);*/
+}
+
+.scroll-bar-grey::-webkit-scrollbar-track {
+  background-color: #bbb;
+}
+
+.scroll-bar-dark::-webkit-scrollbar-track {
+  background-color: black;
+}
+  
+.scroll-bar::-webkit-scrollbar-thumb,
+.scroll-bar-grey::-webkit-scrollbar-thumb,
+.scroll-bar-dark::-webkit-scrollbar-thumb {
+  background-color: #eee;
+  border-radius: 6px;
+  border: 3px solid white;
+}
+
+.scroll-bar-grey::-webkit-scrollbar-thumb {
+  border: 3px solid #eee;
+  background-color: #bbb;
+}
+
+.scroll-bar-dark::-webkit-scrollbar-thumb {
+  border: 3px solid black;
+  background-color: #5d5d5d;
+}

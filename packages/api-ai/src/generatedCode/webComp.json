@@ -1,4 +1,4 @@
 [
   "import { LitElement, html, css } from 'https://cdn.skypack.dev/lit';\n\nclass DmoButton extends LitElement {\n  static styles = css`\n    button {\n      background-color: #6200ea;\n      color: white;\n      border: none;\n      padding: 10px 20px;\n      font-size: 16px;\n      cursor: pointer;\n      border-radius: 5px;\n    }\n    button:hover {\n      background-color: #3700b3;\n    }\n  `;\n\n  render() {\n    return html`<button><slot></slot></button>`;\n  }\n}\n\ncustomElements.define('dmo-button', DmoButton);",
-  "<dmo-button id=\"myButton\">Click Me!</dmo-button>\n<script>\n    document.getElementById('myButton').addEventListener('click', () => {\n        alert('hello, world');\n    });\n</script>"
+  "<dmo-button id=\"myButton\">\n    Click Me!\n</dmo-button>\n<script>\n    document.getElementById('myButton').addEventListener('click', () => {\n        alert('hello, world');\n    });\n</script>"
 ]

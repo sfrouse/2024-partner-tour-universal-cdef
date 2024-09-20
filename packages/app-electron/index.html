@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electron App with Resizable Iframes</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .iframe-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        iframe {
+            flex: 1;
+            border: none;
+            height: 100%;
+        }
+
+        .divider {
+            width: 5px;
+            background-color: #ccc;
+            cursor: col-resize;
+            position: relative;
+        }
+
+        .divider:hover {
+            background-color: #888;
+        }
+
+        .dragging {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Electron App with Resizable Iframes</h1>
+    <div class="iframe-container">
+        <iframe src="https://example.com"></iframe>
+        <div class="divider"></div>
+        <iframe src="https://www.figma.com/design/s1Ohf6N6CrkVNeNCmrXEzT/2024-Partner-Tour---Design-System---Strong?t=vazDlIbELrwn0drf-0"></iframe>
+        <div class="divider"></div>
+        <iframe src="https://app.contentful.com/spaces/cvvf6wkrdo0e/environments/contentful-web-components/entries/yJ75cMmibZIM6mCDgdv9V/preview/1Kb9oePRhiGlBc2sgWjW0C?focusedField=label"></iframe>
+    </div>
+
+    <script>
+        // const dividers = document.querySelectorAll('.divider');
+        // let isDragging = false;
+
+        // dividers.forEach((divider) => {
+        //     divider.addEventListener('mousedown', (e) => {
+        //         isDragging = true;
+        //         divider.classList.add('dragging');
+        //         const prevIframe = divider.previousElementSibling;
+        //         const nextIframe = divider.nextElementSibling;
+
+        //         const initialX = e.clientX;
+        //         const prevWidth = prevIframe.getBoundingClientRect().width;
+        //         const nextWidth = nextIframe.getBoundingClientRect().width;
+
+        //         const onMouseMove = (e) => {
+        //             if (!isDragging) return;
+
+        //             const deltaX = e.clientX - initialX;
+        //             prevIframe.style.flex = `0 0 ${prevWidth + deltaX}px`;
+        //             nextIframe.style.flex = `0 0 ${nextWidth - deltaX}px`;
+        //         };
+
+        //         const onMouseUp = () => {
+        //             isDragging = false;
+        //             divider.classList.remove('dragging');
+        //             window.removeEventListener('mousemove', onMouseMove);
+        //             window.removeEventListener('mouseup', onMouseUp);
+        //         };
+
+        //         window.addEventListener('mousemove', onMouseMove);
+        //         window.addEventListener('mouseup', onMouseUp);
+        //     });
+        // });
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-select, .cui-toolbar-select * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-select select {
+  border: 1px solid rgba(0,0,0,0);
+  padding: vars.$ctfl-spacing-xs vars.$ctfl-spacing-xs;
+  font-family: vars.$ctfl-type-font-stack-primary;
+  font-size: vars.$ctfl-type-font-size-s;
+  line-height: vars.$ctfl-type-line-height-xs;
+  color: vars.$ctfl-foreground-text-default;
+  border-radius: vars.$ctfl-corner-radius-m;
+  outline: none;
+  width: 100%;
+
+
+  -webkit-appearance: none;
+  -moz-appearance: window;
+  padding-right: 50px;
+  background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M11.7328%2018.6422C11.8781%2018.7875%2012.1172%2018.7875%2012.2625%2018.6422L22.3875%208.51718C22.5328%208.37187%2022.5328%208.13281%2022.3875%207.9875C22.2422%207.84218%2022.0031%207.84218%2021.8578%207.9875L12%2017.8453L2.14218%207.98281C1.99687%207.8375%201.75781%207.8375%201.61249%207.98281C1.46718%208.12812%201.46718%208.36718%201.61249%208.5125L11.7375%2018.6375L11.7328%2018.6422Z%22%20fill%3D%22%23111B2B%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+
+  transition: border-color 0.2s ease-in-out 0s, box-shadow 0.1s ease-in-out 0s;
+
+  &:hover {
+    border: 1px solid vars.$ctfl-background-border-hover;
+    cursor: hand;
+  }
+  
+  &:active:not(:disabled), &:focus {
+    border-color: vars.$ctfl-foreground-border-active;
+    box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+  }
+
+  &:disabled {
+    color: vars.$ctfl-foreground-text-disabled;
+  }
+}
+
+.cui-toolbar-select.text-align-right input {
+  text-align: right;
+}
+

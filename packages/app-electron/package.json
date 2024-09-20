@@ -1,0 +1,14 @@
+{
+  "name": "app-electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --trace-warnings"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^32.1.1"
+  }
+}

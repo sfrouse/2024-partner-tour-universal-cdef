@@ -1,0 +1,37 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-input, .cui-toolbar-input * {
+  box-sizing: border-box;
+}
+
+.cui-toolbar-input input {
+  border: 1px solid vars.$ctfl-foreground-border-default;
+  padding: vars.$ctfl-spacing-xs vars.$ctfl-spacing-xs;
+  font-family: vars.$ctfl-type-font-stack-primary;
+  font-size: vars.$ctfl-type-font-size-s;
+  line-height: vars.$ctfl-type-line-height-xs;
+  color: vars.$ctfl-foreground-text-default;
+  border-radius: vars.$ctfl-corner-radius-m;
+  outline: none;
+  width: 100%;
+
+  transition: border-color 0.2s ease-in-out 0s, box-shadow 0.1s ease-in-out 0s;
+
+  &:hover {
+    border-color: vars.$ctfl-foreground-border-hover;
+  }
+  
+  &:active:not(:disabled), &:focus {
+    border-color: vars.$ctfl-foreground-border-active;
+    box-shadow: 0px 0px 0px vars.$ctfl-focus-size vars.$ctfl-focus;
+  }
+
+  &:disabled {
+    color: vars.$ctfl-foreground-text-disabled;
+  }
+}
+
+.cui-toolbar-input.text-align-right input {
+  text-align: right;
+}
+

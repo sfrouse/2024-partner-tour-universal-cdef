@@ -90,6 +90,22 @@ export default function applyClassDecoratorValues(
           figmaProperty: 'autoLayoutDirection',
         }
       }
+      if (designProp.property === '_alignItems') {
+        prop = {
+          label: "Align Items",
+          inputType: 'string',
+          cssProperty: 'align-items',
+          figmaProperty: 'counterAxisAlignContent',
+        }
+      }
+      if (designProp.property === '_justifyContent') {
+        prop = {
+          label: "Justify Content",
+          inputType: 'string',
+          cssProperty: 'justify-content',
+          figmaProperty: 'primaryAxisAlignItems',
+        }
+      }
       if (designProp.property === '_verticalResizing') {
         prop = {
           label: "Vertical Resizing",
@@ -260,10 +276,10 @@ export default function applyClassDecoratorValues(
         compDefinition.properties[slot.property] = {
             $schema: "https://json-schema.org/draft-07/schema",
             title: slot.label,
-            type: "string",
+            type: "array",
             "x-cdef": {
               input: {
-                inputType: "string",
+                inputType: "array",
                 label: slot.label
               },
               output: {

@@ -37,7 +37,7 @@ export default async function parseCDefs(
         "definitions": {}
     };
 
-    const promiseArr = [];
+    // const promiseArr = [];
     for (const sourceFile of sourceFiles) {
         const classes = sourceFile.getClasses();
         const sourceFilePath = sourceFile.getFilePath();

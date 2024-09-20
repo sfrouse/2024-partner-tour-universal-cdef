@@ -1,0 +1,21 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.cui-toolbar-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+
+  .border {
+    flex: 1;
+    align-self: stretch;
+    border-bottom: 1px solid vars.$ctfl-foreground-border-default;
+  }
+
+  &.secondary {
+    .border {
+      border-bottom: 0;
+    }
+  }
+}

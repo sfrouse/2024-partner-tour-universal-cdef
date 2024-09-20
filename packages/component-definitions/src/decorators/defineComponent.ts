@@ -31,7 +31,8 @@ export enum CDefDesignProperty {
 
     GAP = '_gap',
     LAYOUT_DIRECTION = '_layoutDirection',
-    CHILDREN_ALIGNMENT = '_childrenAlignment',
+    ALIGN_ITEMS = '_alignItems',
+    JUSTIFY_CONTENT = '_justifyContent',
     SELF_ALIGNMENT = '_selfAlignment',
     HORIZONTAL_RESIZING = '_horizontalResizing',
     VERTICAL_RESIZING = '_verticalResizing',

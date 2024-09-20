@@ -58,7 +58,7 @@
     "@contentful/f36-tokens": "4.0.2",
     "@contentful/react-apps-toolkit": "1.2.16",
     "@craco/craco": "^7.1.0",
-    "component-definitions": "file:.yalc/component-definitions",
+    "@contentful-demos/component-definitions": "*",
     "contentful-management": "10.46.4",
     "emotion": "10.0.27",
     "react": "^18.3.1",

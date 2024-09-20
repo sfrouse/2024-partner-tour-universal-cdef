@@ -1,0 +1,28 @@
+@use 'tokens' as wc;
+
+$wc-types: (
+  "display-md": wc.$wc-type-display-md,
+  "heading-xl": wc.$wc-type-heading-xl,
+  "heading-lg": wc.$wc-type-heading-lg,
+  "heading-md": wc.$wc-type-heading-md,
+  "heading-sm": wc.$wc-type-heading-sm,
+  "heading-xs": wc.$wc-type-heading-xs,
+  "body-lg": wc.$wc-type-body-lg,
+  "body-md": wc.$wc-type-body-md,
+  "body-sm": wc.$wc-type-body-sm,
+  "label-lg": wc.$wc-type-label-lg,
+  "label-md": wc.$wc-type-label-md,
+  "label-sm": wc.$wc-type-label-sm,
+  "label-xs": wc.$wc-type-label-xs
+);
+
+// Loop through each type and generate corresponding :host selector
+@each $type, $value in $wc-types {
+    :host([type="#{$type}"]) {
+      font: #{$value};
+    }
+}
+
+:host {
+  display: inline-block;
+}

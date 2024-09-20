@@ -6,10 +6,12 @@ import './css/PagePrompt.css';
 import React, { useState, useEffect } from 'react';
 import findActionPrompts from '../../utils/findActionPrompts';
 import ImageUploader from '../../components/imageUpload';
-import RefreshButton from '../../components/refreshButton';
+// import RefreshButton from '../../components/refreshButton';
 import renderAsText from '@partner-tour-2024/api-ai/src/prompts/utils/renderAsText.mjs';
 import LoadingSpinner from '../../components/loadingSpinner/loadingSpinner';
 import startVoiceRecognition, { stopVoiceRecognition } from './utils/speechToText';
+import formatDuration from './utils/formatTimer';
+import getWebSocketStatusColor from './utils/getWebSocketStatusColor';
 
 const AI_SERVICE_URL = 'http://localhost:3005';
 
@@ -34,7 +36,11 @@ function Page() {
     const [focusedTab, setFocusedTab] = useState('html');
     const [scratchPad, setScratchPad] = useState('');
     const [isRecording, setIsRecording] = useState(false);
-    
+
+    const [durationStart, setDurationStart] = useState(0);
+    const [durationEnd, setDurationEnd] = useState(0);
+    const [currentDuration, setCurrentDuration] = useState(0);
+    const [websocketStatus, setWebsocketStatus] = useState('disconnected'); 
 
     const invalidatePage = () => setInvalidate(i => i+1);
 
@@ -47,9 +53,11 @@ function Page() {
     useEffect(() => {
       // Connect to the WebSocket server
       const ws = new WebSocket('ws://localhost:8060');
+      setWebsocketStatus('connecting');
 
       ws.onopen = () => {
         console.log('Connected to the WebSocket server');
+        setWebsocketStatus('connected');
       };
 
       ws.onmessage = (event) => {
@@ -58,6 +66,7 @@ function Page() {
 
       ws.onclose = () => {
         console.log('Disconnected from the WebSocket server');
+        setWebsocketStatus('disconnected');
       };
       setWebSocket(ws);
     }, []);
@@ -127,24 +136,29 @@ function Page() {
     // Run Action
     useEffect(() => {
       if (actionToRun) {
-          const apiUrl = `${AI_SERVICE_URL}/ai/${actionToRun}`;
-          setIsRunning(true);
-          fetch(apiUrl)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-            .then((action) => {
-              setIsRunning(false);
-              setAction(action);
-              setActionToRun(null);
-            })
-            .catch((error) => {
-              setError(`run action: ${error.message}`);
-              setLoading(false);
-            });
+        setDurationStart(Date.now());
+        setDurationEnd(null);
+        setCurrentDuration(0);
+
+        const apiUrl = `${AI_SERVICE_URL}/ai/${actionToRun}`;
+        setIsRunning(true);
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((action) => {
+            setIsRunning(false);
+            setAction(action);
+            setActionToRun(null);
+            setDurationEnd(Date.now());
+          })
+          .catch((error) => {
+            setError(`run action: ${error.message}`);
+            setLoading(false);
+          });
       }
     }, [
       actionToRun,
@@ -153,6 +167,17 @@ function Page() {
       setError,
       setLoading
     ]);
+
+    // Poll during service running
+    useEffect(() => {
+      if (durationEnd === null) {
+        const interval = setInterval(() => {
+          setCurrentDuration(Date.now() - durationStart);
+        }, 1000); // update every second
+  
+        return () => clearInterval(interval);
+      }
+    }, [durationEnd, durationStart]);
 
     // Delete Action
     useEffect(() => {
@@ -196,7 +221,7 @@ function Page() {
         <div className="Page">
 
           {/* ACTIONS NAV */}
-          <div className='page-actions-list'>
+          {/* <div className='page-actions-list'>
             <h2>Actions</h2>
             <div className='page-actions-pane scroll-bar'>
               {actionList?.actions.map(action => {
@@ -243,7 +268,7 @@ function Page() {
               <RefreshButton
                 onClick={() => invalidatePage()} />
             </div>
-          </div>
+          </div> */}
 
           {/* PROMPTS */}
           <div className="page-prompt-box">
@@ -270,11 +295,72 @@ function Page() {
                   </div>  
                 ) : null}
               </div>
+              <div className="page-prompt-nav">
+                <select
+                  className='page-prompt-nav-select'
+                  value={actionId}
+                  onChange={(e) => {
+                    const selectedAction = actionList?.actions.find(action => action.id === e.target.value);
+                    if (selectedAction) {
+                      const newUrl = `${window.location.origin}/${selectedAction.id}`;
+                      if (newUrl !== window.location.href) {
+                        window.history.pushState({ path: newUrl }, '', newUrl);
+                        setAction(null);
+                        setActionToRun(null);
+                      }
+                    }
+                  }}
+                >
+                  {actionList?.actions.map((action, index) => {
+                    if (action.group) {
+                      return (
+                        <optgroup label={action.group} key={index}>
+                          {/* Add individual options for the actions inside the group */}
+                          {actionList?.actions
+                            .filter(subAction => subAction.group === action.group && subAction.name && subAction.id)
+                            .map(subAction => (
+                              <option value={subAction.id} key={subAction.id}>
+                                {subAction.name}
+                              </option>
+                            ))}
+                        </optgroup>
+                      );
+                    }
+                    // If there's no group, return the option directly
+                    return (
+                      <option value={action.id} key={action.id}>
+                        {action.name}
+                      </option>
+                    );
+                  })}
+                </select>
+                <div className="fill"></div>
+                <div className="page-prompt-button clear"
+                  onClick={() => {
+                    setActionToReset(actionId);
+                  }}>
+                  Clear
+                </div>
+                <div className="page-prompt-button upload">
+                   <ImageUploader onSuccess={(result) => {
+                      invalidatePage()
+                      setLastUploadedImageIndex(i => i+1)
+                    }} />
+                    Upload
+                </div>
+                <div className="page-prompt-button run"
+                  onClick={() => {
+                    setActionToRun(actionId);
+                  }}>
+                  Run
+                </div>
+              </div>
+
               <div className="page-prompt-scratchpad scroll-bar">
                 <textarea
                   value={scratchPad} className='scroll-bar'
                   onChange={(e) => setScratchPad(e.target.value)}
-                  placeholder="Scratch pad..."
+                  placeholder="Iterate..."
                   spellCheck={false}
                 />
               </div>
@@ -298,24 +384,18 @@ function Page() {
                 <div className="fill"></div>
                 <div className="page-prompt-button clear"
                   onClick={() => {
-                    setActionToReset(actionId);
+                    setScratchPad('')
                   }}>
                   Clear
-                </div>
-                <div className="page-prompt-button upload">
-                   <ImageUploader onSuccess={(result) => {
-                      invalidatePage()
-                      setLastUploadedImageIndex(i => i+1)
-                    }} />
-                    Upload
                 </div>
                 <div className="page-prompt-button run"
                   onClick={() => {
                     setActionToRun(actionId);
                   }}>
-                  Run
+                  Update
                 </div>
               </div>
+              
           </div>
           
           {/* RESULTS */}
@@ -339,6 +419,10 @@ function Page() {
                     title="dog"
                     style={{width: '100%', height: '100%'}}
                     src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2Fs1Ohf6N6CrkVNeNCmrXEzT%2F2024-Partner-Tour---Design-System---Strong%3Fnode-id%3D4002-1247%26t%3D7uorNQ5whr1AIPoA-1"></iframe>
+                  {/* <iframe
+                    title="dog"
+                    style={{width: '100%', height: '100%'}}
+                    src="https://app.contentful.com/spaces/cvvf6wkrdo0e/environments/contentful-web-components/entries/6828lkg8kVzYFOXe8di0LN/preview/1Kb9oePRhiGlBc2sgWjW0C?focusedField=label"></iframe> */}
                 </div>
                 {isRunning ? (
                   <div className="page-loading">
@@ -347,6 +431,34 @@ function Page() {
                 ) : null}
               </div>
               <div className="page-result-tabs">
+                <div className='page-result-time'>
+                  {durationEnd ? formatDuration(durationEnd - durationStart) : formatDuration(currentDuration)}
+                </div>
+                <div
+                    className="page-result-websocket-status"
+                    style={{
+                        backgroundColor: getWebSocketStatusColor(websocketStatus),
+                    }}
+                ></div>
+                <div
+                  className={`page-prompt-button`}
+                  onClick={() => {
+                    webSocket.send(
+                      JSON.stringify({type:'import', code:action?.rendered})
+                    );
+                  }}>
+                  To Figma
+                </div>
+                <div
+                  className={`page-prompt-button`}
+                  onClick={() => {
+                    webSocket.send(
+                      JSON.stringify({type:'clear'})
+                    );
+                  }}>
+                  Clear Figma
+                </div>
+                <div className='fill'></div>
                 <div
                   className={`page-result-tab ${focusedTab === 'html' ? 'selected' : ''}`}
                   onClick={() => setFocusedTab('html')}>

@@ -1,8 +1,15 @@
-import { CDefDesignProperty, define, defineComponent } from '@contentful-demos/component-definitions/dist';
-import {LitElement, html} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {
+  CDefDesignProperty,
+  defineComponent,
+  layoutsToCss
+} from '@contentful-demos/component-definitions/dist';
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import styles from './DMOContainer.scss';
 import semantic from '../../dist/tokens/semantic';
+import {
+    getCSSDeclarations
+} from 'src/utils/getCSSProp';
 
 @defineComponent(
     'Demo Container', {
@@ -17,10 +24,10 @@ import semantic from '../../dist/tokens/semantic';
               property: CDefDesignProperty.BACKGROUND_COLOR,
               options: semantic.background
             },
-            {
-              property: CDefDesignProperty.TEXT_COLOR,
-              options: semantic.text
-            },
+            // {
+            //   property: CDefDesignProperty.TEXT_COLOR,
+            //   options: semantic.text
+            // },
             // BORDER
             {
               property: CDefDesignProperty.BORDER_COLOR,
@@ -61,6 +68,27 @@ import semantic from '../../dist/tokens/semantic';
                 // 'Horizontal Reversed': 'row-reverse',
                 // 'Vertical Reversed': 'column-reverse'
               },
+              default: 'column'
+            },
+            {
+              property: CDefDesignProperty.ALIGN_ITEMS,
+              options: {
+                'Start': 'start',
+                'Center': 'center',
+                'End': 'end',
+                'Stretch': 'stretch'
+              },
+              default: 'start'
+            },
+            {
+              property: CDefDesignProperty.JUSTIFY_CONTENT,
+              options: {
+                'Start': 'start',
+                'Center': 'center',
+                'End': 'end',
+                'Space Between': 'space-between'
+              },
+              default: 'start'
             },
             {
               property: CDefDesignProperty.HORIZONTAL_RESIZING,
@@ -119,39 +147,7 @@ import semantic from '../../dist/tokens/semantic';
                 '11': '11',
                 '12': '12'
               }
-            },
-            // {
-            //   property: CDefDesignProperty.FLEX_GROW,
-            //   options: {
-            //     'Flex 1': '1',
-            //     'Flex 2': '2',
-            //     'Flex 3': '3',
-            //     'Flex 4': '4',
-            //     'Flex 5': '5',
-            //     'Flex 6': '6',
-            //     'Flex 7': '7',
-            //     'Flex 8': '8',
-            //     'Flex 9': '9',
-            //     'Flex 10': '10',
-            //     'Flex 11': '11',
-            //     'Flex 12': '12'
-            //   },
-            // },
-
-            // TYPOGRAPHY
-            {
-              property: CDefDesignProperty.FONT,
-              options: semantic.type
-            },
-            {
-              property: CDefDesignProperty.FONT_FAMILY,
-              options: semantic.type_family
-            },
-            {
-              property: CDefDesignProperty.FONT_WEIGHT,
-              options: semantic.type_weight
-            },
-            
+            }
           ]
     }
 )
@@ -164,18 +160,28 @@ export class DmoContainer extends LitElement {
     constructor() {
         super();
     }
-
-    @define('Text', {content: true})
-    @property({reflect: true})
-        text: string = 'default text';
-
+  
     // createRenderRoot() {
     //     return this; // Render in light DOM
     // }
  
     render(): object {
         return html`
-          <div>${this.text}</div>
+          <style>:host {
+            ${getCSSDeclarations({
+              "background-color": this.getAttribute(CDefDesignProperty.BACKGROUND_COLOR),
+              "border-color": this.getAttribute(CDefDesignProperty.BORDER_COLOR),
+              "border-width": [this.getAttribute(CDefDesignProperty.BORDER_WIDTH), '0'],
+              "border-style": [this.getAttribute(CDefDesignProperty.BORDER_STYLE), 'solid'],
+              "border-radius": this.getAttribute(CDefDesignProperty.CORNER_RADIUS),
+              "padding": this.getAttribute(CDefDesignProperty.PADDING),
+              "gap": this.getAttribute(CDefDesignProperty.GAP),
+              "align-items": this.getAttribute(CDefDesignProperty.ALIGN_ITEMS),
+              "justify-content": this.getAttribute(CDefDesignProperty.JUSTIFY_CONTENT),
+              "flex-direction": [this.getAttribute('_layoutDirection'), "column"],
+            })};
+            ${layoutsToCss(this)}
+          }</style>
           <slot></slot>
         `;
     }

@@ -9,9 +9,9 @@ import { findFigmaPropViaTokenLookup } from '../../../utils/findViaTokenLookup.j
 import definitionInstanceToFigmaInstance from '../../definitionInstanceToFigmaInstance.js';
 import { findPropertyObjectVariable } from '../applyStyleProperties.js';
 import {
-    applyLayoutModeAndFixedSizes,
+    // applyLayoutModeAndFixedSizes,
     // applyPaddingAndAlignment,
-    applyResizing
+    // applyResizing
 } from './applyLayout.js';
 import {
     applyLocalLayout,
@@ -48,18 +48,18 @@ export default async function processSlot(
             if (isDefaultSlot) {
                 if (isComponentClone) {
                     // we can change the height/width of instances within comps
-                    const componentSlot = componentSlots[slotPropertyName];
-                    applyLayoutModeAndFixedSizes(
-                        defInstance,
-                        compDefinition,
-                        componentSlot   // Component Slot Instance
-                    );
+                    // const componentSlot = componentSlots[slotPropertyName];
+                    // applyLayoutModeAndFixedSizes(
+                    //     defInstance,
+                    //     compDefinition,
+                    //     componentSlot   // Component Slot Instance
+                    // );
                 }
-                applyLayoutModeAndFixedSizes(
-                    defInstance,
-                    compDefinition,
-                    slotComp            // Slot Component
-                );
+                // applyLayoutModeAndFixedSizes(
+                //     defInstance,
+                //     compDefinition,
+                //     slotComp            // Slot Component
+                // );
                 instanceSlot.swapComponent(slotComp);
 
                 const gap = defInstance[CDefDesignProperty.GAP];
@@ -77,11 +77,11 @@ export default async function processSlot(
                 //     compDefinition,
                 //     instanceSlot        // Instance
                 // );
-                applyResizing(
-                    defInstance,
-                    compDefinition,
-                    instanceSlot        // Instance
-                );
+                // applyResizing(
+                //     defInstance,
+                //     compDefinition,
+                //     instanceSlot        // Instance
+                // );
             }else{
                 instanceSlot.swapComponent(slotComp);
                 applyLocalLayout(instanceSlot, prevLayout);

@@ -24,6 +24,8 @@ import getComponentDefinition from './transformers/utils/getComponentDefinition'
 import findFigmaSlots from './utils/findFigmaSlots';
 import findExposedChildren from './utils/findExposedChildren';
 import layoutToCss from './transformers/utils/layoutToCss';
+import { applyProperties } from './transformers/figmaUtils/applyProperties';
+import layoutsToCss, { layoutDesignProps } from './css/layoutsToCss';
 import {
   findLayoutValue,
   setLayoutToStorate,
@@ -78,6 +80,9 @@ export {
   setLayoutToStorate,
   getLayoutFromStorage,
   findLayoutPropertyName,
+  applyProperties,
+  layoutsToCss,
+  layoutDesignProps,
   COMPONENT_INSTANCE_PROPERTY,
   CDEF_INSTRINSIC_IDS,
   CDEF_LAYOUT_VALUE_TYPES,

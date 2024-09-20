@@ -21,6 +21,7 @@ const ComponentLocationSettings = {
   [locations.LOCATION_HOME]: Home,
 };
 
+
 const App = () => {
   const sdk = useSDK();
   const Component = useMemo((): any => {

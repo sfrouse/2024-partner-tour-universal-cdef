@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@contentful-demos/component-definitions": {
+      "signature": "cf478afd9520f00b4df0f22981a2d53e",
+      "file": true,
+      "replaced": "*"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Design Tokens",
+  "collections": {
+    "primitive": {
+      "modes": {
+        "global": [
+          "primitive.global.tokens.json"
+        ]
+      }
+    },
+    "semantic typography": {
+      "modes": {
+        "light": [
+          "semantic typography.light.tokens.json"
+        ]
+      }
+    },
+    "semantic colors": {
+      "modes": {
+        "light": [
+          "semantic colors.light.tokens.json"
+        ],
+        "dark": [
+          "semantic colors.dark.tokens.json"
+        ]
+      }
+    }
+  },
+  "styles": {}
+}

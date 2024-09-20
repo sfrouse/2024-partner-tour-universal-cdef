@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IconButton, Spinner
+  IconButton,
+  Spinner
 } from '@contentful/f36-components';
 import "./Field.scss";
 import {
   CycleIcon,
-  MoreVerticalIcon,
-  CodeTrimmedIcon
+  MoreHorizontalIcon,
+  CodeIcon
 } from '@contentful/f36-icons';
 import {
   EntrySys,
@@ -95,7 +96,7 @@ const Field = () => {
   if (!componentDefinition && !componentInstance) {
     return (
       <div>
-        <Spinner />
+        <Spinner /> 
       </div>
     );
   }
@@ -138,7 +139,7 @@ const Field = () => {
               window.location.reload();
             }}/>
           <IconButton
-            icon={<MoreVerticalIcon />}
+            icon={<MoreHorizontalIcon />}
             size="small"
             aria-label='Show Configuration'
             onClick={async () => {
@@ -164,7 +165,7 @@ const Field = () => {
           manifest:${sdk.parameters.installation.componentDefinitionManifestURL}
         </div>
         <IconButton
-            icon={<CodeTrimmedIcon />}
+            icon={<CodeIcon />}
             size="small"
             aria-label='Show Hidden Fields'
             onClick={async () => {

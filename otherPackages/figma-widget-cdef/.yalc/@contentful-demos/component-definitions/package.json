@@ -1,0 +1,41 @@
+{
+  "name": "@contentful-demos/component-definitions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bin": {
+    "component-definitions": "./cli.mjs"
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "cli.mjs"
+  ],
+  "types": "./dist/types.d.ts",
+  "scripts": {
+    "dev": "nodemon --watch ./src --watch ./www --watch scripts -e ts,html,mjs ./scripts/build.mjs",
+    "build": "tsc --declaration && node ./scripts/build.mjs",
+    "server": "http-server ./dist -p 8082"
+  },
+  "dependencies": {
+    "@contentful/live-preview": "^2.11.9",
+    "@contentful/rich-text-html-renderer": "^16.3.0",
+    "@figma/plugin-typings": "^1.85.0",
+    "@figma/widget-typings": "^1.9.1",
+    "@types/json-schema": "^7.0.15",
+    "@types/node": "^20.8.9",
+    "chalk": "^5.3.0",
+    "chrome-aws-lambda": "^10.1.0",
+    "contentful": "^10.6.5",
+    "contentful-management": "^11.16.0",
+    "glob": "^10.3.10",
+    "json-patch": "^0.7.0",
+    "nodemon": "^3.0.1",
+    "ts-morph": "^22.0.0",
+    "typescript": "^5.2.2"
+  },
+  "yalcSig": "cf478afd9520f00b4df0f22981a2d53e"
+}

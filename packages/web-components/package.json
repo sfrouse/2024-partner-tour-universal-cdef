@@ -59,6 +59,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@exodus/schemasafe": "^1.3.0"
+    "@exodus/schemasafe": "^1.3.0",
+    "@contentful-demos/component-definitions": "*"
   }
 }

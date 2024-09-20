@@ -204,9 +204,11 @@ export enum CDefDesignPropertyEnum {
   resizing = 'resizing',
   textAlign = 'textAlign',
   position = 'position',
-  // Tokenized
+  // // Tokenized
   containment = 'containment', // padding, 
-  // break out into parts...
+  // // break out into parts...
+
+
   // 1:1 tokenized
   textColor = 'textColor',
   backgroundColor = 'backgroundColor',

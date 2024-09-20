@@ -6,29 +6,32 @@ import { findLayoutValue } from "../../../utils/layoutStorage";
 export function applyLayoutModeAndFixedSizes(
     defInstance: CDefInstance,
     compDefinition: CDefDefinition,
-    layoutComp: any // ComponentNode | InstanceNode
+    figmaComp: any // ComponentNode | InstanceNode
 ) {
+
     const layoutDirection = defInstance[CDefDesignProperty.LAYOUT_DIRECTION];
     if (layoutDirection) {
-        layoutComp.layoutMode = layoutDirection === 'column' ? 'VERTICAL' : 'HORIZONTAL';
+        figmaComp.layoutMode = layoutDirection === 'column' ? 'VERTICAL' : 'HORIZONTAL';
         // TODO: reverse layouts
     }
-    // const layoutValue = findLayoutValue(defInstance, compDefinition);
+    const layoutValue = findLayoutValue(defInstance, compDefinition);
+    console.log('layoutValue', layoutValue);
+    
     // if (layoutValue) {
-    //     layoutComp.layoutMode = layoutValue.direction === 'vertical' ? 'VERTICAL' : 'HORIZONTAL';
+    //     figmaComp.layoutMode = layoutValue.direction === 'vertical' ? 'VERTICAL' : 'HORIZONTAL';
     //     // TODO: deal with units and percentage/fill sizings
     //     if (layoutValue.horizontalResizing === 'fixed') {
-    //         layoutComp.layoutSizingHorizontal = 'FIXED';
-    //         layoutComp.resize(
-    //             layoutValue.width !== undefined ? layoutValue.width : layoutComp.width,
-    //             layoutComp.height
+    //         figmaComp.layoutSizingHorizontal = 'FIXED';
+    //         figmaComp.resize(
+    //             layoutValue.width !== undefined ? layoutValue.width : figmaComp.width,
+    //             figmaComp.height
     //         );
     //     }
     //     if (layoutValue.verticalResizing === 'fixed') {
-    //         layoutComp.layoutSizingVertical = 'FIXED';
-    //         layoutComp.resize(
-    //             layoutComp.width,
-    //             layoutValue.height !== undefined ? layoutValue.height : layoutComp.height
+    //         figmaComp.layoutSizingVertical = 'FIXED';
+    //         figmaComp.resize(
+    //             figmaComp.width,
+    //             layoutValue.height !== undefined ? layoutValue.height : figmaComp.height
     //         );
     //     }
     // }

@@ -1,0 +1,28 @@
+@use '../../tokens/output/scss/variables' as vars;
+
+.field-debug-box {
+    display: flex;
+    flex-direction: row;
+    padding-top: vars.$ctfl-spacing-s;
+}
+    .field-debug {
+        flex: 1;
+        font-family: vars.$ctfl-type-font-stack-primary;
+        font-size: 9px; line-height: normal;
+        color: vars.$ctfl-background-text-disabled;
+    }
+
+.field-instance-json-box {
+    padding-top: vars.$ctfl-spacing-s;
+}
+    .field-instance-json {
+        padding: vars.$ctfl-spacing-xs;
+        border: 1px solid vars.$ctfl-background-border-primary-subtle;
+        border-radius: vars.$ctfl-corner-radius-l;
+        margin: 0;
+        font-family: vars.$ctfl-type-font-stack-primary;
+        font-size: vars.$ctfl-type-font-size-s;
+        line-height: vars.$ctfl-type-line-height-xs;
+        color: vars.$ctfl-background-text-subtle;
+        overflow: auto;
+    }

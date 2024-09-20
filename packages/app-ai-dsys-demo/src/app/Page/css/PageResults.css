@@ -26,8 +26,6 @@
             flex: 1;
             position: relative;
 
-            
-
             .page-result-tabs-page {
                 position: absolute;
                 top: 0; bottom: 0;
@@ -46,14 +44,33 @@
         }
 
         .page-result-tabs {
-            padding: 0 8px 0px 8px;
+            padding: 0 8px 0px 16px;
             display: flex;
             flex-direction: row;
-            justify-content: flex-end;
+            justify-content: flex-start;
+            align-items: baseline;
             background-color: #fff;
             border-top: 1px solid #eee;
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 4px;
+
+            .fill {
+                flex: 1;
+            }
+
+            .page-result-time {
+                font-size: 12px;
+                color: #aaa;
+                margin-right: 10px;
+            }
+
+            .page-result-websocket-status {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin-right: 10px;
+                border: 1px solid #eee;
+            }
 
             .page-result-tab {
                 padding: 16px 8px 16px 8px;

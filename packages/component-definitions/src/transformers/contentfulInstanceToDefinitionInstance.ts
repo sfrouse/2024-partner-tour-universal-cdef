@@ -37,9 +37,9 @@ export default async function contentfulInstanceToDefinitionInstance(
         console.error(`Component Definition not found`, cDefPath, compInstance.$schema);
         return;
     }
-
+    
     // compiler is having issues with destructuring in Figma
-    const finalInstance = JSON.parse(JSON.stringify(compInstance));// {...compInstance};
+    const finalInstance = JSON.parse(JSON.stringify(compInstance));
     if (!compDefinition.properties) return;
     await Promise.all(
         Object.entries(compDefinition.properties).map(propertyInfo => {
@@ -50,6 +50,9 @@ export default async function contentfulInstanceToDefinitionInstance(
                 if (name === "$schema") return;
                 if (name === "$identifier") {
                     finalInstance[name] = {contentful: entry.sys.id};
+                    // "$identifier": {
+                    //     "contentful": "1OQsuY37z6xSJnEUDKXphg"
+                    // },
                     return;
                 }
                 

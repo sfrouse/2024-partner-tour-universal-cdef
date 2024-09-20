@@ -3,20 +3,21 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "workspaces": [
-    "packages/*"
-  ],
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+},
   "scripts": {
-    "local:dev:api-ai": "npm run dev --workspace=packages/api-ai",
-    "local:start:app-ai-dsys-demo": "npm run start --workspace=packages/app-ai-dsys-demo",
-    "local:dev:component-definitions": "npm run dev --workspace=packages/component-definitions",
-    "local:server:web-components": "npm run server --workspace=packages/web-components",
-    "local:start:web-components": "npm run start --workspace=packages/web-components",
-    "local:start:contentful-web-components-app": "npm run start --workspace=packages/contentful-web-components-app",
-    "local:start:web-socket": "npm run start --workspace=packages/web-socket",
-    "local:start:figma-widget-cdef": "npm run start --workspace=packages/figma-widget-cdef",
-    "local": "concurrently \"npm run local:dev:api-ai\" \"npm run local:dev:component-definitions\" \"npm run local:start:app-ai-dsys-demo\" \"npm run local:server:web-components\" \"npm run local:start:web-components\" \"npm run local:start:contentful-web-components-app\"",
-    "local:test": ""
+    "local:dev:api-ai": "yarn workspace @partner-tour-2024/api-ai run dev",
+    "local:start:app-ai-dsys-demo": "yarn workspace @partner-tour-2024/app-ai-dsys-demo run start",
+    "local:dev:component-definitions": "yarn workspace @contentful-demos/component-definitions run dev",
+    "local:server:web-components": "yarn workspace @contentful-demos/web-components run server",
+    "local:start:web-components": "yarn workspace @contentful-demos/web-components run start",
+    "local:start:web-socket": "yarn workspace web-socket run start",
+    "local": "concurrently \"yarn local:dev:api-ai\" \"yarn local:dev:component-definitions\" \"yarn local:start:app-ai-dsys-demo\" \"yarn local:server:web-components\" \"yarn local:start:web-components\" \"yarn local:start:web-socket\"",
+    "yalc:all": "cd ./otherPackages/figma-widget-cdef && npm run yalc:update && cd ../contentful-web-components-app && npm run yalc:update"
   },
   "author": "",
   "license": "ISC",

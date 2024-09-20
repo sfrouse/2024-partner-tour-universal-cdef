@@ -1,6 +1,6 @@
 {
-  "name": "Figma Tokens Export",
-  "id": "1348326913690531688",
+  "name": "Tokens Export - 2024 PT",
+  "id": "figmaTokensImport2024PT",
   "api": "1.0.0",
   "main": "code.js",
   "capabilities": ["codegen", "inspect", "vscode"],

@@ -1,0 +1,10 @@
+@use '../../../../tokens/output/scss/variables' as vars;
+
+.nested-web-comp-form {
+  .web-comp-form {
+    padding-left: vars.$ctfl-spacing-m;
+    margin-left: vars.$ctfl-spacing-s;
+    // background-color: rgba(0,0,0,.02);
+    border-left: 3px solid vars.$ctfl-background-border-default;
+  }
+}

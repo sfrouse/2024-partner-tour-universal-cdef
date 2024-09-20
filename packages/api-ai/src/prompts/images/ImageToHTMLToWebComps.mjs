@@ -53,6 +53,9 @@ const imageToHTMLToWebComps = {
                   This is the manifest for all of the components.
                   It is followed by the component definition of each component.
                   Pay attention to how the components can be implemented. 
+                  dmo-container is a replacement for div.
+                  If you want to render a div, use dmo-container.
+                  Do not use inline styles with dmo-container, use it's properties found in it's component definition.
                   You can ignore adding any css to these custom components, they take care of layout entirely.
                     \`\`\`${cdefs}\`\`\`
                   

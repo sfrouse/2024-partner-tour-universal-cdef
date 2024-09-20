@@ -3,7 +3,7 @@ import schemaToIdentifier from "../utils/schemaToIdentifier";
 import { applyProperties } from "./figmaUtils/applyProperties";
 import { applyStyleProperties, getAllVariablesLookup } from "./figmaUtils/applyStyleProperties";
 import { processSlots } from "./figmaUtils/processSlots";
-import { applyLayoutModeAndFixedSizes, applyResizing } from "./figmaUtils/processSlots/applyLayout";
+// import { applyLayoutModeAndFixedSizes, applyResizing } from "./figmaUtils/processSlots/applyLayout";
 import { hasLayoutDefinition, isDefaultSlotDefinition } from "./figmaUtils/processSlots/isLayoutWithDefaultSlot";
 import getComponentDefinition from "./utils/getComponentDefinition";
 import getComponentDefinitionTokenLookup from "./utils/getComponentDefinitionTokenLookup";
@@ -16,7 +16,6 @@ export default async function definitionInstanceToFigmaInstance(
     resizeFunk?: (figmaInstance: InstanceNode) => void,
     isRoot: boolean = true
 ) {
-
     if (!defInstance) {
         console.error('definitionInstanceToFigmaInstance: no defInstance')
         return;
@@ -79,30 +78,14 @@ export default async function definitionInstanceToFigmaInstance(
     );
 
     // Update Figma Instance Style Properties
-    await applyStyleProperties(
+    await applyStyleProperties( 
         figmaInstance,
         defInstance,
         tokenLookup,
         allVarsLookup,
-        figma
+        figma,
+        isRoot
     );
-
-    // Auto-Layout Properties
-    if (isRoot === false) {
-        if (hasLayout) {
-            applyLayoutModeAndFixedSizes(
-                defInstance,
-                compDefinition,
-                figmaComponent // Component
-            );
-            // it is not slot here, so no padding or alignments...
-            applyResizing(
-                defInstance,
-                compDefinition,
-                figmaInstance  // Instance
-            )
-        }
-    }
 
     // Slots
     await processSlots(

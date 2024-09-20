@@ -13,3 +13,17 @@ export default async function getComponentDefinitionTokenLookup(
     }
     return undefined;
 }
+
+export async function getComponentDefinitionTokenLookupIndexedToFigmaVariables(
+  cDefPath: string,
+) : Promise<{[key: string]: string}> {
+  const tokenLookup: {[key: string]: string} = {};
+  const bigTokenLookup = await getComponentDefinitionTokenLookup(cDefPath);
+  if (bigTokenLookup) {
+    bigTokenLookup.tokens.map(token => {
+      tokenLookup[token.figma] = token.global;
+    })
+  }
+
+  return tokenLookup;
+}
