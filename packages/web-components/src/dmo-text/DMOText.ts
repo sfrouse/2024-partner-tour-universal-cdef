@@ -117,6 +117,10 @@ export class DmoText extends LitElement {
         super();
     }
 
+    @define('Internal Label', {content: true})
+    @property({reflect: true})
+      title: string;
+
     @define('Typography', {
         options: DMOTextTypeEnum,
         description: `

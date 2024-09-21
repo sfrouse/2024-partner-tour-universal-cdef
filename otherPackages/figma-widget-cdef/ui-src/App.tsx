@@ -15,6 +15,7 @@ import postMessagePromise, {
 import {
   AppPage,
   CodePageId,
+  CreatePageId,
   LintPageId,
   MessageRequest,
   PageSize
@@ -24,7 +25,8 @@ import { Layout } from '@contentful/f36-layout';
 import {
   GlobalStyles,
   ButtonGroup,
-  ToggleButton
+  ToggleButton,
+  Flex
 } from '@contentful/f36-components';
 import * as icons from '@contentful/f36-icons';
 import ctflTokens from '@contentful/f36-tokens';
@@ -55,9 +57,10 @@ function App() {
   const [errorMsg, setErrorMsg] = useState<string | undefined>();
 
   // Tabs
-  const [selectedPageId, setSelectedPageId] = useState<AppPage>(AppPage.ctfl);
+  const [selectedPageId, setSelectedPageId] = useState<AppPage>(AppPage.component);
   const [selectedLintPageId, setSelectedLintPageId] = useState<LintPageId>(LintPageId.figma);
-  const [selectedCodePageId, setSelectedCodePageId] = useState<CodePageId>(CodePageId.html);
+  const [selectedCodePageId, setSelectedCodePageId] = useState<CodePageId>(CodePageId.preview);
+  const [selectedCreatePageId, setSelectedCreatePageId] = useState<CreatePageId>(CreatePageId.ctfl);
 
   // Stored Info
   const [cDefRootUrl, setCDefRootUrl] = useState<string | undefined>();
@@ -75,14 +78,6 @@ function App() {
 
   const [webSocket, setWebSocket] = useState<WebSocketManager | null>(null);
   const [importCode, setImportCode] = useState<string>(`<dmo-container
-    _layoutDirection="column"
-    _horizontalResizing="hug"
-    _verticalResizing="hug"
-    _height="100vh"
-    _gap="wc_gap_2x"
-    _padding="wc_padding_2x"
-    _backgroundColor="wc_background_default">
-    <dmo-container
         _backgroundColor="wc_background_default"
         _padding="wc_padding_2x"
         _cornerRadius="wc_border_radius_md"
@@ -91,6 +86,8 @@ function App() {
         _borderStyle="dashed"
         _horizontalResizing="hug"
         _verticalResizing="hug"
+        _layoutDirection="column"
+        _alignItems="center"
         _gap="wc_gap_2x"
         _width="300px">
         <dmo-text type="heading-md" _textColor="wc_text_tertiary_default" text="Jump back in!"></dmo-text>
@@ -100,16 +97,12 @@ function App() {
           _padding="wc_padding_1x"
           _cornerRadius="wc_border_radius_md"
           _gap="wc_gap_1x"
-          _layoutDirection="row">
+          _layoutDirection="column">
           <dmo-text type="label-md" _textColor="wc_text_default" text="CURRENT LESSON:"></dmo-text>
           <dmo-text type="body-md" _textColor="wc_text_default" text="Objects in Javascript (Challenge)"></dmo-text>
         </dmo-container>
         <dmo-button design="primary" emphasis="bold" url="#" label="Go to lesson"></dmo-button>
-    </dmo-container>
-</dmo-container>
-
-
-  `);
+    </dmo-container>`);
 
   useEffect(() => {
     // Connect to the WebSocket server
@@ -118,11 +111,22 @@ function App() {
       try {
         const data = JSON.parse(evt.data);
         if (data.type === 'import') {
-            setImportCode(data.code);
+          setImportCode(data.code);
         }
       }catch(err){ console.error(err) }
     });
     setWebSocket(ws);
+
+    window.addEventListener('focus', async () => {
+      // Stage Component
+      await postMessagePromise(
+        MessageRequest.getStageComponentInfo
+      ) as any;
+    });
+
+    // window.addEventListener('blur', () => {
+    //   console.log('Plugin window lost focus');
+    // });
   }, []);
 
   useEffect(() => {
@@ -210,6 +214,7 @@ function App() {
         setErrorMsg(`No content definition root url`);
         return;
       }
+
       // MANIFEST
       const manifest = await fetchJson(`${loadedCdefRootUrl}/manifest.json`) as CDefManifest;
       setManifest(manifest);
@@ -217,6 +222,11 @@ function App() {
         setInitialized(true);
         setErrorMsg(`Manifest was not found for ${loadedCdefRootUrl}/manifest.json`)
       }
+
+      // Stage Component
+      await postMessagePromise(
+        MessageRequest.getStageComponentInfo
+      ) as any;
 
       setInitialized(true);
     })()
@@ -235,9 +245,6 @@ function App() {
   useEffect(() => {
     const listener = (msg: any) => {
       if (msg.request === MessageRequest.selectionChange) {
-        console.log('msg', msg);
-        setExampleCDefCode(msg.results.cdefInstance);
-        setExampleCode(msg.results.webInstance);
         setLintResults(msg.results.lintResults);
         if (msg.results.lintResults) {
           const contentType = contentTypes?.find(cType => cType.sys.id === msg.results.lintResults.id );
@@ -250,6 +257,9 @@ function App() {
             setCtflLintResults(undefined);
           }
         }
+      }else if (msg.request === MessageRequest.stageComponentChange) {
+        setExampleCDefCode(msg.results.cdefInstance);
+        setExampleCode(msg.results.webInstance);
       }
     }
     addMessageListener(listener);
@@ -328,36 +338,48 @@ function App() {
       header={
         <Layout.Header>
           <CUIToolbarHeader header="Component Definition" style="app">
-            <ButtonGroup>
-              <ToggleButton
-                  icon={<icons.MinusIcon />}
-                  aria-label='Default Display'
+            <Flex
+              flexDirection="row"
+              gap="spacingS">
+              <ButtonGroup>
+                <ToggleButton
+                    icon={<icons.MinusIcon />}
+                    aria-label='Default Display'
+                    size="small"
+                    isActive={pageSize === PageSize.default}
+                    onToggle={() => setPageSize(PageSize.default)}
+                  />
+                <ToggleButton
+                    icon={<icons.ArrowForwardIcon />}
+                    aria-label='Wide Display'
+                    size="small"
+                    isActive={pageSize === PageSize.wide}
+                    onToggle={() => setPageSize(PageSize.wide)}
+                  />
+                <ToggleButton
+                    icon={<icons.ArrowDownwardIcon />}
+                    aria-label='Tall Display'
+                    size="small"
+                    isActive={pageSize === PageSize.tall}
+                    onToggle={() => setPageSize(PageSize.tall)}
+                  />
+                <ToggleButton
+                    icon={<icons.EnvironmentIcon />}
+                    aria-label='Tall and Wide Display'
+                    size="small"
+                    isActive={pageSize === PageSize.wideAndTall}
+                    onToggle={() => setPageSize(PageSize.wideAndTall)}
+                  />
+              </ButtonGroup>
+              <ToggleButton icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16">
+                    <path d="M328 0l14.6 66.8c11.9 5.5 23.3 12 33.8 19.6l65.2-20.8 72 124.7-50.6 46.1c.6 6.4 .9 12.9 .9 19.5s-.3 13.1-.9 19.5l50.6 46.1-72 124.7-65.2-20.8c-10.6 7.5-21.9 14.1-33.8 19.6L328 512l-144 0-14.6-66.8c-11.9-5.5-23.3-12-33.8-19.6L70.3 446.4l-72-124.7 50.6-46.1c-.6-6.4-.9-12.9-.9-19.5s.3-13.1 .9-19.5L-1.7 190.4l72-124.7 65.2 20.8c10.6-7.5 21.9-14.1 33.8-19.6L184 0 328 0zm63 132.2l-22.9 7.3-19.5-13.9c-8.2-5.8-16.9-10.9-26-15.1l-21.8-10-5.1-23.4L289.4 48l-66.7 0-6.4 29.1-5.1 23.4-21.8 10c-9.2 4.2-17.9 9.3-26 15.1l-19.5 13.9L121 132.2l-28.4-9L59.2 180.9l22 20.1 17.7 16.1-2.2 23.8c-.5 5-.7 10-.7 15.1s.2 10.1 .7 15.1l2.2 23.8L81.2 311l-22 20.1 33.4 57.8 28.4-9 22.9-7.3 19.5 13.9c8.2 5.8 16.9 10.9 26 15.1l21.8 10 5.1 23.4 6.4 29.1 66.7 0 6.4-29.1 5.1-23.4 21.8-10c9.2-4.2 17.9-9.3 26-15.1l19.5-13.9 22.9 7.3 28.4 9 33.4-57.8L430.8 311l-17.7-16.1 2.2-23.8c.5-5 .7-10 .7-15.1s-.2-10.1-.7-15.1l-2.2-23.8L430.8 201l22.1-20.1-33.4-57.8-28.4 9zM304 256a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm-144 0a96 96 0 1 1 192 0 96 96 0 1 1 -192 0z"/>
+                  </svg>}
                   size="small"
-                  isActive={pageSize === PageSize.default}
-                  onToggle={() => setPageSize(PageSize.default)}
-                />
-              <ToggleButton
-                  icon={<icons.ArrowForwardIcon />}
-                  aria-label='Wide Display'
-                  size="small"
-                  isActive={pageSize === PageSize.wide}
-                  onToggle={() => setPageSize(PageSize.wide)}
-                />
-              <ToggleButton
-                  icon={<icons.ArrowDownwardIcon />}
-                  aria-label='Tall Display'
-                  size="small"
-                  isActive={pageSize === PageSize.tall}
-                  onToggle={() => setPageSize(PageSize.tall)}
-                />
-              <ToggleButton
-                  icon={<icons.EnvironmentIcon />}
-                  aria-label='Tall and Wide Display'
-                  size="small"
-                  isActive={pageSize === PageSize.wideAndTall}
-                  onToggle={() => setPageSize(PageSize.wideAndTall)}
-                />
-            </ButtonGroup>
+                  aria-label="Go to config"
+                  onToggle={() => setSelectedPageId(AppPage.config)}
+                  />
+            </Flex>
           </CUIToolbarHeader>
           {errorMsg ? (<div className="error-msg">{errorMsg}</div>) : ''}
         </Layout.Header>
@@ -374,10 +396,12 @@ function App() {
           <CUIToolbarTabs
             selectedTab={selectedPageId}
             onSelectedTabChange={(val: any) => setSelectedPageId(val as AppPage)}>
+            <CUIToolbarTab label={AppPage.component} tabId={AppPage.component} />
+            <CUIToolbarTab label={AppPage.create} tabId={AppPage.create} />
+            {/* <CUIToolbarTab label={AppPage.ctfl} tabId={AppPage.ctfl} />
+            <CUIToolbarTab label={AppPage.import} tabId={AppPage.import} /> */}
             <CUIToolbarTab label={AppPage.lint} tabId={AppPage.lint} />
-            <CUIToolbarTab label={AppPage.code} tabId={AppPage.code} />
-            <CUIToolbarTab label={AppPage.ctfl} tabId={AppPage.ctfl} />
-            <CUIToolbarTab label={AppPage.config} tabId={AppPage.config} />
+            {/* <CUIToolbarTab label={AppPage.config} tabId={AppPage.config} /> */}
             <div
                 className="websocket-status"
                 style={{
@@ -419,14 +443,62 @@ function App() {
                 </CUIToolbarPanels>
               </div>
             </CUIToolbarPanel>
-            <CUIToolbarPanel panelId={AppPage.code}>
+            <CUIToolbarPanel panelId={AppPage.create}>
+              <div style={{display: 'flex', flexDirection:'column', height: '100%', width: '100%'}}>
+                <CUIToolbarTabs
+                  selectedTab={selectedCreatePageId} secondary
+                  onSelectedTabChange={(val: any) => setSelectedCreatePageId(val as CreatePageId)}>
+                  <CUIToolbarTab secondary
+                    label={CreatePageId.ctfl}
+                    tabId={CreatePageId.ctfl} />
+                  <CUIToolbarTab secondary
+                    label={CreatePageId.import}
+                    tabId={CreatePageId.import} />
+                </CUIToolbarTabs>
+                <CUIToolbarPanels
+                    selectedPanel={selectedCreatePageId}>
+                    <CUIToolbarPanel panelId={CreatePageId.ctfl}>
+                      <ContentfulPage
+                        cDefRootUrl={cDefRootUrl}
+                        manifest={manifest}
+                        ctflCMAKey={ctflCMAKey}
+                        ctflCPAKey={ctflCPAKey}
+                        organizationId={organizationId}
+                        spaceId={spaceId}
+                        environmentId={environmentId}
+                        contentTypes={contentTypes} />
+                    </CUIToolbarPanel>
+                    <CUIToolbarPanel panelId={CreatePageId.import}>
+                      <ImportPage
+                        cDefRootUrl={cDefRootUrl}
+                        importCode={importCode}
+                        setImportCode={setImportCode} />
+                    </CUIToolbarPanel>
+                  </CUIToolbarPanels>
+                </div>
+            </CUIToolbarPanel>
+            {/* <CUIToolbarPanel panelId={AppPage.import}>
+                <ImportPage
+                  cDefRootUrl={cDefRootUrl}
+                  importCode={importCode}
+                  setImportCode={setImportCode} />
+            </CUIToolbarPanel> */}
+            {/* <CUIToolbarPanel panelId={AppPage.ctfl}>
+              <ContentfulPage
+                cDefRootUrl={cDefRootUrl}
+                manifest={manifest}
+                ctflCMAKey={ctflCMAKey}
+                ctflCPAKey={ctflCPAKey}
+                organizationId={organizationId}
+                spaceId={spaceId}
+                environmentId={environmentId}
+                contentTypes={contentTypes} />
+            </CUIToolbarPanel> */}
+            <CUIToolbarPanel panelId={AppPage.component}>
               <div style={{display: 'flex', flexDirection:'column', height: '100%', width: '100%'}}>
                 <CUIToolbarTabs
                   selectedTab={selectedCodePageId} secondary
                   onSelectedTabChange={(val: any) => setSelectedCodePageId(val as CodePageId)}>
-                  {/* <CUIToolbarTab secondary
-                    label={CodePageId.cdef}
-                    tabId={CodePageId.cdef} /> */}
                   <CUIToolbarTab secondary
                     label={CodePageId.cinst}
                     tabId={CodePageId.cinst} />
@@ -439,17 +511,9 @@ function App() {
                   <CUIToolbarTab secondary
                     label={CodePageId.contentful}
                     tabId={CodePageId.contentful} />
-                  <div className="fill"></div>
-                  <CUIToolbarTab secondary
-                    label={CodePageId.import}
-                    tabId={CodePageId.import} />
                 </CUIToolbarTabs>
                 <CUIToolbarPanels
                   selectedPanel={selectedCodePageId}>
-                  {/* <CUIToolbarPanel panelId={CodePageId.cdef}>
-                    <CodePage
-                      exampleCode={exampleCDefCode} />
-                  </CUIToolbarPanel> */}
                   <CUIToolbarPanel panelId={CodePageId.cinst}>
                     <CodePage
                       exampleCode={JSON.stringify(exampleCDefCode, null, 2)} />
@@ -473,25 +537,8 @@ function App() {
                       environmentId={environmentId}
                       ctflCMAKey={ctflCMAKey} />
                   </CUIToolbarPanel>
-                  <CUIToolbarPanel panelId={CodePageId.import}>
-                    <ImportPage
-                      cDefRootUrl={cDefRootUrl}
-                      importCode={importCode}
-                      setImportCode={setImportCode} />
-                  </CUIToolbarPanel>
                 </CUIToolbarPanels>
               </div>
-            </CUIToolbarPanel>
-            <CUIToolbarPanel panelId={AppPage.ctfl}>
-              <ContentfulPage
-                cDefRootUrl={cDefRootUrl}
-                manifest={manifest}
-                ctflCMAKey={ctflCMAKey}
-                ctflCPAKey={ctflCPAKey}
-                organizationId={organizationId}
-                spaceId={spaceId}
-                environmentId={environmentId}
-                contentTypes={contentTypes} />
             </CUIToolbarPanel>
             <CUIToolbarPanel panelId={AppPage.config}>
               <ConfigPage
@@ -507,7 +554,7 @@ function App() {
           </CUIToolbarPanels>
           <div className="cdef-root-url">
             Component Definition: {cDefRootUrl}<br/>
-            Contentful Environment: {environment?.name}
+            Contentful Environment: org: {organizationId}, space: {spaceId}, env: {environment?.name}
           </div>
         </>
 

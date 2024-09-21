@@ -45,7 +45,7 @@ export default async function contentfulInstanceToDefinitionInstance(
         Object.entries(compDefinition.properties).map(propertyInfo => {
             return (async () => {
                 const name = propertyInfo[0];
-                
+
                 // special properties
                 if (name === "$schema") return;
                 if (name === "$identifier") {

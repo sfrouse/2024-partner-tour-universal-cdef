@@ -43,10 +43,7 @@ const HtmlPage = (
             padding: 0;
         }
         body {
-            /*display: flex;
-            align-items: center;
-            justify-content: center;*/
-            padding: 20px;
+
         }
     </style>
   </head>

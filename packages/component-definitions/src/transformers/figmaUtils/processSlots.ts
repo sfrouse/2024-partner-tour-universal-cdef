@@ -27,15 +27,13 @@ export async function processSlots(
         // this requires a specific instance (named after the property) of a 
         // component named "slots" with child instances of "slots-child"
         const instanceSlots = findFigmaSlots(figmaInstance);
-        const componentSlots = findFigmaSlots(figmaComponent);
+        // const componentSlots = findFigmaSlots(figmaComponent);
 
         const entries = Object.entries(slotDefs);
         for (const [slotName, slotDef] of entries) {
             await processSlot(
-                compDefinition,
                 slotName,
                 instanceSlots,
-                componentSlots,
                 cDefRootUrl,
                 slotDef,
                 defInstance,

@@ -17,15 +17,12 @@ const CUIToolbarTabs = (
     onSelectedTabChange
   } = args;
 
-  const [selectedTabInternal, setSelectedTabInternal] = useState<string | undefined>(selectedTab);
-
   const modifiedChildren = React.Children.map(children, (child: ReactNode) => {
     if (React.isValidElement(child)) {
       const tabId = child.props['tabId'];
       return React.cloneElement(child, {
-        selected: tabId === selectedTabInternal,
+        selected: tabId === selectedTab,
         onClick: () => {
-          setSelectedTabInternal(tabId);
           onSelectedTabChange ? onSelectedTabChange(tabId) : null;
         }
       } as any);
@@ -38,7 +35,7 @@ const CUIToolbarTabs = (
       className={`cui-toolbar-tabs
         ${secondary ? 'secondary' : ''}`}>
       {modifiedChildren}
-      <div className='border'></div>
+      {secondary ? '' : (<div className='border'></div>)}
     </div>
   );
 };

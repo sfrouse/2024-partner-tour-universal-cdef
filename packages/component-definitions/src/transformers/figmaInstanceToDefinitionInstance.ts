@@ -6,45 +6,47 @@ import getComponentDefinition from "./utils/getComponentDefinition";
 import { getAllVariablesLookupViaId } from "./figmaUtils/applyStyleProperties";
 import { getComponentDefinitionTokenLookupIndexedToFigmaVariables } from "./utils/getComponentDefinitionTokenLookup";
 import { CDefDesignProperty } from "../decorators/defineComponent";
-import findSlotChildren from "./utils/findSlotChildren";
+import findSlotChildren, { processSlotChildren } from "./utils/findSlotChildren";
 // Having trouble getting Figma types to work here...
 
 export default async function figmaInstanceToDefinitionInstance(
-    node: any | undefined,
+    figmaNode: any | undefined,
     cDefPath: string,
     figma: any, // Figma API,
     allVarsLookupCached?: {[name: string]: {}[]},
-    tokenLookupCached? : any
+    tokenLookupCached? : any,
+    isRoot: boolean = true
 ): Promise<CDefInstance | undefined> {
 
     const allVarsLookup = allVarsLookupCached || await getAllVariablesLookupViaId(figma);
     const tokenLookup = tokenLookupCached || await getComponentDefinitionTokenLookupIndexedToFigmaVariables(cDefPath);
 
-    // TODO: figure out auto-layout nodes
-    if (node.type === "INSTANCE") {
-        const figmaInstance: any = {};
-        const compName = getInstanceCompName(node);
-        figmaInstance['$schema'] = `${compName}.cdef.json`;
+    // TODO: figure out auto-layout figmaNodes
+    if (figmaNode.type === "INSTANCE") {
+        const cdefInstance: any = {};
+        const compName = getInstanceCompName(figmaNode);
+        cdefInstance['$schema'] = `${compName}.cdef.json`;
         const compDefinition = await getComponentDefinition(
             cDefPath,
-            figmaInstance['$schema'] as string
+            cdefInstance['$schema'] as string
         );
         if (!compDefinition) {
             console.error(
                 `Component Definition not found`,
                 cDefPath,
-                figmaInstance['$schema']
+                cdefInstance['$schema']
             );
             return;
         }
 
         // Identifier transfer
-        const contentfulId = node.getPluginData('contentfulIdentifier');
-        figmaInstance['$identifier'] = {contentful: contentfulId};
+        const contentfulId = figmaNode.getPluginData('contentfulIdentifier');
+        // something errors out if this isn't at least set
+        cdefInstance['$identifier'] = {contentful: contentfulId};
 
         // Node Component Properties
         const promiseArr: Promise<any>[] = [];
-        Object.entries(node.componentProperties).map(entry => {
+        Object.entries(figmaNode.componentProperties).map(entry => {
             promiseArr.push((async() => {
                 const propName = entry[0];
                 const prop = entry[1] as any;
@@ -52,8 +54,8 @@ export default async function figmaInstanceToDefinitionInstance(
                     propName,
                     prop,
                     compDefinition,
-                    node,
-                    figmaInstance,
+                    figmaNode,
+                    cdefInstance,
                     cDefPath,
                     figma
                 );
@@ -61,7 +63,7 @@ export default async function figmaInstanceToDefinitionInstance(
         });
 
         // Exposed Children
-        const exposedChildren = findExposedChildren(node);
+        const exposedChildren = findExposedChildren(figmaNode);
         exposedChildren.map(child => {
             Object.entries(child.componentProperties).map(entry => {
                 promiseArr.push((async() => {
@@ -72,7 +74,7 @@ export default async function figmaInstanceToDefinitionInstance(
                         prop,
                         compDefinition,
                         child,
-                        figmaInstance,
+                        cdefInstance,
                         cDefPath,
                         figma
                     );
@@ -88,54 +90,54 @@ export default async function figmaInstanceToDefinitionInstance(
                 if (prop['x-cdef']?.design === true) {
                     switch (propName) {
                         case CDefDesignProperty.BACKGROUND_COLOR: {
-                            if ( node.backgrounds?.length > 0) {
-                                const background = node.backgrounds[0];
+                            if ( figmaNode.backgrounds?.length > 0) {
+                                const background = figmaNode.backgrounds[0];
                                 if (background.boundVariables?.color) {
                                     const variable = allVarsLookup[background.boundVariables.color.id] as any;
                                     const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                    figmaInstance[propName] = variableGlobalId;
+                                    cdefInstance[propName] = variableGlobalId;
                                 }
                             }
                             break;
                         }
                         case CDefDesignProperty.TEXT_COLOR: {
-                            const textNode = findFirstTextChild(node);
+                            const textNode = findFirstTextChild(figmaNode);
                             if (textNode) {
                                 if ( textNode.boundVariables.fills?.length > 0) {
                                     const fill = textNode.boundVariables.fills[0];
                                     const variable = allVarsLookup[fill.id] as any;
                                     const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                    figmaInstance[propName] = variableGlobalId;
+                                    cdefInstance[propName] = variableGlobalId;
                                 }
                             }
                             break;
                         }
                         case CDefDesignProperty.PADDING: {
                             // only one to one padding value right now...
-                            if ( node.boundVariables?.paddingTop ) {
-                                const variable = allVarsLookup[node.boundVariables.paddingTop.id] as any;
+                            if ( figmaNode.boundVariables?.paddingTop ) {
+                                const variable = allVarsLookup[figmaNode.boundVariables.paddingTop.id] as any;
                                 const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                figmaInstance[propName] = variableGlobalId;
+                                cdefInstance[propName] = variableGlobalId;
                             }
                             break;
                         }
                         case CDefDesignProperty.CORNER_RADIUS: {
                             // only one right now
-                            if ( node.boundVariables?.topLeftRadius ) {
-                                const variable = allVarsLookup[node.boundVariables.topLeftRadius.id] as any;
+                            if ( figmaNode.boundVariables?.topLeftRadius ) {
+                                const variable = allVarsLookup[figmaNode.boundVariables.topLeftRadius.id] as any;
                                 const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                figmaInstance[propName] = variableGlobalId;
+                                cdefInstance[propName] = variableGlobalId;
                             }
                             break;
                         }
                         case CDefDesignProperty.GAP: {
-                            const slotChildren = findSlotChildren(node);
+                            const slotChildren = findSlotChildren(figmaNode);
                             if (slotChildren) {
                                 slotChildren.map(slotChild => {
                                     if (slotChild.boundVariables?.itemSpacing) {
                                         const variable = allVarsLookup[slotChild.boundVariables.itemSpacing.id] as any;
                                         const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                        figmaInstance[propName] = variableGlobalId;
+                                        cdefInstance[propName] = variableGlobalId;
                                     }
                                 });
                             }
@@ -143,76 +145,139 @@ export default async function figmaInstanceToDefinitionInstance(
                         }
                         case CDefDesignProperty.BORDER_COLOR: {
                             // only one right now
-                            if ( node.boundVariables?.strokes?.length > 0) {
-                                const stroke = node.boundVariables?.strokes[0];
+                            if ( figmaNode.boundVariables?.strokes?.length > 0) {
+                                const stroke = figmaNode.boundVariables?.strokes[0];
                                 const variable = allVarsLookup[stroke.id] as any;
                                 const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                figmaInstance[propName] = variableGlobalId;
+                                cdefInstance[propName] = variableGlobalId;
                             }
                             break;
                         }
                         case CDefDesignProperty.BORDER_WIDTH: {
                             // only one right now
-                            if ( node.boundVariables?.strokeTopWeight ) {
-                                const weight = node.boundVariables.strokeTopWeight;
+                            if ( figmaNode.boundVariables?.strokeTopWeight ) {
+                                const weight = figmaNode.boundVariables.strokeTopWeight;
                                 const variable = allVarsLookup[weight.id] as any;
                                 const variableGlobalId = tokenLookup[`variable:${variable[0].name}`];
-                                figmaInstance[propName] = variableGlobalId;
+                                cdefInstance[propName] = variableGlobalId;
                             }
                             break;
                         }
                         case CDefDesignProperty.BORDER_STYLE: {
                             // only one right now
-                            if ( node.strokes?.length > 0) {
-                                const stroke = node.strokes[0];
-                                figmaInstance[propName] = stroke.type.toLowerCase();
+                            if ( figmaNode.strokes?.length > 0) {
+                                const stroke = figmaNode.strokes[0];
+                                cdefInstance[propName] = stroke.type.toLowerCase();
                             }
                             break;
                         }
                         case CDefDesignProperty.LAYOUT_DIRECTION: {
-                            const slotChildren = findSlotChildren(node);
+                            const slotChildren = findSlotChildren(figmaNode);
                             if (slotChildren) {
                                 slotChildren.map(slotChild => {
-                                    figmaInstance[propName] =
+                                    cdefInstance[propName] =
                                         slotChild.layoutMode === "HORIZONTAL" ? "row" : "column"
                                 });
                             }
                             break;
                         }
+                        case CDefDesignProperty.FONT : {
+                            // TODO
+                            break;
+                        }
+                        case CDefDesignProperty.HORIZONTAL_RESIZING : {
+                            // TODO: check against width of frame...that will tell if it is a fill instead...
+                            if (isRoot) {
+                                const fillFrameSize = (figmaNode.parent as FrameNode).width - 100;
+                                if (fillFrameSize === figmaNode.width) {
+                                    cdefInstance[propName] = 'fill';
+                                }else{
+                                    cdefInstance[propName] = figmaNode.layoutSizingHorizontal.toLowerCase();
+                                }
+                            }else{
+                                cdefInstance[propName] = figmaNode.layoutSizingHorizontal.toLowerCase();
+                            }
+                            break;
+                        }
+                        case CDefDesignProperty.VERTICAL_RESIZING : {
+                            cdefInstance[propName] = figmaNode.layoutSizingVertical.toLowerCase();
+                            break;
+                        }
+                        case CDefDesignProperty.WIDTH : {
+                            cdefInstance[propName] = `${figmaNode.width}px`;
+                            break;
+                        }
+                        case CDefDesignProperty.HEIGHT : {
+                            cdefInstance[propName] = `${figmaNode.height}px`;
+                            break;
+                        }
+                        case CDefDesignProperty.ALIGN_ITEMS : {
+                            processSlotChildren(figmaNode, (slot: any) => {
+                                switch ( slot.counterAxisAlignItems ) {
+                                    case 'MIN': {
+                                        cdefInstance[propName] = `start`;
+                                        break;
+                                    }
+                                    case 'CENTER': {
+                                        cdefInstance[propName] = `center`;
+                                        break;
+                                    }
+                                    case 'MAX': {
+                                        cdefInstance[propName] = `end`;
+                                        break;
+                                    }
+                                    case 'STRETCH': {
+                                        cdefInstance[propName] = `stretch`;
+                                        break;
+                                    }
+                                }
+                            });
+                            break;
+                        }
+                        case CDefDesignProperty.JUSTIFY_CONTENT : {
+                            processSlotChildren(figmaNode, (slot: any) => {
+                                switch ( slot.primaryAxisAlignItems ) {
+                                    case 'MIN': {
+                                        cdefInstance[propName] = `start`;
+                                        break;
+                                    }
+                                    case 'CENTER': {
+                                        cdefInstance[propName] = `center`;
+                                        break;
+                                    }
+                                    case 'MAX': {
+                                        cdefInstance[propName] = `end`;
+                                        break;
+                                    }
+                                    case 'SPACE_BETWEEN': {
+                                        cdefInstance[propName] = `space-between`;
+                                        break;
+                                    }
+                                }
+                            });
+                            break;
+                        }
+
                     }
                 }
             });
         }
 
-        // Layout Information
-        // const layoutPropName = findLayoutPropertyName(compDefinition);
-        // if (layoutPropName) {
-        //     const layout = getLayoutFromStorage(node);
-        //     if (layout) {
-        //         figmaInstance[layoutPropName] = layout;
-        //     }
-        //     // TODO: think about pulling from auto-layout...
-        //     // there may NOT be enough info...
-        // }
-
-        const slotChildren = findSlotChildren(node);
-        slotChildren.map(slot => {
-            // slots are not anything in themselves...look through children
+        await processSlotChildren(figmaNode, async (slot) => {
             const slotDefs: any[] = [];
-            slot.children.map((slotChild: any) => {
-                promiseArr.push((async () => {
-                    const slotChildDef = await figmaInstanceToDefinitionInstance(
-                        slotChild, cDefPath, figma, allVarsLookup, tokenLookup
-                    );
-                    slotDefs.push(slotChildDef);
-                })());
-            });
-            figmaInstance[slot.name] = slotDefs;
+            for (const slotChild of slot.children) {
+                // Wait for each asynchronous operation to complete before proceeding to the next
+                const slotChildDef = await figmaInstanceToDefinitionInstance(
+                    slotChild, cDefPath, figma, allVarsLookup, tokenLookup
+                );
+                slotDefs.push(slotChildDef); // Push each result in order
+            }
+            cdefInstance[slot.name] = slotDefs;
         })
+        
+        await promiseArr;
 
-        await Promise.all(promiseArr);
-
-        return figmaInstance;
+        return cdefInstance;
     }
     return;
 }
@@ -233,8 +298,8 @@ async function processProp(
     propName: string,
     prop: any,
     compDefinition: CDefDefinition,
-    node: any,
-    figmaInstance: any,
+    figmaNode: any,
+    cdefInstance: any,
     cDefPath: string,
     figma: any
 ) {
@@ -243,8 +308,9 @@ async function processProp(
     const finalName = propNameArr.join('#');
     // we are not linting here...just take out.
     if (!compDefinition.properties || compDefinition.properties[finalName] === undefined) return;
+
     if (prop.type === "INSTANCE_SWAP") {
-        const instances = findInstanceOfProp(node, propName);
+        const instances = findInstanceOfProp(figmaNode, propName);
         const cDef = compDefinition.properties[finalName];
         const swapDefInstances = await Promise.all(
             instances.map(inst => {
@@ -254,38 +320,20 @@ async function processProp(
             })
         );
         if (cDef.type === 'array') {
-            figmaInstance[finalName] = swapDefInstances;
+            cdefInstance[finalName] = swapDefInstances;
         }else{
-            figmaInstance[finalName] = swapDefInstances?.length > 0 ? swapDefInstances[0] : [];
+            cdefInstance[finalName] = swapDefInstances?.length > 0 ? swapDefInstances[0] : [];
         }
     }else{
-        figmaInstance[finalName] = prop.value;
+        // text props always use " " as default...
+        cdefInstance[finalName] = `${prop.value}`.trim();
     }
 }
 
-// function findSlotChildren(node: any, slotChildren: any[] = []) {
-//     if (node.children) {
-//         node.children.map((child: any) => {
-//             if (
-//                 child.type === 'INSTANCE' &&
-//                 child.mainComponent?.name === '_slot'
-//             ) {
-//                 slotChildren.push(child);
-//             }else{
-//                 // not entirely recursive...
-//                 // the slot will be process on it's own
-//                 findSlotChildren(child, slotChildren);
-//             }
-//         })
-//     }
-//     return slotChildren;
-// }
-
-function findFirstTextChild(node: any) {
-    console.log('node.type', node.type);
-    let targetNode = node;
+function findFirstTextChild(figmaNode: any) {
+    let targetNode = figmaNode;
     if (targetNode.type !== 'TEXT') {
-        targetNode = node.children.find((child: any) => child.type === 'TEXT');
+        targetNode = figmaNode.children.find((child: any) => child.type === 'TEXT');
     }
     return targetNode;
 }

@@ -19,10 +19,8 @@ import {
 } from './localLayout.js';
 
 export default async function processSlot(
-    compDefinition: CDefDefinition,
     slotPropertyName: string,
     instanceSlots: {[key:string]: InstanceNode},
-    componentSlots: {[key:string]: InstanceNode},
     cDefRootUrl: string,
     slotDef: CDefDefinition,
     defInstance: CDefInstance,
@@ -46,22 +44,7 @@ export default async function processSlot(
             const prevLayout = captureLocalLayout(instanceSlot);
             slotComp.layoutMode = prevLayout.layoutMode;
             if (isDefaultSlot) {
-                if (isComponentClone) {
-                    // we can change the height/width of instances within comps
-                    // const componentSlot = componentSlots[slotPropertyName];
-                    // applyLayoutModeAndFixedSizes(
-                    //     defInstance,
-                    //     compDefinition,
-                    //     componentSlot   // Component Slot Instance
-                    // );
-                }
-                // applyLayoutModeAndFixedSizes(
-                //     defInstance,
-                //     compDefinition,
-                //     slotComp            // Slot Component
-                // );
                 instanceSlot.swapComponent(slotComp);
-
                 const gap = defInstance[CDefDesignProperty.GAP];
                 const figmaGapProp = findFigmaPropViaTokenLookup(`${gap}`, tokenLookup);
                 const figmaGapPropVar = await findPropertyObjectVariable(figmaGapProp, allVarsLookup, figma);
@@ -71,17 +54,6 @@ export default async function processSlot(
                         figmaGapPropVar
                     );
                 }
-
-                // applyPaddingAndAlignment(
-                //     defInstance,
-                //     compDefinition,
-                //     instanceSlot        // Instance
-                // );
-                // applyResizing(
-                //     defInstance,
-                //     compDefinition,
-                //     instanceSlot        // Instance
-                // );
             }else{
                 instanceSlot.swapComponent(slotComp);
                 applyLocalLayout(instanceSlot, prevLayout);
@@ -96,6 +68,12 @@ export default async function processSlot(
                     cDefRootUrl,
                     slotComp,
                     figma,
+                    (figmaInstance) => {
+                        if (figmaInstance) {
+                            figmaInstance.x = 0;
+                            figmaInstance.y = 0;
+                        }
+                    },
                     (figmaInstance) => {
                         // Instances w/o internal resizing should mimic the slot resizing
                         if (!isComponentClone) {
@@ -112,6 +90,12 @@ export default async function processSlot(
                 cDefRootUrl,
                 slotComp,
                 figma,
+                (figmaInstance) => {
+                    if (figmaInstance) {
+                        figmaInstance.x = 0;
+                        figmaInstance.y = 0;
+                    }
+                },
                 (figmaInstance) => {
                     // Instances w/o internal resizing should mimic the slot resizing
                     if (!isComponentClone) {

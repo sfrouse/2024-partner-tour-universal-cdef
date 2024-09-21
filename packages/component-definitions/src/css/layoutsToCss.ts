@@ -9,9 +9,6 @@ export default function layoutsToCss(
     const horizontalResizing = htmlElement.getAttribute('_horizontalResizing') || 'fill';
     const verticalResizing = htmlElement.getAttribute('_verticalResizing') || 'fill';
 
-
-    console.log('parentLayout', parentLayout, horizontalResizing);
-
     if (horizontalResizing === 'hug') {
         if (parentLayout === CDefLayout.NONE) {
             styles.push('display: inline-flex;');
@@ -22,12 +19,12 @@ export default function layoutsToCss(
         styles.push(`width: ${htmlElement.getAttribute('_width')};`)
     }else if (horizontalResizing === 'fill') {
         if (parentLayout === CDefLayout.NONE) {
-            styles.push('width: 100%; box-sizing: border-box;');
+            styles.push('width: 100%; box-sizing: border-box; /* horizontalResizing = fill && parentLayout = none */');
         }else if (parentLayout === CDefLayout.COLUMN) {
-            // styles.push(`self-align: stretch;`);
+            styles.push(`align-self: stretch; /* horizontalResizing = fill && parentLayout = column */`);
         }else if (parentLayout === CDefLayout.ROW) {
             const horizontalFlex = htmlElement.getAttribute('_horizontalFlexGrow') || '1';
-            styles.push(`flex: ${horizontalFlex};`);
+            styles.push(`flex: ${horizontalFlex};  /* horizontalResizing = fill && parentLayout = row */`);
         }
     }
     
@@ -47,7 +44,7 @@ export default function layoutsToCss(
             const verticalFlex = htmlElement.getAttribute('_verticalFlexGrow') || '1';
             styles.push(`flex: ${verticalFlex};`);
         }else if (parentLayout === CDefLayout.ROW) {
-            // styles.push(`self-align: stretch;`);
+            styles.push(`align-self: stretch;`);
         }
     }
 

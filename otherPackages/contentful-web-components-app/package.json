@@ -13,8 +13,7 @@
     "upload": "contentful-app-scripts upload --bundle-dir ./build",
     "upload-ci": "dotenv -- cross-var contentful-app-scripts upload --ci --bundle-dir ./build --organization-id %CONTENTFUL_ORG_ID% --definition-id %CONTENTFUL_APP_DEF_ID% --token %CONTENTFUL_ACCESS_TOKEN%",
     "server": "http-server ./dist -p 8081",
-    "te": "dotenv cross-var echo %CONTENTFUL_ORG_ID%",
-    "yalc:update": "cd ../../packages/component-definitions && yalc publish && cd ../../otherPackages/contentful-web-components-app && yalc update && echo 'done contentful-web-components-app'"
+    "te": "dotenv cross-var echo %CONTENTFUL_ORG_ID%"
   },
   "eslintConfig": {
     "extends": "react-app"

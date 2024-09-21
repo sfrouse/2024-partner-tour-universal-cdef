@@ -28,9 +28,14 @@ Object.keys(config).map((key: string) => {
   (config as any)[key] = urlParams.get(key) || (config as any)[key];
 });
 
+console.log('[PREVIEW] config', config);
+
 document.addEventListener('DOMContentLoaded', initialize);
 
 async function initialize() {
+
+  if (!config.entry_id) return;
+
   const client = createClient({
     space: config.contentful_space_id,
     environment: config.contentful_environment_id,
@@ -67,7 +72,7 @@ async function initialize() {
       // con sole.log('webComp', webComp);
       if (!webCompNode) return;
       webCompNode.innerHTML = webComp;
-      console.log('PREVIEW FINAL BUILD: compInst', compInst);
+      console.log('[PREVIEW] compInst', compInst);
 
       ContentfulLivePreview.subscribe('edit', {
           data: entry,
@@ -83,8 +88,7 @@ async function initialize() {
                 });
               if (entries && entries.items.length === 0) return;
               const loadedEntry = entries.items[0];
-              // con sole.log('updatedEntry', updatedEntry);
-              // con sole.log('loadedEntry', JSON.parse(JSON.stringify(loadedEntry)));
+
               decorateLeaves(updatedEntry, loadedEntry);
               const finalEntry = entries.items[0];
               
@@ -100,7 +104,7 @@ async function initialize() {
               //   <textarea style="width: 100vw; height: 50vh;">${webComp}</textarea>
               //   <textarea style="width: 100vw; height: 50vh;">${JSON.stringify(compInst, null, 2)}</textarea>`;
               webCompNode.innerHTML = `${webComp}`;// ${debug}`;
-              console.log('PREVIEW FINAL EDIT: compInst', compInst);
+              console.log('[PREVIEW] FINAL EDIT: compInst', compInst);
             })();
           }
       });

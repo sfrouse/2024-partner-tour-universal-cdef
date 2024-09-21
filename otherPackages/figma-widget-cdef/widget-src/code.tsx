@@ -10,7 +10,6 @@ import {
   clearAllClientStorage,
   clearAllFileStorage,
   clearAllWidgetStorage,
-  getFromClientStorage,
   getFromClientStorageBounce,
   getFromFileStorage,
   getFromFileStorageBounce,
@@ -20,10 +19,11 @@ import {
   saveToFileStorage,
   saveToWidgetStorage
 } from "./actions/storage.js";
-import renderFigmaComponent from "./actions/renderFigmaComponent.js";
 import renderFigmaComponentFromCDef from "./actions/renderFigmaComponentFromCDef.js";
 import clearStage from "actions/clearStage.js";
-// import figma from '@figma/plugin-typings';
+import renderFigmaComponentFromContentfulEntry from "actions/renderFigmaComponentFromContentfulEntry.js";
+import findWidgetSiblings from "actions/findWidgetSiblings.js";
+import stageComponentChange from "utils/stageComponentChange.js";
 
 const { widget } = figma;
 const {
@@ -38,14 +38,14 @@ const {
   SVG
 } = widget;
 
-export const DEFAULT_PAGE_WIDTH = 400;
+export const DEFAULT_PAGE_WIDTH = 600;
 export const DEFAULT_PAGE_HEIGHT = 600;
 
 function Widget() {
-  const nodeId = useWidgetNodeId();
+  const widgetNodeId = useWidgetNodeId();
 
-  const [environmentId, setEnvironmentId] = useSyncedState(
-    'environmentId', ''
+  const [contentfulInfo, setContentfulInfo] = useSyncedState(
+    'contentfulInfo', ''
   );
   const [cDefRootUrl, setCDefRootUrl] = useSyncedState(
     'cDefRootUrl', ''
@@ -54,9 +54,13 @@ function Widget() {
     'widgetWidth', 'hug-contents'
   );
 
+  const [renderedCompTitle, setRenderedCompTitle] = useSyncedState(
+    'renderedCompTitle', 'Component Definition'
+  );
+
   const initWidget = () => {
     // useEffect(() => {
-    const widgetNode = figma.getNodeById(nodeId);
+    const widgetNode = figma.getNodeById(widgetNodeId);
     if (
       widgetNode?.type === "WIDGET" &&
       widgetNode.parent?.type === "FRAME"
@@ -69,22 +73,23 @@ function Widget() {
     }else{
       setWidgetWidth('hug-contents')
     }
+
+    const siblings = findWidgetSiblings(widgetNodeId);
+    if (siblings.length === 0) {
+      setRenderedCompTitle('Component Definitions');
+    }
   }
 
   const windowSetup = () => {
-    figma.on('selectionchange', () => processSelection(nodeId));
-    figma.on('documentchange',  () => processSelection(nodeId));
-    processSelection(nodeId);
+    figma.on('selectionchange', () => processSelection(widgetNodeId));
+    // figma.on('documentchange',  () => processSelection(widgetNodeId));
+    processSelection(widgetNodeId);
 
     figma.ui.onmessage = async (message) => {
       console.log('-> RECIEVE MSG', message);
       switch (message.name) {
         case MessageName.promiseBounce :
           switch (message.request) {
-            case MessageRequest.stateUpdate: {
-              bounceBack(message, {nodeId});
-              break;
-            }
             case MessageRequest.resizeWindow: {
               const pageSize = message.pageSize as PageSize;
               resizeWindow(pageSize);
@@ -107,12 +112,12 @@ function Widget() {
             }
             // WIDGET STORAGE
             case MessageRequest.saveToWidgetStorage: {
-              const widgetNode = figma.getNodeById(nodeId) as WidgetNode;
+              const widgetNode = figma.getNodeById(widgetNodeId) as WidgetNode;
               saveToWidgetStorage(message, widgetNode);
               break;
             } 
             case MessageRequest.getFromWidgetStorage: {
-              const widgetNode = figma.getNodeById(nodeId) as WidgetNode;
+              const widgetNode = figma.getNodeById(widgetNodeId) as WidgetNode;
               getFromWidgetStorageBounce(message, widgetNode);
 
               // piggy back on the UI having to ask...
@@ -129,46 +134,65 @@ function Widget() {
               break;
             } 
             case MessageRequest.getFromClientStorage: {
-              getFromClientStorageBounce(message);
-
-              // piggy back on the UI having to ask...
-              // useEffect infinitely regresses
-              const clientProps = await getFromClientStorage(['environmentId']);
-              setEnvironmentId(clientProps['environmentId'] || '');
+              const widgetNode = figma.getNodeById(widgetNodeId) as WidgetNode;
+              await getFromClientStorageBounce(message);
+              const fileProps = await getFromWidgetStorage(['organizationId', 'spaceId', 'environmentId'], widgetNode);
+              setContentfulInfo(`org: ${fileProps.organizationId}, space: ${fileProps.spaceId}, env: ${fileProps.environmentId}`);
               break;
             }
             case MessageRequest.clearAllStorage: {
               await clearAllClientStorage();
               clearAllFileStorage();
-              const widgetNode = figma.getNodeById(nodeId) as WidgetNode;
+              const widgetNode = figma.getNodeById(widgetNodeId) as WidgetNode;
               clearAllWidgetStorage(widgetNode);
               bounceBack(message);
               break;
             }
-            case MessageRequest.renderFigmaComponent: {
-              renderFigmaComponent(
+            // ===============================================
+            // CREATING STAGE COMPONENT
+            // ===============================================
+            case MessageRequest.renderFigmaComponentFromContentfulComponent: {
+              // const entryTitle = message.entry?.fields?.internalTitle
+              setRenderedCompTitle(
+                `Contentful Entry: ${message.entry?.sys?.id || 'unknown'}`
+              );
+              await renderFigmaComponentFromContentfulEntry(
                 message.entry,
                 message.cDefRootUrl, 
-                nodeId
+                widgetNodeId
               );
+              await stageComponentChange(widgetNodeId, cDefRootUrl);
+              bounceBack(message);
               break;
             } 
             case MessageRequest.renderFigmaComponentFromCDef: { 
-              renderFigmaComponentFromCDef(
+              setRenderedCompTitle(
+                `CDef Instance: ${message.defInstance?.$schema || 'unknown'}`
+              );
+              await renderFigmaComponentFromCDef(
                 message.defInstance,
                 message.cDefRootUrl, 
-                nodeId
+                widgetNodeId
               );
+              await stageComponentChange(widgetNodeId, cDefRootUrl);
+              bounceBack(message);
+              break;
+            }
+            case MessageRequest.getStageComponentInfo: {
+              await stageComponentChange(widgetNodeId, cDefRootUrl);
+              bounceBack(message);
               break;
             }
             case MessageRequest.clearStage: {
-              console.log('TEST');
-              clearStage(nodeId);
+              clearStage(widgetNodeId);
+              bounceBack(message);
               break;
             }
+            // ===============================================
           }
           break;
       }
+
     }
 
     figma.ui.on("message", (msg) => {
@@ -223,19 +247,19 @@ function Widget() {
             fontFamily="Inter"
             fontSize={16}
             fill="#333">
-            Component Definition
+            {renderedCompTitle}
           </Text>
           <Text
             fontFamily="Inter"
             fontSize={10}
             fill="#777">
-            Component Definition Root: {cDefRootUrl}
+            Component Definition: {cDefRootUrl}
           </Text>
           <Text
             fontFamily="Inter"
             fontSize={10}
             fill="#777">
-            Contentful Environment: {environmentId}
+            Contentful: {contentfulInfo}
           </Text>
         </AutoLayout>
        

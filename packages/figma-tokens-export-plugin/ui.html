@@ -30,7 +30,6 @@ document.getElementById('generateTokens').onclick = () => {
 
 onmessage = (evt) => {
   const msg = evt.data.pluginMessage;
-  console.log('msg', msg);
   document.getElementById('output').value = JSON.stringify(msg.tokenSheet, null, 2);
 }
 

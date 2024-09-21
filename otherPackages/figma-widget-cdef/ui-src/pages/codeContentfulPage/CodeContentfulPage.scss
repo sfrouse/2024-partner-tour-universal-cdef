@@ -11,4 +11,14 @@
         border: 1px solid vars.$ctfl-background-border-primary-subtle;
         border-radius: vars.$ctfl-corner-radius-m;
     }
+
+    .no-contentful-entry {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: vars.$ctfl-spacing-m;
+    }
 }

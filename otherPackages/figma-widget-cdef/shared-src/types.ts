@@ -12,7 +12,6 @@ export type MessagePromiseResult = {
 }
 
 export enum MessageRequest {
-  stateUpdate = 'stateUpdate',
   selectionChange = 'selectionChange',
   resizeWindow = 'resizeWindow',
   saveToFileStorage = 'saveToFileStorage',
@@ -22,9 +21,11 @@ export enum MessageRequest {
   saveToClientStorage = 'saveToClientStorage',
   getFromClientStorage = 'getFromClientStorage',
   clearAllStorage = 'clearAllStorage',
-  renderFigmaComponent = 'renderFigmaComponent',
+  renderFigmaComponentFromContentfulComponent = 'renderFigmaComponentFromContentfulComponent',
   renderFigmaComponentFromCDef = 'renderFigmaComponentFromCDef',
-  clearStage = 'clearStage'
+  clearStage = 'clearStage',
+  stageComponentChange = 'stageComponentChange',
+  getStageComponentInfo = 'getStageComponentInfo'
 }
 
 export enum PageSize {
@@ -36,11 +37,13 @@ export enum PageSize {
 
 export enum AppPage {
   lint = 'Lint',
-  ctflLint = 'CTFL Lint',
-  code = 'Code',
-  html = 'HTML',
+  // ctflLint = 'CTFL Lint',
+  component = 'Component',
+  // html = 'HTML',
   ctfl = 'Contentful',
-  config = 'Config'
+  config = 'Config',
+  import = 'Import',
+  create = 'Create'
 }
 
 export enum LintPageId {
@@ -48,11 +51,15 @@ export enum LintPageId {
   ctfl = 'Contentful',
 }
 
+export enum CreatePageId {
+  ctfl = 'Contentful',
+  import = 'From HTML',
+}
+
 export enum CodePageId {
   // cdef = 'Definition',
   cinst = 'CDef',
   html = 'HTML',
   preview = 'Preview',
-  import = 'Import',
   contentful = 'Contentful'
 }

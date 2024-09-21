@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Flex, IconButton, Spinner } from '@contentful/f36-components';
+import { Flex, IconButton, Spinner, ToggleButton } from '@contentful/f36-components';
 import { ExternalLinkIcon } from '@contentful/f36-icons';
 import { CDefManifest } from "@contentful-demos/component-definitions/dist/index.js";
 import * as contentful from 'contentful';
@@ -110,14 +110,27 @@ const ContentfulPage = (
             <div className="entries">
                 <div className="body scroll-bar">
                 {entries.map(entry => {
-                    const key = Object.keys(entry.fields).find(key => key === 'title' || key === 'label');
+                    const key = Object.keys(entry.fields).find(key => key === 'title' || key === 'label' || key === 'internalLabel');
                     return (
                         <div
                             className="entry" 
                             key={entry.sys.id}>
                             <div className="title">
-                                {key ? entry.fields[key] : entry.sys.id}
+                                {key ? (<>{entry.fields[key]} <span>{entry.sys.id}</span></>) : entry.sys.id}
                             </div>
+                            <ToggleButton icon={<ExternalLinkIcon />}
+                                size="small"
+                                aria-label="Contentful Entry"
+                                onToggle={() => {
+                                    window.open(`https://app.contentful.com/spaces/${
+                                            spaceId
+                                        }/environments/${
+                                            environmentId
+                                        }/entries/${
+                                            entry.sys.id
+                                        }`, '_blank');
+                                }}
+                                />
                             <IconButton
                                 icon={<ExternalLinkIcon />}
                                 aria-label="Contentful Entry"
@@ -134,7 +147,7 @@ const ContentfulPage = (
                                 <CUIToolbarButton
                                     label="Create"
                                     onClick={async () => {
-                                        postMessagePromise(MessageRequest.renderFigmaComponent, {
+                                        postMessagePromise(MessageRequest.renderFigmaComponentFromContentfulComponent, {
                                             entry,
                                             cDefRootUrl
                                         });

@@ -4,7 +4,7 @@ import {
     findFigmaCompositePropViaTokenLookup,
     findFigmaPropViaTokenLookup
 } from "../../utils/findViaTokenLookup";
-import findSlotChildren from "../utils/findSlotChildren";
+import { processSlotChildren } from "../utils/findSlotChildren";
 
 export async function applyStyleProperties(
     figmaInstance: InstanceNode,
@@ -22,6 +22,10 @@ export async function applyStyleProperties(
     // only applied if layout is Fixed;
     let width: number = 500;
     let height: number = 500;
+
+    let layoutDirection: string | undefined;
+    let alignItems: string | undefined;
+    let justifyContent: string | undefined;
 
     const defInstanceEntries = Object.entries(defInstance);
     for (const [key, value] of defInstanceEntries) {
@@ -163,21 +167,7 @@ export async function applyStyleProperties(
             //     break;
             // }
             case CDefDesignProperty.LAYOUT_DIRECTION : {
-                const slotChildren = findSlotChildren(figmaInstance);
-                if (slotChildren) {
-                    slotChildren.map(slotChild => {
-                        // Can't change layoutmode in instance...
-                        // slotChild.layoutMode = "VERTICAL";
-                        // this is a myopic stopgap....
-                        // TODO: create slots from scratch
-                        if (slotChild.componentProperties.layoutDirection) {
-                            (slotChild as InstanceNode).setProperties({
-                                layoutDirection: `${value}`.toLowerCase() === 'column' ?
-                                    'vertical' : 'horizontal'
-                            });
-                        }
-                    });
-                }
+                layoutDirection = `${value}`;
                 break;
             }
             case CDefDesignProperty.HORIZONTAL_RESIZING : {
@@ -226,45 +216,87 @@ export async function applyStyleProperties(
                 break;
             }
             case CDefDesignProperty.ALIGN_ITEMS: {
-                console.log('ALIGN_ITEMS', value);
-                switch ( value ) {
-                    case 'start' : {
-                        
-                        break;
-                    }
-                    case 'center' : {
-                        figmaInstance.primaryAxisAlignItems = 'CENTER';
-                        figmaInstance.counterAxisAlignItems = 'CENTER';
-                        break;
-                    }
-                }
+                alignItems = `${value}`.toLowerCase();
                 break;
             }
             case CDefDesignProperty.JUSTIFY_CONTENT: {
-                console.log('JUSTIFY_CONTENT', value);
+                justifyContent = `${value}`.toLowerCase();
                 break;
             }
         }
     }
 
-    if ((figmaInstance?.parent as any)?.layoutMode !== "NONE") {
-        figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
-        figmaInstance.layoutSizingVertical = layoutSizingVertical;
-        // TODO: take child slot along for the ride...
+    // Layout Direction
+    processSlotChildren(figmaInstance, (slot: any) => {
+        if (slot.componentProperties.layoutDirection) {
+            (slot as InstanceNode).setProperties({
+                layoutDirection: layoutDirection?.toLowerCase() === 'column' ?
+                    'vertical' : 'horizontal'
+            });
+        }
+    });
+
+    // Align Items and Justify Content
+    if (alignItems) {
+        processSlotChildren(figmaInstance, (slot: any) => {
+            switch ( alignItems ) {
+                case 'start': {
+                    slot.counterAxisAlignItems = 'MIN';
+                    break;
+                }
+                case 'center': {
+                    slot.counterAxisAlignItems = 'CENTER';
+                    break;
+                }
+                case 'end': {
+                    slot.counterAxisAlignItems = 'MAX';
+                    break;
+                }
+                case 'stretch': {
+                    slot.counterAxisAlignItems = 'STRETCH';
+                    break;
+                }
+            }
+        });
+    }
+    if (justifyContent) {
+        processSlotChildren(figmaInstance, (slot: any) => {
+            switch ( justifyContent) {
+                case 'start': {
+                    slot.primaryAxisAlignItems = 'MIN';
+                    break;
+                }
+                case 'center': {
+                    slot.primaryAxisAlignItems = 'CENTER';
+                    break;
+                }
+                case 'end': {
+                    slot.primaryAxisAlignItems = 'MAX';
+                    break;
+                }
+                case 'space-between': {
+                    slot.primaryAxisAlignItems = 'SPACE_BETWEEN';
+                    break;
+                }
+            }
+        });
     }
 
     if (
         layoutSizingHorizontal === 'FIXED' &&
         layoutSizingVertical === 'FIXED'
     ) {
+        // con sole.log('[resize] width, height', width, height);
         figmaInstance.resize( width, height );
     }else{
         if (layoutSizingHorizontal === 'FIXED') {
+            // con sole.log('[resize] width, figmaInstance.height', width, figmaInstance.height);
             figmaInstance.resize(
                 width,
                 figmaInstance.height
             );
         }else if (layoutSizingVertical === 'FIXED') {
+            // con sole.log('[resize] figmaInstance.width, height', figmaInstance.width, height);
             figmaInstance.resize(
                 figmaInstance.width,
                 height
@@ -272,11 +304,37 @@ export async function applyStyleProperties(
         }
     }
 
-    if (isRoot && layoutSizingHorizontal === "FILL" && figmaInstance.parent) {
-        figmaInstance.resize(
-            (figmaInstance.parent as FrameNode).width - 100,
-            figmaInstance.height
-        )
+    if (isRoot) {
+        if (layoutSizingHorizontal === "FILL" && figmaInstance.parent) {
+            figmaInstance.resize(
+                (figmaInstance.parent as FrameNode).width - 100,
+                figmaInstance.height
+            );
+            processSlotChildren(figmaInstance, (slot: any) => {
+                slot.layoutSizingHorizontal = "FILL";
+            });
+        }
+        if (layoutSizingHorizontal === 'HUG') {
+            figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
+            processSlotChildren(figmaInstance, (slot: any) => {
+                slot.layoutSizingHorizontal = "HUG";
+            });
+        }
+    }else{
+        if ((figmaInstance?.parent as any)?.layoutMode !== "NONE") {
+            figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
+            figmaInstance.layoutSizingVertical = layoutSizingVertical;
+            if (layoutSizingHorizontal === "FILL") {
+                processSlotChildren(figmaInstance, (slot: any) => {
+                    slot.layoutSizingHorizontal = "FILL";
+                });
+            }
+            if (layoutSizingHorizontal === 'HUG') {
+                processSlotChildren(figmaInstance, (slot: any) => {
+                    slot.layoutSizingHorizontal = "HUG";
+                });
+            }
+        }
     }
 }
 

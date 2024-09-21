@@ -431,15 +431,15 @@ function Page() {
                 ) : null}
               </div>
               <div className="page-result-tabs">
-                <div className='page-result-time'>
-                  {durationEnd ? formatDuration(durationEnd - durationStart) : formatDuration(currentDuration)}
-                </div>
                 <div
                     className="page-result-websocket-status"
                     style={{
                         backgroundColor: getWebSocketStatusColor(websocketStatus),
                     }}
                 ></div>
+                <div className='page-result-time'>
+                  {durationEnd ? formatDuration(durationEnd - durationStart) : formatDuration(currentDuration)}
+                </div>
                 <div
                   className={`page-prompt-button`}
                   onClick={() => {

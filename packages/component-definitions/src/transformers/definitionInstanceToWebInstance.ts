@@ -45,10 +45,10 @@ export default async function definitionInstanceToWebInstance(
     const grandChildTabs = `\t`.repeat(indent+2);
 
     const attrs: string[] = [];
-    const styles: string[] = [];
+    // const styles: string[] = [];
     const slots: string[] = [];
 
-    styles.push(`--parent-layout: ${parentLayout};`);
+    // styles.push(`--parent-layout: ${parentLayout};`);
     const layout = getLayout(definitionInst);;
 
     if (!compDefinition.properties) return;
@@ -80,18 +80,17 @@ export default async function definitionInstanceToWebInstance(
     
                 // ARRAY
                 if (Array.isArray(value)) {
-                    const childArr = await Promise.all(
-                        value.map(child => {
-                            // could this be an array of strings?'
-                            return definitionInstanceToWebInstance(
-                                child,
-                                cDefPath,
-                                indent+2,
-                                undefined,
-                                layout
-                            );
-                        })
-                    );
+                    const childArr: any[] = [];
+                    for (const child of value) {
+                        const childResult = await definitionInstanceToWebInstance(
+                            child,
+                            cDefPath,
+                            indent + 2,
+                            undefined,
+                            layout
+                        );
+                        childArr.push(childResult); // Push each result sequentially
+                    }
                     if (isSlot) {
                         if (webConfig?.defaultSlot === true) {
                             slots.push(`${childArr.join(`\n${childTabs}`)}`);
@@ -184,9 +183,6 @@ export default async function definitionInstanceToWebInstance(
         slotName ? `slot="${slotName}" data-type="webcomp"` : ''
     } ${
         `\n${childTabs}${attrs.join(`\n${childTabs}`)}`
-    } ${
-        `\n${childTabs}style="
-    ${styles.join(`\n${childTabs}`)}"`
     }>${
         slots.length > 0 ? 
             `\n${slots.join(`\n`)}` : ''

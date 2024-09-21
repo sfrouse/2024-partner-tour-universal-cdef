@@ -1,10 +1,11 @@
 import {
   CDefDesignProperty,
+  define,
   defineComponent,
   layoutsToCss
 } from '@contentful-demos/component-definitions/dist';
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import styles from './DMOContainer.scss';
 import semantic from '../../dist/tokens/semantic';
 import {
@@ -160,6 +161,10 @@ export class DmoContainer extends LitElement {
     constructor() {
         super();
     }
+
+    @define('Internal Label', {content: true})
+    @property({reflect: true})
+      internalLabel: string;
   
     // createRenderRoot() {
     //     return this; // Render in light DOM

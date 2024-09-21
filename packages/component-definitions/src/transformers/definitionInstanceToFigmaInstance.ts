@@ -13,9 +13,17 @@ export default async function definitionInstanceToFigmaInstance(
     cDefPath: string,
     figmaParentNode: any,
     figma: any, // Figma API
+    onCreatedFunk?: (figmaInstance: InstanceNode) => void,
     resizeFunk?: (figmaInstance: InstanceNode) => void,
     isRoot: boolean = true
 ) {
+    console.log('[definitionInstanceToFigmaInstance] defInstance', {
+        defInstance,
+        cDefPath,
+        figmaParentNode,
+        figma
+    });
+
     if (!defInstance) {
         console.error('definitionInstanceToFigmaInstance: no defInstance')
         return;
@@ -69,6 +77,12 @@ export default async function definitionInstanceToFigmaInstance(
 
     // Add to Figma Parent Node
     figmaParentNode.appendChild(figmaInstance);
+
+    if (onCreatedFunk) {
+        onCreatedFunk(figmaInstance);
+    }
+
+
     
     // Update Figma Instance Properties
     applyProperties(

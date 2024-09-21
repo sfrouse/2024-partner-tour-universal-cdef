@@ -5,50 +5,71 @@ import {
 import * as contentful from 'contentful-management';
 
 export default async function updateEntries(
-    // entryId: string,
     cdefInstance: CDefInstance,
     ctflCMAKey: string,
     spaceId: string,
     environmentId: string,
     cDefRootUrl: string,
 ) {
-    const compDefinition = await getComponentDefinition(cDefRootUrl, cdefInstance.$schema as string );
+    const compDefinition = await getComponentDefinition(
+        cDefRootUrl,
+        cdefInstance.$schema as string
+    );
     if (!compDefinition) {
         console.error(
-            `[createFigmaInstanceFromCDef] Component Definition not found`,
+            `[updateEntries] Component Definition not found`,
             cDefRootUrl,
             cdefInstance.$schema
         );
         return;
     }
-    
+
     const client = contentful.createClient({
         accessToken: ctflCMAKey
     });
 
     // Fetch the space and environment
-    const space = await client.getSpace(spaceId); // Replace with your space ID
-    const environment = await space.getEnvironment(environmentId); // Replace with your environment ID
-    
-    // Get the entry by ID
-    if (!cdefInstance.$identifier.contentful) {
-        console.error('no contentful id on cdefInstance', cdefInstance);
-        return;
+    const space = await client.getSpace(spaceId);
+    const environment = await space.getEnvironment(environmentId);
+
+    let ctfEntry : contentful.Entry;
+
+    // Check if the Contentful ID exists in the cdefInstance
+    if (!cdefInstance.$identifier?.contentful) {
+        // If not, create a new entry
+        return createNewEntry(
+            cdefInstance,
+            cDefRootUrl,
+            environment
+        );
+    } else {
+        // If the entry exists, fetch it by ID
+        try {
+            ctfEntry = await environment.getEntry(cdefInstance.$identifier.contentful);
+        } catch (error) {
+            return createNewEntry(
+                cdefInstance,
+                cDefRootUrl,
+                environment
+            );
+        }
     }
-    const ctfEntry = await environment.getEntry(cdefInstance.$identifier.contentful);
 
     const cdefInstancePropValues = {...cdefInstance};
     const promiseArr: any[] = [];
+
+    if (!ctfEntry) {
+        console.log('ctfEntry MISSING', ctfEntry);
+        return;
+    }
+    // Loop through the entry fields and update or recursively process slots
     Object.entries(ctfEntry.fields).map((entry: any) => {
         const propName = entry[0];
-        // const prop = entry[1];
         const cdefInstanceProp = cdefInstance[propName];
-        console.log('cdefInstanceProp', cdefInstanceProp);
         const cdefProp = compDefinition.properties[propName];
         if (cdefProp) {
-            // if (Array.isArray(cdefInstanceProp)) {
             if (cdefProp.type === 'array') {
-                // it's a slot...
+                // Handle slots (arrays of child components)
                 delete cdefInstancePropValues[propName];
                 if (Array.isArray(cdefInstanceProp)) {
                     cdefInstanceProp.map(childCdefInst => {
@@ -60,10 +81,11 @@ export default async function updateEntries(
                                 environmentId,
                                 cDefRootUrl
                             )
-                        )
-                    })
+                        );
+                    });
                 }
-            }else{
+            } else {
+                // Handle normal properties
                 ctfEntry.fields[propName]['en-US'] = cdefInstanceProp;
             }
         }
@@ -77,4 +99,82 @@ export default async function updateEntries(
 
     // Update the entry (save changes)
     await ctfEntry.update();
+
+    return ctfEntry;
 }
+
+async function createNewEntry(
+    cdefInstance: CDefInstance,
+    cDefRootUrl: string,
+    environment: contentful.Environment
+) {
+    console.log('[createNewEntry] creating', cdefInstance);
+    let ctfEntry: contentful.Entry;
+    try {
+        if (cdefInstance.$identifier.contentful && cdefInstance.$identifier.contentful.length > 0) {
+            ctfEntry = await environment.getEntry(cdefInstance.$identifier.contentful);
+            // Check if the entry is archived or deleted (invalid case)
+            if (!ctfEntry.sys || ctfEntry.sys.archivedAt || ctfEntry.sys.deletedAt) {
+                throw new Error('Entry is invalid (archived or deleted).');
+            }
+            console.log('[createNewEntry] Found entry, skipping create', ctfEntry);
+            return ctfEntry;
+        }
+    } catch (error) {
+        // nada 
+    }
+
+    const compDefinition = await getComponentDefinition(
+        cDefRootUrl,
+        cdefInstance.$schema as string
+    );
+    const fields: { [key: string]: any } = {};
+    const cdefInstancePropValues = { ...cdefInstance };
+    const tag = compDefinition['x-cdef'].tag;
+
+    // Loop through the properties and add fields if "content": true
+    if (compDefinition.properties) {
+
+        for (const propName of Object.keys(compDefinition.properties)) {
+            const propertyDefinition = compDefinition.properties[propName];
+            const value = cdefInstancePropValues[propName];
+
+            // Check if the property has the "content": true flag
+            const hasContentFlag = propertyDefinition?.['x-cdef']?.['output']?.['content']?.['content'] === true;
+            const isArray = propertyDefinition?.['type'] === 'array';
+
+            if (hasContentFlag && !isArray) {
+                // Handle single value properties
+                delete cdefInstancePropValues[propName];
+                const finalValue = value ? `${value}`.trim() : `${tag} - ${Date.now()}`;
+                // con sole.log(`propName(${propName}) value(${value}) finalValue(${finalValue})`);
+                fields[propName] = { 'en-US': finalValue };
+            } 
+            
+            if (isArray && Array.isArray(value)) {
+                // Handle array properties (recursive updates for child instances)
+                delete cdefInstancePropValues[propName];
+                fields[propName] = { 'en-US': [] };
+                for (const childCDefInstance of value) {
+                    const childEntry = await createNewEntry(
+                        childCDefInstance,
+                        cDefRootUrl,
+                        environment
+                    );
+                    fields[propName]['en-US'].push({
+                        sys: { id: childEntry.sys.id, linkType: 'Entry', type: 'Link' }
+                    });
+                }
+            }
+        }
+
+        // Add any remaining componentInstance fields
+        fields.componentInstance = { 'en-US': cdefInstancePropValues };
+    }
+
+    // Create the entry in Contentful
+    ctfEntry = await environment.createEntry(tag, { fields });
+    cdefInstance.$identifier = { contentful: ctfEntry.sys.id }; // Store the new entry ID
+    return ctfEntry;
+}
+
