@@ -1,9 +1,11 @@
-import htmlCssExpertSystem from "../../systems/htmlCssExpertSystem.mjs";
+import htmlCssExpertSystem from "../../systems/systems/htmlCssExpertSystem.mjs";
 import getCSSTokensPrompt from "../utils/getTokensPrompt.mjs";
 import config from '../../config.mjs';
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
+import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
 
 const imageToHTMLToTokens = {
-    name: 'Image...to Tokens',
+    name: 'Image Results to Tokens',
     id: 'imageToHTMLToTokens',
     prompts: async () => {
 
@@ -30,7 +32,7 @@ const imageToHTMLToTokens = {
           {
             model: "gpt-4o",
             messages: [
-                htmlCssExpertSystem,
+                await htmlCssExpertSystem.prompt(),
                 {
                     "role": "user",
                     "content": `
@@ -54,15 +56,10 @@ const imageToHTMLToTokens = {
       ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-        return `
-<link rel="stylesheet" href="${config.TOKENS_CSS}">
-
-<!-- HTML -->
-${action.results[0]}
-
-`;
-
+      return renderFollowUpResults(
+        action,
+        designSystemTemplate(action.results[0])
+      );
     }
 };
 

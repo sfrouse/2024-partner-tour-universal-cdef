@@ -6,23 +6,32 @@ import './css/PagePrompt.css';
 import React, { useState, useEffect } from 'react';
 import findActionPrompts from '../../utils/findActionPrompts';
 import ImageUploader from '../../components/imageUpload';
-// import RefreshButton from '../../components/refreshButton';
+import RefreshButton from '../../components/refreshButton';
 import renderAsText from '@partner-tour-2024/api-ai/src/prompts/utils/renderAsText.mjs';
 import LoadingSpinner from '../../components/loadingSpinner/loadingSpinner';
 import startVoiceRecognition, { stopVoiceRecognition } from './utils/speechToText';
 import formatDuration from './utils/formatTimer';
 import getWebSocketStatusColor from './utils/getWebSocketStatusColor';
+import ActionSelect from './utils/actionSelect';
+// import SystemSelect from './utils/systemsSelect';
+import runAIConvo from './utils/runAIConvo';
+import runAI from './utils/runAI';
+import RecordButton from './components/RecordButton';
 
-const AI_SERVICE_URL = 'http://localhost:3005';
+export const AI_SERVICE_URL = 'http://localhost:3005';
 
 function Page() {
 
+    // Actions
     const [actionList, setActionList] = useState(null);
     const [actionId, setActionId] = useState(null);
     const [action, setAction] = useState(null);
+
     const [prompts, setPrompts] = useState(null);
-    const [actionToRun, setActionToRun] = useState(null);
     const [actionToReset, setActionToReset] = useState(null);
+
+    // Systems
+    // const [systemsList, setSystemsList] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [isRunning, setIsRunning] = useState(false);
@@ -71,6 +80,14 @@ function Page() {
       setWebSocket(ws);
     }, []);
 
+    // Scratchpad
+    useEffect(() => {
+      const savedValue = localStorage.getItem('scratchPad');
+      if (savedValue) {
+        setScratchPad(savedValue); // Update state with saved value
+      }
+    }, []);
+
     // Load Actions
     useEffect(() => {
       const originalPushState = window.history.pushState;
@@ -88,8 +105,9 @@ function Page() {
       });
       establishActionInfo();
 
-      const apiUrl = `${AI_SERVICE_URL}/actions`;
-      fetch(apiUrl)
+      // Load Actions
+      const actionsUrl = `${AI_SERVICE_URL}/actions`;
+      fetch(actionsUrl)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -104,6 +122,23 @@ function Page() {
           setError(`load actions: ${error.message}`);
           setLoading(false);
         });
+
+      // // Load Systems
+      // const systemsUrl = `${AI_SERVICE_URL}/systems`;
+      // fetch(systemsUrl)
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error('Network response was not ok');
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((systemsList) => {
+      //     setSystemsList(systemsList);
+      //   })
+      //   .catch((error) => {
+      //     setError(`load actions: ${error.message}`);
+      //     setLoading(false);
+      //   });
     }, [invalidate]);
 
     // Load Action
@@ -127,46 +162,45 @@ function Page() {
       }
     }, [
       actionId,
-      // setAction,
       setPrompts,
-      // setActionRender,
-      setAction
+      setAction,
+      invalidate
     ]);
 
     // Run Action
-    useEffect(() => {
-      if (actionToRun) {
-        setDurationStart(Date.now());
-        setDurationEnd(null);
-        setCurrentDuration(0);
+    // useEffect(() => {
+    //   if (actionToRun) {
+    //     setDurationStart(Date.now());
+    //     setDurationEnd(null);
+    //     setCurrentDuration(0);
 
-        const apiUrl = `${AI_SERVICE_URL}/ai/${actionToRun}`;
-        setIsRunning(true);
-        fetch(apiUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then((action) => {
-            setIsRunning(false);
-            setAction(action);
-            setActionToRun(null);
-            setDurationEnd(Date.now());
-          })
-          .catch((error) => {
-            setError(`run action: ${error.message}`);
-            setLoading(false);
-          });
-      }
-    }, [
-      actionToRun,
-      setIsRunning,
-      setAction,
-      setError,
-      setLoading
-    ]);
+    //     const apiUrl = `${AI_SERVICE_URL}/ai/${actionToRun}`;
+    //     setIsRunning(true);
+    //     fetch(apiUrl)
+    //       .then((response) => {
+    //         if (!response.ok) {
+    //           throw new Error('Network response was not ok');
+    //         }
+    //         return response.json();
+    //       })
+    //       .then((action) => {
+    //         setIsRunning(false);
+    //         setAction(action);
+    //         setActionToRun(null);
+    //         setDurationEnd(Date.now());
+    //       })
+    //       .catch((error) => {
+    //         setError(`run action: ${error.message}`);
+    //         setLoading(false);
+    //       });
+    //   }
+    // }, [
+    //   actionToRun,
+    //   setIsRunning,
+    //   setAction,
+    //   setError,
+    //   setLoading
+    // ]);
 
     // Poll during service running
     useEffect(() => {
@@ -215,6 +249,37 @@ function Page() {
 
     if (error) {
       return <div>Error: {error}</div>;
+    }
+
+    // const runAI = (newActionToRun) => {
+    //   setDurationStart(Date.now());
+    //   setDurationEnd(null);
+    //   setCurrentDuration(0);
+
+    //   const apiUrl = `${AI_SERVICE_URL}/ai/${newActionToRun}`;
+    //   setIsRunning(true);
+    //   fetch(apiUrl)
+    //     .then((response) => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       return response.json();
+    //     })
+    //     .then((action) => {
+    //       setIsRunning(false);
+    //       setAction(action);
+    //       setActionToRun(null);
+    //       setDurationEnd(Date.now());
+    //     })
+    //     .catch((error) => {
+    //       setError(`run action: ${error.message}`);
+    //       setLoading(false);
+    //     });
+    // }
+
+    const updateScratchPad = ( newScratch ) => {
+      localStorage.setItem('scratchPad', newScratch);
+      setScratchPad(newScratch);
     }
     
     return (
@@ -273,67 +338,41 @@ function Page() {
           {/* PROMPTS */}
           <div className="page-prompt-box">
               <h2>Prompt</h2>
-              <div className="page-prompt-display scroll-bar-grey">
-                {prompts?.map(prompt => {
-                  if (prompt === '(upload last image)') {
-                    return (
-                      <div
-                        key={`lastkupdated-${lastUploadedImageIndex}`}
-                        className="page-prompt-display-prompt-image">
-                        <img
-                          src={`http://localhost:3005/uploads/lastUpload.png?${lastUploadedImageIndex}`}
-                          
-                          alt=""
-                          width="400" />
-                      </div>);
-                  }
-                  return <div className="page-prompt-display-prompt" key={prompt}>{prompt}</div>;
-                })}
-                {isRunning ? (
-                  <div className="page-loading">
-                    <LoadingSpinner />
-                  </div>  
-                ) : null}
+              <div className="page-prompt-display-canned">
+                <div className="page-prompt-display-header">
+                  <ActionSelect
+                      actionId={actionId}
+                      actionList={actionList}
+                      setAction={setAction} />
+                </div>
+                <div className="page-prompt-display-body">
+                  <div className="page-prompt-display prompt scroll-bar-grey">
+                    {prompts?.map(prompt => {
+                      if (prompt === '(upload last image)') {
+                        return (
+                          <div
+                            key={`lastkupdated-${lastUploadedImageIndex}`}
+                            className="page-prompt-display-prompt-image">
+                            <img
+                              src={`http://localhost:3005/uploads/lastUpload.png?${lastUploadedImageIndex}`}
+                              
+                              alt=""
+                              width="400" />
+                          </div>);
+                      }
+                      return <div className="page-prompt-display-prompt" key={prompt}>{prompt}</div>;
+                    })}
+                    {isRunning ? (
+                      <div className="page-loading">
+                        <LoadingSpinner />
+                      </div>  
+                    ) : null}
+                  </div>
+                </div>
               </div>
               <div className="page-prompt-nav">
-                <select
-                  className='page-prompt-nav-select'
-                  value={actionId}
-                  onChange={(e) => {
-                    const selectedAction = actionList?.actions.find(action => action.id === e.target.value);
-                    if (selectedAction) {
-                      const newUrl = `${window.location.origin}/${selectedAction.id}`;
-                      if (newUrl !== window.location.href) {
-                        window.history.pushState({ path: newUrl }, '', newUrl);
-                        setAction(null);
-                        setActionToRun(null);
-                      }
-                    }
-                  }}
-                >
-                  {actionList?.actions.map((action, index) => {
-                    if (action.group) {
-                      return (
-                        <optgroup label={action.group} key={index}>
-                          {/* Add individual options for the actions inside the group */}
-                          {actionList?.actions
-                            .filter(subAction => subAction.group === action.group && subAction.name && subAction.id)
-                            .map(subAction => (
-                              <option value={subAction.id} key={subAction.id}>
-                                {subAction.name}
-                              </option>
-                            ))}
-                        </optgroup>
-                      );
-                    }
-                    // If there's no group, return the option directly
-                    return (
-                      <option value={action.id} key={action.id}>
-                        {action.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                <RefreshButton
+                  onClick={() => invalidatePage()} />
                 <div className="fill"></div>
                 <div className="page-prompt-button clear"
                   onClick={() => {
@@ -350,47 +389,67 @@ function Page() {
                 </div>
                 <div className="page-prompt-button run"
                   onClick={() => {
-                    setActionToRun(actionId);
+                    runAI(
+                      actionId,
+                      setDurationStart,
+                      setDurationEnd,
+                      setCurrentDuration,
+                      setIsRunning,
+                      setAction,
+                      setError,
+                      setLoading
+                    );
                   }}>
                   Run
                 </div>
               </div>
 
-              <div className="page-prompt-scratchpad scroll-bar">
+              <div className="page-prompt-scratchpad">
                 <textarea
                   value={scratchPad} className='scroll-bar'
-                  onChange={(e) => setScratchPad(e.target.value)}
-                  placeholder="Iterate..."
+                  onChange={(e) => {
+                    updateScratchPad(e.target.value);
+                  }}
+                  placeholder="prompt..."
                   spellCheck={false}
                 />
+                {/* <div className="page-prompt-scratchpad-header">
+                  <SystemSelect
+                      systemsList={systemsList}
+                      systemId={systemId}
+                      setSystemId={setSystemId} />
+                </div> */}
               </div>
               <div className="page-prompt-nav">
-                <div className={`page-prompt-button speech ${isRecording ? 'recording' : ''}`}
-                  onClick={() => {
-                    if (isRecording) {
-                      stopVoiceRecognition(
-                        setIsRecording
-                      )
-                    }else{
-                      startVoiceRecognition(
-                        (transcription) => setScratchPad(transcription),
-                        isRecording,
-                        setIsRecording
-                      );
-                    }
-                  }}>
-                  {isRecording ? 'Stop' : 'Record'}
-                </div>
+                <RecordButton 
+                  isRecording={isRecording}
+                  startVoiceRecognition={startVoiceRecognition}
+                  updateScratchPad={updateScratchPad}
+                  setIsRecording={setIsRecording}
+                  stopVoiceRecognition={stopVoiceRecognition} />
                 <div className="fill"></div>
                 <div className="page-prompt-button clear"
                   onClick={() => {
-                    setScratchPad('')
+                    updateScratchPad('')
                   }}>
                   Clear
                 </div>
                 <div className="page-prompt-button run"
+                  tabIndex={0}
                   onClick={() => {
-                    setActionToRun(actionId);
+                    runAIConvo(
+                      actionId,
+                      // systemId,
+                      scratchPad,
+
+                      setDurationStart,
+                      setDurationEnd,
+                      setCurrentDuration,
+                      setIsRunning,
+                      setAction,
+                      setError,
+                      setLoading
+                    );
                   }}>
                   Update
                 </div>

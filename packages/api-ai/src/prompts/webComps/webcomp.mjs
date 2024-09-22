@@ -1,5 +1,6 @@
-import webCompInstanceSystem from "../../systems/webCompInstanceSystem.mjs";
-import webCompSystem from "../../systems/webCompSystem.mjs";
+import webCompInstanceSystem from "../../systems/systems/webCompInstanceSystem.mjs";
+import webCompSystem from "../../systems/systems/webCompSystem.mjs";
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 // import textTemplate from "../utils/textTemplate.mjs";
 
 export default {
@@ -10,7 +11,7 @@ export default {
             {
                 model: "gpt-4o",
                 messages: [
-                    webCompSystem,
+                    await webCompSystem.prompt(),
                     {
                         "role": "user",
                         "content": `Create a web component of a button.`,
@@ -23,7 +24,7 @@ export default {
             {
                 model: "gpt-4o",
                 messages: [
-                    webCompInstanceSystem,
+                    await webCompInstanceSystem.prompt(),
                     {
                         "role": "user",
                         "content": `
@@ -38,15 +39,15 @@ export default {
         ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-
-        return `<!-- WEB COMPONENT CODE -->
+        return renderFollowUpResults(
+            action,
+            `<!-- WEB COMPONENT CODE -->
 <script type="module">
     ${action.results[0]}
 </script>
 
 <!-- INSTANCE -->
-${action.results[1]}`;
-
+${action.results[1]}`
+        );
     }
 };

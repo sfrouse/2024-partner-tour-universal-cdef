@@ -1,12 +1,12 @@
-import htmlCssExpertSystem from "../../systems/htmlCssExpertSystem.mjs";
-import textSystem from "../../systems/textSystem.mjs";
+import htmlCssExpertSystem from "../../systems/systems/htmlCssExpertSystem.mjs";
 import getCDefsPrompt from "../utils/getCDefsPrompt.mjs";
 import getCSSTokensPrompt from "../utils/getTokensPrompt.mjs";
-import renderAsText from "../utils/renderAsText.mjs";
 import config from '../../config.mjs';
+import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageToHTMLToWebComps = {
-    name: 'Image...to Web Comps',
+    name: 'Image Results to Web Comps',
     id: 'imageToHTMLToWebComps',
     prompts: async () => {
 
@@ -34,7 +34,7 @@ const imageToHTMLToWebComps = {
         {
           model: "gpt-4o",
           messages: [
-              htmlCssExpertSystem,
+              await htmlCssExpertSystem.prompt(),
               {
                   "role": "user",
                   "content": `
@@ -69,31 +69,10 @@ const imageToHTMLToWebComps = {
       ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-        return `
-<link rel="stylesheet" href="${config.TOKENS_CSS}">
-<script type="module" src="${config.WEB_COMPONENTS}"></script> 
-
-${(action.results[0])}
-
-`;
-
-//         return `
-// <!-- WEB COMPONENT CODE -->
-// <script type="module">
-//     ${action.results[0]}
-// </script>
-
-// <!-- INSTANCE -->
-// ${action.results[1]}
-
-// <!-- TOKENS -->
-// <style>
-//   ${tokens}
-// </style>
-
-// `;
-
+      return renderFollowUpResults(
+        action,
+        designSystemTemplate(action.results[0])
+      );
     }
 };
 

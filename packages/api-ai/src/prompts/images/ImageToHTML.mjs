@@ -1,7 +1,8 @@
-import processImageToHTMLSystem from "../../systems/processImageToHTMLSystem.mjs";
+import processImageToHTMLSystem from "../../systems/systems/processImageToHTMLSystem.mjs";
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageToHTML = {
-    name: 'Image to HTML',
+    name: 'Image to HTML (claude)',
     id: 'imageToHTML',
     prompts: async () => {
         return [
@@ -10,7 +11,7 @@ const imageToHTML = {
                 model: "claude-3-opus-20240229",
                 max_tokens: 1000,
                 temperature: 0,
-                system: processImageToHTMLSystem.content,
+                system: (await processImageToHTMLSystem.prompt()).content,
                 messages: [
                   {
                     role: "user",
@@ -30,8 +31,12 @@ const imageToHTML = {
         ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-        return action.results[0];
+      // CANT DO THIS WITH CLAUDE
+      // return renderFollowUpResults(
+      //   action,
+      //   action.results[0]
+      // );
+      return action.results[0];
     }
 };
 

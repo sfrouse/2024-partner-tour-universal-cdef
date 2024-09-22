@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 export default async function aiApi(
     action
-  ) {
+) {
     const allPrompts = await action.prompts();
     const results = [];
     const conversationHistory = [];

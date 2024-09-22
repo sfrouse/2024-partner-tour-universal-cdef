@@ -1,4 +1,6 @@
-import textSystem from "../../systems/textSystem.mjs";
+import textSystem from "../../systems/systems/textSystem.mjs";
+import textTemplate from "../../templates/textTemplate.mjs";
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 export default {
     name: 'Test',
@@ -8,7 +10,7 @@ export default {
             {
                 model: "gpt-4o",
                 messages: [
-                    textSystem,
+                    await textSystem.prompt(),
                     {
                         "role": "user",
                         "content": `What is a dog?`,
@@ -21,7 +23,9 @@ export default {
         ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-        return action.results.join('\n\n');
+        return renderFollowUpResults(
+            action,
+            textTemplate(action.results.join('<br/><br/>'))
+        );
     }
 };

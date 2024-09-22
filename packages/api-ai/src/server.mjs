@@ -1,12 +1,13 @@
 import express from 'express';
-// import { exec } from 'child_process';
 import cors from 'cors';
 import actionsIndex from './actionsIndex.mjs';
 import writeStringToFile from './prompts/utils/writeStringToFile.mjs';
-import loadFileAsText from './prompts/utils/loadFileAsText.mjs';
 import pullHTMLComponent from './pullHTMLComponent.mjs';
 import { uploadImage } from './services/uploadService.mjs';
 import aiApi from './services/aiApi.mjs';
+import systemsIndex from './systems/systemsIndex.mjs';
+import getAction from './utils/getAction.mjs';
+import getSystem from './utils/getSystem.mjs';
 
 const app = express();
 const port = 3005;
@@ -44,6 +45,18 @@ app.get('/cssTricks', async (req, res) => {
   });
 });
 
+// LIST OF SYSTEMS
+app.get('/systems', (req, res) => {
+  res.json({
+    systems: systemsIndex
+  });
+});
+
+// SYSTEM INFO
+app.get('/system/:systemId', async (req, res) => {
+  return await getSystem(req.params.systemId, res);
+});
+
 // LIST OF ACTIONS
 app.get('/actions', (req, res) => {
   res.json({
@@ -69,6 +82,54 @@ app.get('/ai/:actionId', async (req, res) => {
         actionId: req.params.actionId
       });
     }
+});
+
+// RUN AI w/ ROLLING CONVO
+app.post('/ai/convo/:actionId', async (req, res) => {
+  const action = actionsIndex.find(action => action.id === req.params.actionId);
+  const actionRendered = await getAction(req.params.actionId);
+
+  const newPrompt = req.body;
+  const systemPrompt = newPrompt.messages[0];
+  systemPrompt.content = `The content below is formatted content derived from the previous prompt's answers.
+This new request should augment this formatted content and only return that final augmented version.
+Do not add anything extra like "\`\`\`html" or any comments or formatting around it.
+It needs to act exactly like the formatted content.
+
+${actionRendered.rendered}`;
+
+  const ogPrompts = action.prompts;
+  const newAction = {
+    ...action,
+    prompts: async() => {
+      const previousPrompts = await ogPrompts()
+      previousPrompts.map((prompt, index) => {
+        prompt.messages.push({
+          role: "assistant",
+          content: actionRendered.results[index]
+        })
+      })
+      return [
+        ...previousPrompts,
+        newPrompt
+      ]
+    }
+  }
+
+  // res.json({
+  //   ...newAction,
+  //   prompts: await newAction.prompts()
+  // });
+  if (action) {
+    await aiApi(newAction);
+    return await getAction(req.params.actionId, res);
+  }else{
+    return res.status(400).json({
+      success: false,
+      error: 'Action not found',
+      actionId: req.params.actionId
+    });
+  }
 });
 
 app.get('/resetlist', async (req, res) => {
@@ -138,33 +199,43 @@ async function deleteAction(action) {
   // );
 }
 
-async function getAction(actionId, res) {
-  const action = actionsIndex.find(action => action.id === actionId);
-  if (action) {
-    let results = '';
-    try {
-      results = await loadFileAsText(
-        `./src/generatedCode/${action.id}.json`
-      );
-      results = JSON.parse(results);
-    }catch(err) {
-      console.log('err', err);
-    }// nada
+// async function getAction(actionId, res) {
+//   const action = actionsIndex.find(action => action.id === actionId);
+//   if (action) {
+//     let results = '';
+//     try {
+//       results = await loadFileAsText(
+//         `./src/generatedCode/${action.id}.json`
+//       );
+//       results = JSON.parse(results);
+//     }catch(err) {
+//       console.log('err', err);
+//     }// nada
 
-    const finalAction = {
-      ...action,
-      prompts: await action.prompts(),
-      results
-    }
-    res.json({
-      ...finalAction,
-      rendered: await action.render(finalAction)
-    });
-  }else{
-    return res.status(400).json({
-      error: 'Action not found',
-      actionId: actionId
-    });
-  }
-}
+//     const finalAction = {
+//       ...action,
+//       prompts: await action.prompts(),
+//       results
+//     }
+
+//     const rendering = await action.render(finalAction);
+//     finalAction.rendered = rendering;
+    
+//     if (res) {
+//       res.json(finalAction);
+//     }else{
+//       return finalAction;
+//     }
+//   }else{
+//     if (res) {
+//       return res.status(400).json({
+//         error: 'Action not found',
+//         actionId: actionId
+//       });
+//     }else{
+//       return false;
+//     }
+//   }
+// }
+
 

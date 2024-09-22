@@ -18,7 +18,8 @@ export default function startVoiceRecognition(
   
       recognition.onresult = (event) => {
         const speechResult = event.results[event.results.length - 1][0].transcript;
-        setTranscript((prevTranscript) => prevTranscript + ' ' + speechResult); // Append new text to the previous one
+        // setTranscript((prevTranscript) => prevTranscript + ' ' + speechResult); // Append new text to the previous one
+        setTranscript(speechResult);
       };
   
       recognition.onerror = (event) => {

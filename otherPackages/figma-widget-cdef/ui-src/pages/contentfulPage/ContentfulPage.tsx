@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Flex, IconButton, Spinner, ToggleButton } from '@contentful/f36-components';
+import { Flex, Spinner, ToggleButton } from '@contentful/f36-components';
 import { ExternalLinkIcon } from '@contentful/f36-icons';
 import { CDefManifest } from "@contentful-demos/component-definitions/dist/index.js";
 import * as contentful from 'contentful';
@@ -131,18 +131,6 @@ const ContentfulPage = (
                                         }`, '_blank');
                                 }}
                                 />
-                            <IconButton
-                                icon={<ExternalLinkIcon />}
-                                aria-label="Contentful Entry"
-                                as="a"
-                                href={`https://app.contentful.com/spaces/${
-                                    spaceId
-                                }/environments/${
-                                    environmentId
-                                }/entries/${
-                                    entry.sys.id
-                                }`}
-                                target="_new" />
                             {entry.fields['componentInstance'] ? (
                                 <CUIToolbarButton
                                     label="Create"

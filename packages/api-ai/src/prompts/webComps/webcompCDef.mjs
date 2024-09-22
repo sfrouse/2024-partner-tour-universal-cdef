@@ -1,7 +1,8 @@
-import webCompInstanceSystem from "../../systems/webCompInstanceSystem.mjs";
+import webCompInstanceSystem from "../../systems/systems/webCompInstanceSystem.mjs";
 import dmoButtonCDef from '@contentful-demos/web-components/dist/cdef/dmo-button.cdef.json' assert { type: 'json' }
-import config from '../../config.mjs';
 import renderAsText from "../utils/renderAsText.mjs";
+import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
+import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 export default {
     name: 'Web Comp using CDef',
@@ -11,7 +12,7 @@ export default {
             {
                 model: "gpt-4o",
                 messages: [
-                    webCompInstanceSystem,
+                    await webCompInstanceSystem.prompt(),
                     {
                         "role": "user",
                         "content": `
@@ -32,15 +33,13 @@ export default {
         ]
     },
     render: async (action) => {
-        if (!action.results) return '';
-
-        return `
-<link rel="stylesheet" href="${config.TOKENS_CSS}">
-<script type="module" src="${config.WEB_COMPONENTS}"></script>        
-<!-- INSTANCE -->
-${action.results[0]}
-
-${renderAsText(action.results[0])}`;
-
+        return renderFollowUpResults(
+            action,
+            designSystemTemplate(`
+                <!-- INSTANCE -->
+                ${action.results[0]}
+                
+                ${renderAsText(action.results[0])}`)
+        );
     }
 };
