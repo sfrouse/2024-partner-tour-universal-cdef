@@ -19,9 +19,9 @@ const runAI = async(
 
     const apiUrl = `${AI_SERVICE_URL}/ai/${actionToRun}`;
     fetch(apiUrl)
-        .then((response) => {
+        .then(async (response) => {
             if (!response.ok) {
-            throw new Error('Network response was not ok');
+                throw new Error(JSON.stringify(await response.json(), null, 2));
             }
             return response.json();
         })
@@ -34,7 +34,8 @@ const runAI = async(
             // ------------------------
         })
         .catch((error) => {
-            setError(`run action: ${error.message}`);
+            setError(`run action: ${error}`);
+            setIsRunning(false);
             setLoading(false);
         });
 }

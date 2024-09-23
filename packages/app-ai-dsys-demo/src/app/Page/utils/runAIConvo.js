@@ -1,3 +1,4 @@
+import config from "@partner-tour-2024/api-ai/src/config.mjs";
 import { AI_SERVICE_URL } from "../Page";
 
 const runAIConvo = async(
@@ -23,7 +24,7 @@ const runAIConvo = async(
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-        model: "gpt-4o",
+        model: config.OPEN_AI_MODEL,
         messages: [
             {
                 "role": "system",
@@ -34,9 +35,9 @@ const runAIConvo = async(
                 "content": prompt,
             }
         ],
-        temperature: 0,
-        max_tokens: 1000,
-        top_p: 1,
+        temperature: config.OPEN_AI_TEMPERATURE,
+        max_tokens: config.OPEN_AI_MAX_TOKENS,
+        top_p: config.OPEN_AI_TOP_P,
     });
 
     const requestOptions = {
@@ -46,12 +47,18 @@ const runAIConvo = async(
         redirect: "follow"
     };
 
-    const apiUrl = `${AI_SERVICE_URL}/ai/convo/${actionId}`;
+    const apiUrl = `${AI_SERVICE_URL}/ai-convo/${actionId}`;
     const result = await fetch(apiUrl, requestOptions)
-        .then((response) => response.json())
+        .then(async (response) => {
+            if (!response.ok) {
+                throw new Error(JSON.stringify(await response.json(), null, 2));
+            }
+            return response.json();
+        })
         .catch((error) => {
-            setError(`run action: ${error.message}`);
+            setError(`run action: ${error}`);
             setLoading(false);
+            setIsRunning(false);
         });
 
     setAction(result);

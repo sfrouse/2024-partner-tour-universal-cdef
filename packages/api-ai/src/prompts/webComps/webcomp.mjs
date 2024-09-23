@@ -1,5 +1,6 @@
-import webCompInstanceSystem from "../../systems/systems/webCompInstanceSystem.mjs";
-import webCompSystem from "../../systems/systems/webCompSystem.mjs";
+import config from "../../config.mjs";
+import webCompInstanceSystem from "../../systems/systems/webComps/webCompInstanceSystem.mjs";
+import webCompSystem from "../../systems/systems/webComps/webCompSystem.mjs";
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 // import textTemplate from "../utils/textTemplate.mjs";
 
@@ -9,7 +10,7 @@ export default {
     prompts: async () => {
         return [
             {
-                model: "gpt-4o",
+                model: config.OPEN_AI_MODEL,
                 messages: [
                     await webCompSystem.prompt(),
                     {
@@ -17,12 +18,12 @@ export default {
                         "content": `Create a web component of a button.`,
                     }
                 ],
-                temperature: 0,
-                max_tokens: 1000,
-                top_p: 1,
+                temperature: config.OPEN_AI_TEMPERATURE,
+                max_tokens: config.OPEN_AI_MAX_TOKENS,
+                top_p: config.OPEN_AI_TOP_P,
             },
             {
-                model: "gpt-4o",
+                model: config.OPEN_AI_MODEL,
                 messages: [
                     await webCompInstanceSystem.prompt(),
                     {
@@ -32,9 +33,9 @@ export default {
                             attaching a click action that alerts a "hello, world" message.`,
                     }
                 ],
-                temperature: 0,
-                max_tokens: 1000,
-                top_p: 1,
+                temperature: config.OPEN_AI_TEMPERATURE,
+                max_tokens: config.OPEN_AI_MAX_TOKENS,
+                top_p: config.OPEN_AI_TOP_P,
             }
         ]
     },
@@ -47,7 +48,8 @@ export default {
 </script>
 
 <!-- INSTANCE -->
-${action.results[1]}`
+${action.results[1]}
+`
         );
     }
 };

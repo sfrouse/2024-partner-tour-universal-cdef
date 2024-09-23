@@ -1,8 +1,7 @@
-import htmlCssExpertSystem from "../../systems/systems/htmlCssExpertSystem.mjs";
-import getCDefsPrompt from "../utils/getCDefsPrompt.mjs";
-import getCSSTokensPrompt from "../utils/getTokensPrompt.mjs";
-import config from '../../config.mjs';
+import config from "../../config.mjs";
+import designSystemComponentsSystem from "../../systems/systems/designSystem/designSystemComponentsSystem.mjs";
 import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
+import getCDefsPrompt from "../../utils/getCDefsPrompt.mjs";
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageToHTMLToWebComps = {
@@ -10,8 +9,6 @@ const imageToHTMLToWebComps = {
     id: 'imageToHTMLToWebComps',
     prompts: async () => {
 
-      const cdefs = await getCDefsPrompt();
-      const tokens = await getCSSTokensPrompt();
       let imageToHTML;
       try {
         imageToHTML = await import(
@@ -32,39 +29,24 @@ const imageToHTMLToWebComps = {
 
       return [
         {
-          model: "gpt-4o",
+          model: config.OPEN_AI_MODEL,
           messages: [
-              await htmlCssExpertSystem.prompt(),
+              await designSystemComponentsSystem.prompt(),
               {
                   "role": "user",
                   "content": `
+                    Can you update this HTML to use the custom web components below.
+                    Try to keep everything as close as possible to the original.
                   
-                  Can you update this HTML to use the custom web components and css custom properties below.
-                
-                  \`\`\`
-                  ${imageToHTML.default[0]}
-                  \`\`\`
-
-                  Tokens:
-                  \`\`\`
-                  ${tokens}
-                  \`\`\`
-
-                  This is the manifest for all of the components.
-                  It is followed by the component definition of each component.
-                  Pay attention to how the components can be implemented. 
-                  dmo-container is a replacement for div.
-                  If you want to render a div, use dmo-container.
-                  Do not use inline styles with dmo-container, use it's properties found in it's component definition.
-                  You can ignore adding any css to these custom components, they take care of layout entirely.
-                    \`\`\`${cdefs}\`\`\`
-                  
+                    \`\`\`
+                    ${imageToHTML.default[0]}
+                    \`\`\`
                   `,
               }
           ],
-          temperature: 0,
-          max_tokens: 1000,
-          top_p: 1,
+          temperature: config.OPEN_AI_TEMPERATURE,
+          max_tokens: config.OPEN_AI_MAX_TOKENS,
+          top_p: config.OPEN_AI_TOP_P,
       }
       ]
     },

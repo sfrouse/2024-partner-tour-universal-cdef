@@ -15,6 +15,7 @@ const textTemplate = (text) => {
                 white-space: pre-wrap; /* Preserves whitespace but allows wrapping */
                 word-wrap: break-word; /* Breaks long words onto the next line */
                 overflow-wrap: break-word; /* Ensures long words will break */
+                margin: 0;
             }
         </style>
 

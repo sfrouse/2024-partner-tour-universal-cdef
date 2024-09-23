@@ -2,11 +2,9 @@ import systemsIndex from "../systems/systemsIndex.mjs";
 
 export default async function getSystem(systemId, res) {
     const system = systemsIndex.find(system => system.id === systemId);
+
     if (system) {
-      const finalSystem = {
-        ...system,
-        prompt: await system.prompt()
-      }
+      const finalSystem = system;
      
       if (res) {
         res.json(finalSystem);

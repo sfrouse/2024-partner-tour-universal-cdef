@@ -5,11 +5,8 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8060 });
 
 wss.on('connection', (ws) => {
-  console.log('New client connected!');
-
   // When a message is received from the client
   ws.on('message', (message) => {
-    console.log(`Received: ${message}`);
     // Echo the message back to the client
     // Broadcast the message to all connected clients
     wss.clients.forEach((client) => {
@@ -19,10 +16,10 @@ wss.on('connection', (ws) => {
     });
   });
 
-  // When the client disconnects
-  ws.on('close', () => {
-    console.log('Client disconnected');
-  });
+  // // When the client disconnects
+  // ws.on('close', () => {
+  //   console.log('Client disconnected');
+  // });
 });
 
 console.log('WebSocket server is running on ws://localhost:8060');

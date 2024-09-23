@@ -6,7 +6,9 @@ export default async function pullHTMLComponent() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-        await page.goto('https://css-tricks.com/guides/');// 'https://css-tricks.com/');
+        // await page.goto('https://css-tricks.com/guides/');// 'https://css-tricks.com/');
+        await page.goto('https://openai.com/chatgpt/education/');
+        
         await page.setViewport({
             width: 700,
             height: 800,
@@ -43,9 +45,9 @@ export default async function pullHTMLComponent() {
         //             ${compHtml.html}`,
         //         }
         //     ],
-        //     temperature: 0,
+        //     temperature: config.OPEN_AI_TEMPERATURE,
         //     max_tokens: 3000,
-        //     top_p: 1,
+        //     top_p: config.OPEN_AI_TOP_P,
         // });
 
         // let content = '';

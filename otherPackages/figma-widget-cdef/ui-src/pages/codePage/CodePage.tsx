@@ -4,7 +4,7 @@ import './CodePage.scss';
 
 const CodePage = (
     args: {
-        exampleCode: string
+        exampleCode: string,
     }
 ) => {
   

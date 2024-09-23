@@ -36,4 +36,8 @@ export default class WebSocketManager {
     removeListener(listener: MessageListener): void {
         this.listeners.delete(listener);
     }
+
+    send(msg: string): void {
+        this.ws.send(msg);
+    }
 }

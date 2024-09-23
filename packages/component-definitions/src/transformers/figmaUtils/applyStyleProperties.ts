@@ -4,7 +4,7 @@ import {
     findFigmaCompositePropViaTokenLookup,
     findFigmaPropViaTokenLookup
 } from "../../utils/findViaTokenLookup";
-import { processSlotChildren } from "../utils/findSlotChildren";
+import { findTextChildren, processSlotChildren, processTextChildren } from "../utils/findSlotChildren";
 
 export async function applyStyleProperties(
     figmaInstance: InstanceNode,
@@ -23,7 +23,7 @@ export async function applyStyleProperties(
     let width: number = 500;
     let height: number = 500;
 
-    let layoutDirection: string | undefined;
+    let layoutDirection: string | undefined = 'column';
     let alignItems: string | undefined;
     let justifyContent: string | undefined;
 
@@ -261,7 +261,7 @@ export async function applyStyleProperties(
     }
     if (justifyContent) {
         processSlotChildren(figmaInstance, (slot: any) => {
-            switch ( justifyContent) {
+            switch ( justifyContent ) {
                 case 'start': {
                     slot.primaryAxisAlignItems = 'MIN';
                     break;
@@ -304,6 +304,8 @@ export async function applyStyleProperties(
         }
     }
 
+    
+
     if (isRoot) {
         if (layoutSizingHorizontal === "FILL" && figmaInstance.parent) {
             figmaInstance.resize(
@@ -320,6 +322,13 @@ export async function applyStyleProperties(
                 slot.layoutSizingHorizontal = "HUG";
             });
         }
+        if (layoutSizingHorizontal === 'FIXED') {
+            console.log('FIXED ROOT');
+            figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
+            processSlotChildren(figmaInstance, (slot: any) => {
+                slot.layoutSizingHorizontal = "FILL";
+            });
+        }
     }else{
         if ((figmaInstance?.parent as any)?.layoutMode !== "NONE") {
             figmaInstance.layoutSizingHorizontal = layoutSizingHorizontal;
@@ -328,10 +337,17 @@ export async function applyStyleProperties(
                 processSlotChildren(figmaInstance, (slot: any) => {
                     slot.layoutSizingHorizontal = "FILL";
                 });
+                processTextChildren(figmaInstance, (text: TextNode) => {
+                    console.log('TEXT!!!!!!', text );
+                    text.layoutSizingHorizontal = "FILL";
+                });
             }
             if (layoutSizingHorizontal === 'HUG') {
                 processSlotChildren(figmaInstance, (slot: any) => {
                     slot.layoutSizingHorizontal = "HUG";
+                });
+                processTextChildren(figmaInstance, (text: TextNode) => {
+                    text.layoutSizingHorizontal = "HUG";
                 });
             }
         }

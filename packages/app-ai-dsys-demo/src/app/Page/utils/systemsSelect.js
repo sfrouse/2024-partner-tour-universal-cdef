@@ -3,17 +3,20 @@
 const SystemSelect =({
     systemId,
     systemsList,
-    setSystemId
+    setSystemId,
+    setSystem
 }) => {
     return (
         <select
             value={systemId}
             onChange={(e) => {
-                const selectedAction = systemsList?.systems?.find(system => system.id === e.target.value);
-                if (selectedAction) {
-                    setSystemId(selectedAction.id);
+                const selectedSystem = systemsList?.systems?.find(system => system.id === e.target.value);
+                if (selectedSystem) {
+                    setSystemId(selectedSystem.id);
+                    setSystem(selectedSystem);
                 }else{
-                    setSystemId('text')
+                    setSystemId(null);
+                    setSystem(null);
                 }
             }}
         >

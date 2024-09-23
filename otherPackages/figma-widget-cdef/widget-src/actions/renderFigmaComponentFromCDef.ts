@@ -15,11 +15,9 @@ export default async function renderFigmaComponentFromCDef(
 
     // Find the parent of this widget
     const widgetNode = figma.getNodeById(nodeId) as WidgetNode;
-    let instanceParent: FrameNode | PageNode | undefined;
+    let instanceParent: FrameNode | undefined;
     if (widgetNode.parent && widgetNode.parent.type === "FRAME") {
         instanceParent = widgetNode.parent;
-    }else{
-        instanceParent = figma.currentPage;
     }
     if (!instanceParent) return;
 
@@ -27,7 +25,7 @@ export default async function renderFigmaComponentFromCDef(
     clearStage(nodeId);
     
     // Create New Instance
-    return await definitionInstanceToFigmaInstance(
+    const figmaInstance = await definitionInstanceToFigmaInstance(
         cdef,
         cDefRootUrl,
         instanceParent as FrameNode,
@@ -39,4 +37,11 @@ export default async function renderFigmaComponentFromCDef(
             }
         }
     );
+
+    instanceParent.resize(
+        instanceParent.width,
+        figmaInstance.height + 150
+    );
+
+    return figmaInstance;
 }

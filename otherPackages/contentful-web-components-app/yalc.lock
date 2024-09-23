@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@contentful-demos/component-definitions": {
-      "signature": "00188f6e33593dee346dd7b09a2fe5c6",
+      "signature": "f2f6953846488269f5dfb032b6987ce3",
       "file": true,
       "replaced": "*"
     }

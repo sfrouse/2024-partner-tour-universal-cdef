@@ -30,67 +30,15 @@ export enum DMOTextTypeEnum {
     'Demo Text', {
         designProperties: [
             {
-              property: CDefDesignProperty.TEXT_COLOR,
-              options: semantic.text
+                property: CDefDesignProperty.TEXT_COLOR,
+                options: semantic.text
             },
-            {
-            property: CDefDesignProperty.HORIZONTAL_RESIZING,
-            options: {
-                'Fixed': 'fixed',
-                'Fill': 'fill',
-                'Hug': 'hug'
-            },
-            default: 'hug'
-            },
-            {
-            property: CDefDesignProperty.WIDTH,
-            },
-            {
-            property: CDefDesignProperty.HORIZONTAL_FLEX_GROW,
-            options: {
-                '1': '1',
-                '2': '2',
-                '3': '3',
-                '4': '4',
-                '5': '5',
-                '6': '6',
-                '7': '7',
-                '8': '8',
-                '9': '9',
-                '10': '10',
-                '11': '11',
-                '12': '12'
-            }
-            },
-            {
-            property: CDefDesignProperty.VERTICAL_RESIZING,
-            options: {
-                'Fixed': 'fixed',
-                'Fill': 'fill',
-                'Hug': 'hug'
-            },
-            default: 'hug'
-            },
-            {
-            property: CDefDesignProperty.HEIGHT,
-            },
-            {
-            property: CDefDesignProperty.VERTICAL_FLEX_GROW,
-            options: {
-                '1': '1',
-                '2': '2',
-                '3': '3',
-                '4': '4',
-                '5': '5',
-                '6': '6',
-                '7': '7',
-                '8': '8',
-                '9': '9',
-                '10': '10',
-                '11': '11',
-                '12': '12'
-            }
-            }
+            {property: CDefDesignProperty.HORIZONTAL_RESIZING},
+            {property: CDefDesignProperty.WIDTH,},
+            {property: CDefDesignProperty.HORIZONTAL_FLEX_GROW},
+            {property: CDefDesignProperty.VERTICAL_RESIZING},
+            {property: CDefDesignProperty.HEIGHT},
+            {property: CDefDesignProperty.VERTICAL_FLEX_GROW}
             // TYPOGRAPHY (NO, DONE VIA PROPS)
             // {
             //   property: CDefDesignProperty.FONT,

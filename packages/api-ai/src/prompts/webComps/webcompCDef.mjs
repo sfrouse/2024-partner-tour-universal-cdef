@@ -1,8 +1,9 @@
-import webCompInstanceSystem from "../../systems/systems/webCompInstanceSystem.mjs";
+import webCompInstanceSystem from "../../systems/systems/webComps/webCompInstanceSystem.mjs";
 import dmoButtonCDef from '@contentful-demos/web-components/dist/cdef/dmo-button.cdef.json' assert { type: 'json' }
 import renderAsText from "../utils/renderAsText.mjs";
 import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
+import config from "../../config.mjs";
 
 export default {
     name: 'Web Comp using CDef',
@@ -10,7 +11,7 @@ export default {
     prompts: async () => {
         return [
             {
-                model: "gpt-4o",
+                model: config.OPEN_AI_MODEL,
                 messages: [
                     await webCompInstanceSystem.prompt(),
                     {
@@ -26,9 +27,9 @@ export default {
                             \`\`\``,
                     }
                 ],
-                temperature: 0,
-                max_tokens: 1000,
-                top_p: 1,
+                temperature: config.OPEN_AI_TEMPERATURE,
+                max_tokens: config.OPEN_AI_MAX_TOKENS,
+                top_p: config.OPEN_AI_TOP_P,
             }
         ]
     },

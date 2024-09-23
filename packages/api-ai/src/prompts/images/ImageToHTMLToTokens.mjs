@@ -1,15 +1,15 @@
 import htmlCssExpertSystem from "../../systems/systems/htmlCssExpertSystem.mjs";
-import getCSSTokensPrompt from "../utils/getTokensPrompt.mjs";
-import config from '../../config.mjs';
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
+import config from "../../config.mjs";
+import getTokensPrompt from "../../utils/tokens/getTokensPrompt.mjs";
 
 const imageToHTMLToTokens = {
-    name: 'Image Results to Tokens',
+    name: 'Image Results to Tokens (Simple)',
     id: 'imageToHTMLToTokens',
     prompts: async () => {
 
-      const tokens = await getCSSTokensPrompt();
+      const tokens = await getTokensPrompt();
       let imageToHTML;
       try {
         imageToHTML = await import(
@@ -30,28 +30,28 @@ const imageToHTMLToTokens = {
 
       return [
           {
-            model: "gpt-4o",
+            model: config.OPEN_AI_MODEL,
             messages: [
                 await htmlCssExpertSystem.prompt(),
                 {
                     "role": "user",
-                    "content": `
-                    
-                    Can you update this HTML to use the css custom properties below.
-                  
-                    \`\`\`
-                    ${imageToHTML.default[0]}
-                    \`\`\`
+                    "content": `${[
+  `Can you update this HTML to use the css custom properties below.`,
+  `Try to keep everything as close as possible to the original.`,
+].join(' ')}
 
-                    Tokens:
-                    \`\`\`
-                    ${tokens}
-                    \`\`\``,
+\`\`\`
+${imageToHTML.default[0]}
+\`\`\`
+
+${tokens}
+
+`,
                 }
             ],
-            temperature: 0,
-            max_tokens: 1000,
-            top_p: 1,
+            temperature: config.OPEN_AI_TEMPERATURE,
+            max_tokens: config.OPEN_AI_MAX_TOKENS,
+            top_p: config.OPEN_AI_TOP_P,
         }
       ]
     },

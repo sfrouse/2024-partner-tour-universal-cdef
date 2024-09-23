@@ -1,5 +1,4 @@
 import processImageToHTMLSystem from "../../systems/systems/processImageToHTMLSystem.mjs";
-import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageToHTML = {
     name: 'Image to HTML (claude)',
@@ -9,8 +8,8 @@ const imageToHTML = {
             {
                 type: "claude",
                 model: "claude-3-opus-20240229",
-                max_tokens: 1000,
-                temperature: 0,
+                max_tokens: 3000,
+                temperature: 1,
                 system: (await processImageToHTMLSystem.prompt()).content,
                 messages: [
                   {
@@ -21,8 +20,9 @@ const imageToHTML = {
                       },
                       {
                         type: "text",
-                        text: `
-                          Can you produce HTML from this image of a web page?`
+                        text: [
+                          `Can you produce HTML from this image of a web page?`,
+                        ].join(' ')
                       }
                     ]
                   }

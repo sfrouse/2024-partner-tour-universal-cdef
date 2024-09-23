@@ -8,6 +8,12 @@ import aiApi from './services/aiApi.mjs';
 import systemsIndex from './systems/systemsIndex.mjs';
 import getAction from './utils/getAction.mjs';
 import getSystem from './utils/getSystem.mjs';
+import augmentingPromptSystem from './systems/systems/augmentingPrompt.mjs';
+import tiktoken from './utils/tiktoken.mjs';
+import findAllPrompts from './utils/findAllPrompts.mjs';
+import loadFileAsText from './prompts/utils/loadFileAsText.mjs';
+import config from './config.mjs';
+import designSystemTemplate from './templates/designSystemTemplate.mjs';
 
 const app = express();
 const port = 3005;
@@ -21,18 +27,34 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
+// Delete all Results
 app.get('/reset', async (req, res) => {
   for (const action of actionsIndex) {
     deleteAction(action);
   }
-  
   res.json({
     success: true
   });
 });
 
+// Latest Usage
+app.get('/latest-usage', async (req, res) => {
+  let usage = {};
+  try {
+    const usageResults = await loadFileAsText(
+      `./src/generatedCode/latest.usage.json`
+    );
+    usage = JSON.parse(usageResults);
+  }catch(err) {
+    console.log('err', err);
+  }// nada
+  res.json(usage);
+});
+
+// Pull HTML/CSS from CSS Tricks
 app.get('/cssTricks', async (req, res) => {
   const htmlComp = await pullHTMLComponent();
+  console.log('htmlComp', htmlComp);
   const final = `<style>${htmlComp.css}</style>${htmlComp.html}`;
   const outputFile = `./src/generatedCode/cssTricksSource.mjs`;
   await writeStringToFile(
@@ -69,9 +91,34 @@ app.get('/action/:actionId', async (req, res) => {
   return await getAction(req.params.actionId, res);
 });
 
+// =======================================
+// count the tokens...
+app.post('/token-count', async (req, res) => {
+  const body = req.body;
+  const result = tiktoken(body.prompt);
+  res.json({
+    tokens: result
+  });
+});
+
 // RUN AI
 app.get('/ai/:actionId', async (req, res) => {
     const action = actionsIndex.find(action => action.id === req.params.actionId);
+    const allPrompts = findAllPrompts({
+      ...action,
+      prompts: await action.prompts()
+    });
+    const tokenCount = tiktoken(allPrompts);
+    const limit = config.OPEN_AI_TOKEN_LIMIT;
+    if (tokenCount > limit) {
+      res.status(400).json({
+        success: false,
+        error: `Prompt too big tokens: ${tokenCount} (limit: ${limit})`,
+        actionId: req.params.actionId
+      });
+      return;
+    }
+
     if (action) {
       await aiApi(action);
       return await getAction(req.params.actionId, res);
@@ -84,19 +131,28 @@ app.get('/ai/:actionId', async (req, res) => {
     }
 });
 
+// AI OPEN
+app.post('/ai-open-ended', async (req, res) => {
+  const newPrompt = req.body;
+  const action = {
+    name: "Open Ended Question",
+    id: "openEnded",
+    prompts: () => [
+      newPrompt
+    ]
+  };
+  await aiApi(action);
+  return await getAction("openEnded", res);
+});
+
 // RUN AI w/ ROLLING CONVO
-app.post('/ai/convo/:actionId', async (req, res) => {
+app.post('/ai-convo/:actionId', async (req, res) => {
   const action = actionsIndex.find(action => action.id === req.params.actionId);
   const actionRendered = await getAction(req.params.actionId);
 
   const newPrompt = req.body;
   const systemPrompt = newPrompt.messages[0];
-  systemPrompt.content = `The content below is formatted content derived from the previous prompt's answers.
-This new request should augment this formatted content and only return that final augmented version.
-Do not add anything extra like "\`\`\`html" or any comments or formatting around it.
-It needs to act exactly like the formatted content.
-
-${actionRendered.rendered}`;
+  systemPrompt.content = await augmentingPromptSystem(actionRendered.rendered);
 
   const ogPrompts = action.prompts;
   const newAction = {
@@ -130,6 +186,26 @@ ${actionRendered.rendered}`;
       actionId: req.params.actionId
     });
   }
+});
+// ===========================================
+
+app.post('/action-code-update/:actionId', async (req, res) => {
+  const action = await getAction(req.params.actionId);
+
+  const results = [...action.results];
+  if (action.results?.length > action.prompts?.length) {
+    results.pop();
+  }
+  const newCode = req.body;
+  results.push(designSystemTemplate(newCode.code));
+
+  const outputFile = `./src/generatedCode/${action.id}.json`;
+  await writeStringToFile(
+    outputFile,
+    JSON.stringify(results, null, 2)
+  );
+
+  res.send(results);
 });
 
 app.get('/resetlist', async (req, res) => {
@@ -192,50 +268,12 @@ async function deleteAction(action) {
     outputFile,
     ``
   );
-  // const outputFileCompiled = `./src/generatedCode/${action.id}-compiled.json`;
-  // await writeStringToFile(
-  //   outputFileCompiled,
-  //   ``
-  // );
+
+  const usageFile = `./src/generatedCode/${action.id}.usage.json`;
+  await writeStringToFile(
+    usageFile,
+    `{}`
+  );
 }
-
-// async function getAction(actionId, res) {
-//   const action = actionsIndex.find(action => action.id === actionId);
-//   if (action) {
-//     let results = '';
-//     try {
-//       results = await loadFileAsText(
-//         `./src/generatedCode/${action.id}.json`
-//       );
-//       results = JSON.parse(results);
-//     }catch(err) {
-//       console.log('err', err);
-//     }// nada
-
-//     const finalAction = {
-//       ...action,
-//       prompts: await action.prompts(),
-//       results
-//     }
-
-//     const rendering = await action.render(finalAction);
-//     finalAction.rendered = rendering;
-    
-//     if (res) {
-//       res.json(finalAction);
-//     }else{
-//       return finalAction;
-//     }
-//   }else{
-//     if (res) {
-//       return res.status(400).json({
-//         error: 'Action not found',
-//         actionId: actionId
-//       });
-//     }else{
-//       return false;
-//     }
-//   }
-// }
 
 

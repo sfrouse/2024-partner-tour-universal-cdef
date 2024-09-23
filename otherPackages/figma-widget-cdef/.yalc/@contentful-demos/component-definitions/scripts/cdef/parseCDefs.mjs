@@ -7,6 +7,7 @@ import createDir from "./workers/createDir.mjs";
 import compDefitionToFigmaCodeConnect from "./transformers/compDefinitionToFigmaCodeConnect.mjs";
 import compDefitionToStorybook from "./transformers/compDefinitionToStorybook.mjs";
 import { logDone, logStart } from "../log.mjs";
+import compDefitionToAI from "./transformers/compDefinitionToAI.mjs";
 
 export default async function parseCDefs(
     source,
@@ -116,6 +117,17 @@ export default async function parseCDefs(
                     );
                 }
                 logDone('Storybook', true);
+
+                // AI
+                logStart('AI CDef', true);
+                const aiCDef = compDefitionToAI(cdef, className);
+                if (aiCDef) {
+                    await writeFile(
+                        `${classDestFolder}/${className}.ai.txt`,
+                        aiCDef
+                    );
+                }
+                logDone('AI CDef', true);
 
                 // Add to Manifest
                 manifest.definitions[tagName] = {

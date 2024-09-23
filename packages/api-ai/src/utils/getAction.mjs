@@ -6,10 +6,20 @@ export default async function getAction(actionId, res) {
     if (action) {
       let results = '';
       try {
-        results = await loadFileAsText(
+        const contentResults = await loadFileAsText(
           `./src/generatedCode/${action.id}.json`
         );
-        results = JSON.parse(results);
+        results = JSON.parse(contentResults);
+      }catch(err) {
+        console.log('err', err);
+      }// nada
+
+      let usage = {};
+      try {
+        const usageResults = await loadFileAsText(
+          `./src/generatedCode/${action.id}.usage.json`
+        );
+        usage = JSON.parse(usageResults);
       }catch(err) {
         console.log('err', err);
       }// nada
@@ -17,11 +27,19 @@ export default async function getAction(actionId, res) {
       const finalAction = {
         ...action,
         prompts: await action.prompts(),
-        results
+        results,
+        usage
       }
   
       const rendering = await action.render(finalAction);
       finalAction.rendered = rendering;
+
+      // const allPrompts = findAllPrompts({
+      //   ...action,
+      //   prompts: await action.prompts()
+      // });
+      // const tokenCount = tiktoken(allPrompts);
+      // finalAction.tokenCount = tokenCount;
       
       if (res) {
         res.json(finalAction);

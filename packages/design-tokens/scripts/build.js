@@ -23,6 +23,7 @@ export default async function build() {
     );
 
     const finalCSS = [];
+    const finalSimpleCSS = [];
     const finalSCSS = [];
     const finalJS = [];
     const finalJSOptions = [];
@@ -39,6 +40,13 @@ export default async function build() {
         lookup.tokens.push({
             ...token.keys
         });
+
+        finalSimpleCSS.push(
+            token.keys.css
+                .replace(/var\(|\)/g, '')
+                .replace(/--wc-/g, '')
+        );
+
         Object.entries(token.outputs).map((entry, index) => {
             // const name = entry[0];
             if (
@@ -63,6 +71,11 @@ export default async function build() {
     await fs.promises.writeFile(
         `${dest}/tokens.css`,
         `@import url('${fontsUrl}');\n\n:root, .light {\n\t${finalCSS.join('\n\t')}\n}`
+    );
+
+    await fs.promises.writeFile(
+        `${dest}/tokens.simple.txt`,
+        finalSimpleCSS.join(' ')
     );
 
     await fs.promises.writeFile(
@@ -95,6 +108,27 @@ export default async function build() {
     await fs.promises.writeFile(
         `${dest}/semantic.ts`,
         `const semantic = ${JSON.stringify(semantic, null, 2)};\nexport default semantic;`
+    );
+
+    const simpleSemanticCSS = {};
+    Object.entries(semantic).map(entry => {
+        const name = entry[0];
+        const value = entry[1];
+        simpleSemanticCSS[name] = {
+            "possibleValues": []
+        }
+        Object.entries(value).map(valEntry => {
+            simpleSemanticCSS[name].possibleValues.push(
+                valEntry[1]
+                    .replace(/wc_/g, '')
+                    .replace(/_/g, '-')
+            )
+        })
+    });
+
+    await fs.promises.writeFile(
+        `${dest}/tokens.semantic.simple.txt`,
+        JSON.stringify(simpleSemanticCSS) // , null, 2)
     );
 }
 

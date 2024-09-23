@@ -21,12 +21,20 @@ const webCompInstanceSystem = {
                     });
                 </script>
 
-
                 You should never create an actual web component.
                 For example, this is an instance of a web component named 'dmo-button'
                 <dmo-button design="primary" disabled>Hi there</dmo-button>
-                
-                If the JSON Schema property has an x-cdef hidden property set to true, you should always ignore it.
+
+                `
+        }
+    }
+};
+
+export default webCompInstanceSystem;
+
+/*
+
+If the JSON Schema property has an x-cdef hidden property set to true, you should always ignore it.
                 For example:
                 "interactive" : {
                     ...
@@ -46,9 +54,6 @@ const webCompInstanceSystem = {
                             "defaultSlot": true
                         }
                     }
-                }`
-        }
-    }
-};
+                }
 
-export default webCompInstanceSystem;
+*/

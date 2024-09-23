@@ -36,6 +36,7 @@ export default function applyClassDecoratorValues(
       }
       let prop = {
         label: "Unknown",
+        description: "design property",
         inputType: 'string',
         cssProperty: 'Unknown',
         figmaProperty: 'Unknown',
@@ -43,6 +44,7 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_backgroundColor') {
         prop = {
           label: "Background Color",
+          description: "Specifies the background color for the component, allowing selection from a predefined set of design tokens.",
           inputType: 'color',
           cssProperty: 'background-color',
           figmaProperty: 'backgroundColor',
@@ -51,6 +53,7 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_textColor') {
         prop = {
           label: "Text Color",
+          description: "Specifies the text color for the component, allowing selection from a predefined set of design tokens.",
           inputType: 'color',
           cssProperty: 'color',
           figmaProperty: 'textColor',
@@ -59,6 +62,7 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_cornerRadius') {
         prop = {
           label: "Corner Radius",
+          description: "Specifies the corner radius of the component, called border-radius in css.",
           inputType: 'number',
           cssProperty: 'border-radius',
           figmaProperty: 'cornerRadius',
@@ -67,6 +71,7 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_padding') {
         prop = {
           label: "Padding",
+          description: "Specifies the padding of this component, allowing selection from a predefined set of design tokens.",
           inputType: 'string', // allows for array overloading
           cssProperty: 'padding',
           figmaProperty: 'padding',
@@ -85,9 +90,17 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_layoutDirection') {
         prop = {
           label: "Layout Direction",
+          description: "This component controls how it's children get rendered. This property determines the direction. This is simiar to flex-direction in css.",
           inputType: 'string',
           cssProperty: 'flex-direction',
           figmaProperty: 'autoLayoutDirection',
+          options: {
+            'Horizontal': 'row',
+            'Vertical': 'column',
+            // 'Horizontal Reversed': 'row-reverse',
+            // 'Vertical Reversed': 'column-reverse'
+          },
+          default: 'column'
         }
       }
       if (designProp.property === '_alignItems') {
@@ -96,6 +109,13 @@ export default function applyClassDecoratorValues(
           inputType: 'string',
           cssProperty: 'align-items',
           figmaProperty: 'counterAxisAlignContent',
+          options: {
+            'Start': 'start',
+            'Center': 'center',
+            'End': 'end',
+            'Stretch': 'stretch'
+          },
+          default: 'start'
         }
       }
       if (designProp.property === '_justifyContent') {
@@ -104,27 +124,49 @@ export default function applyClassDecoratorValues(
           inputType: 'string',
           cssProperty: 'justify-content',
           figmaProperty: 'primaryAxisAlignItems',
+          options: {
+            'Start': 'start',
+            'Center': 'center',
+            'End': 'end',
+            'Space Between': 'space-between'
+          },
+          default: 'start'
         }
       }
       if (designProp.property === '_verticalResizing') {
         prop = {
           label: "Vertical Resizing",
+          description: "This is shortcut for figuring out how this component should resize vertically. Fixed means that the height property will be used (height is ignored otherwise), hug means it will hug it's children and take the height of the children combined, and fill is like stretch in that it will try to fill whatever space is available in it's parent.",
           inputType: 'string',
           cssProperty: '--vertical-resizing',
           figmaProperty: 'layoutSizingVertical',
+          options: {
+            'Fixed': 'fixed',
+            'Fill': 'fill',
+            'Hug': 'hug'
+          },
+          default: 'hug'
         }
       }
       if (designProp.property === '_horizontalResizing') {
         prop = {
           label: "Horizontal Resizing",
+          description: "This is shortcut for figuring out how this component should resize horizontally. Fixed means that the width property will be used (width is ignored otherwise), hug means it will hug it's children and take the width of the children combined, and fill is like stretch in that it will try to fill whatever space is available in it's parent.",
           inputType: 'string',
           cssProperty: '--horizontal-resizing',
           figmaProperty: 'layoutSizingHorizontal',
+          options: {
+            'Fixed': 'fixed',
+            'Fill': 'fill',
+            'Hug': 'hug'
+          },
+          default: 'hug'
         }
       }
       if (designProp.property === '_width') {
         prop = {
           label: "Width",
+          description: "The hardcoded width of the component. It only accepts pixels right now. It is only valid with _horizontalResizing set to 'fixed'",
           inputType: 'string',
           cssProperty: 'width',
           figmaProperty: 'width',
@@ -133,6 +175,7 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_height') {
         prop = {
           label: "Height",
+          description: "The hardcoded height of the component. It only accepts pixels right now. It is only valid with _verticalResizing set to 'fixed'",
           inputType: 'string',
           cssProperty: 'height',
           figmaProperty: 'height',
@@ -141,17 +184,47 @@ export default function applyClassDecoratorValues(
       if (designProp.property === '_verticalFlexGrow') {
         prop = {
           label: "Vertical Flex",
+          description: "A shortcut for figuring how the component should fill it's space if it's parent is flex-direction column. It is flex in css.",
           inputType: 'string',
           cssProperty: '--vertical-flex-grow',
           figmaProperty: 'verticalFlexGrow',
+          options: {
+            '1': '1',
+            '2': '2',
+            '3': '3',
+            '4': '4',
+            '5': '5',
+            '6': '6',
+            '7': '7',
+            '8': '8',
+            '9': '9',
+            '10': '10',
+            '11': '11',
+            '12': '12'
+          }
         }
       }
       if (designProp.property === '_horizontalFlexGrow') {
         prop = {
           label: "Horizontal Flex",
+          description: "A shortcut for figuring how the component should fill it's space if it's parent is flex-direction row. It is flex in css.",
           inputType: 'string',
           cssProperty: '--horizontal-flex-grow',
           figmaProperty: 'horizontalFlexGrow',
+          options: {
+            '1': '1',
+            '2': '2',
+            '3': '3',
+            '4': '4',
+            '5': '5',
+            '6': '6',
+            '7': '7',
+            '8': '8',
+            '9': '9',
+            '10': '10',
+            '11': '11',
+            '12': '12'
+          }
         }
       }
       // if (designProp.property === '_flexGrow') {
@@ -210,6 +283,12 @@ export default function applyClassDecoratorValues(
           inputType: 'string',
           cssProperty: 'border-style',
           figmaProperty: 'borderStyle',
+          options: {
+            'None': 'none',
+            'Solid': 'solid',
+            'Dashed': 'dashed'
+          },
+          default: 'none'
         }
       }
       if (designProp.property === '_fontFamily') {
@@ -242,13 +321,14 @@ export default function applyClassDecoratorValues(
       const propertyDef = {
           $schema: "https://json-schema.org/draft-07/schema",
           title: prop.label,
+          description: prop.description,
           type: 'string',
           "x-cdef": {
             design: true,
             input: {
               inputType: 'string',
               label: prop.label,
-              defaultValue: designProp.default
+              defaultValue: prop.default || designProp.default
             },
             output: {
               figma: {
@@ -260,7 +340,11 @@ export default function applyClassDecoratorValues(
             }
           }
       }
-      if (designProp.options) {
+      if (prop.options) {
+        propertyDef.enum = Object.values(prop.options);
+        propertyDef["x-cdef"].input.options = prop.options;
+        propertyDef["x-cdef"].input.inputType = 'select';
+      } else if (designProp.options) {
         propertyDef.enum = Object.values(designProp.options);
         propertyDef["x-cdef"].input.options = designProp.options;
         propertyDef["x-cdef"].input.inputType = 'select';

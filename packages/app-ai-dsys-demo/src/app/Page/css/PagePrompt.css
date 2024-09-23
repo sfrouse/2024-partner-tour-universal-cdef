@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
 
-    width: 400px;
+    width: 440px;
     
     h2 {
         margin-bottom: 10px;
@@ -73,6 +73,49 @@
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
         }
 
+        &.prompt {
+            .page-prompt-display-open-input {
+                position: absolute;
+                top: 0; right: 0; left: 0; bottom: 0;
+                display: flex;
+                flex-direction: column;
+
+                .page-prompt-open-input-header {
+                    border-bottom: 1px solid #eee;
+                    padding: 8px;
+                    display: flex;
+
+                    select {
+                        color: #aaa;
+                        padding: 6px;
+                        border: none;
+                        flex: 1;
+                        outline: none;
+                        &:focus {
+                            outline: none;
+                        }
+                    }
+                }
+
+                textarea {
+                    border: 0;
+                    background-color: #fff;
+                    padding-left: 20px;
+                    padding-top: 20px;
+                    font-size: 16px;
+                    line-height: 130%;
+                    border: 3px solid #fff;
+                    box-sizing: border-box;
+                    flex: 1;
+
+                    &:focus {
+                        border: 3px solid rgba(159,205,240, 0.4);
+                        outline: none;
+                    }
+                }
+            }
+        }
+
         .page-prompt-display-prompt {
             margin-bottom: 10px;
             padding-bottom: 10px;
@@ -84,7 +127,7 @@
             }
             
             .prompt-code {
-                height: 100px;
+                /* height: 100px; */
                 text-overflow: ellipsis;
                 font-size: 9px;
                 line-height: 130%;
@@ -95,7 +138,7 @@
                 border-left: 3px solid #ccc;
                 padding-left: 10px;
 
-                * {
+                /* * {
                     max-height: 100px;
                 }
 
@@ -105,14 +148,14 @@
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    height: 50px; /* Height of the fading area */
+                    height: 50px;
                     background: linear-gradient(
                         to bottom, 
                         rgba(255, 255, 255, 0) 0%,
                         rgba(255, 255, 255, 1) 100%
                     );
-                    pointer-events: none; /* Ensures it doesn't interfere with scrolling or interaction */
-                }
+                    pointer-events: none;
+                } */
             }
         }
 
@@ -201,6 +244,11 @@
         border-color: #eee;
         flex: 1;
     }
+
+    .tokenCount {
+        font-size: 11px;
+        color: #aaa;
+    }
 }
 
     .fill {
@@ -210,12 +258,13 @@
     .page-prompt-button {
         padding: 8px;
         /* border: 1px solid #eee; */
+        border: none;
         border-radius: 6px;
         cursor: pointer;
         font-size: 14px;
         /* font-weight: 600; */
         text-align: center;
-        min-width: 90px;
+        min-width: 80px;
         background-color: #fff;
         color: #444;
         text-transform: uppercase;
@@ -230,13 +279,11 @@
             background-color: #DCF0FF;
         }
 
-        &:focus {
+        &:focus-visible {
             outline: 3px solid rgba(159,205,240, 0.4);
         }
 
         &.speech {
-            min-width: 0;
-
             svg {
                 fill: #777;
             }

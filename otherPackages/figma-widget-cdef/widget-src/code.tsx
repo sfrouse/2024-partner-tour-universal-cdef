@@ -81,7 +81,10 @@ function Widget() {
   }
 
   const windowSetup = () => {
-    figma.on('selectionchange', () => processSelection(widgetNodeId));
+    figma.on('selectionchange', () => {
+      stageComponentChange(widgetNodeId, cDefRootUrl);
+      processSelection(widgetNodeId);
+    });
     // figma.on('documentchange',  () => processSelection(widgetNodeId));
     processSelection(widgetNodeId);
 

@@ -45,6 +45,7 @@ import * as contentful from 'contentful-management';
 import WebSocketManager from "./utils/WebSocketManager.js";
 import getWebSocketStatusColor from "./utils/getWebSocketStatusColor.js";
 import CodeContentfulPage from "./pages/codeContentfulPage/CodeContentfulPage.js";
+import PushToCode from "./components/PushToCode.js";
 
 function App() {
 
@@ -515,12 +516,13 @@ function App() {
                 <CUIToolbarPanels
                   selectedPanel={selectedCodePageId}>
                   <CUIToolbarPanel panelId={CodePageId.cinst}>
-                    <CodePage
-                      exampleCode={JSON.stringify(exampleCDefCode, null, 2)} />
+                    <CodePage exampleCode={JSON.stringify(exampleCDefCode, null, 2)} />
+                    <PushToCode code={exampleCode} webSocket={webSocket} />
                   </CUIToolbarPanel>
                   <CUIToolbarPanel panelId={CodePageId.html}>
                     <CodePage
                       exampleCode={exampleCode} />
+                    <PushToCode code={exampleCode} webSocket={webSocket} />
                   </CUIToolbarPanel>
                   <CUIToolbarPanel panelId={CodePageId.preview}>
                     <HtmlPage

@@ -3,7 +3,6 @@ import schemaToIdentifier from "../utils/schemaToIdentifier";
 import { applyProperties } from "./figmaUtils/applyProperties";
 import { applyStyleProperties, getAllVariablesLookup } from "./figmaUtils/applyStyleProperties";
 import { processSlots } from "./figmaUtils/processSlots";
-// import { applyLayoutModeAndFixedSizes, applyResizing } from "./figmaUtils/processSlots/applyLayout";
 import { hasLayoutDefinition, isDefaultSlotDefinition } from "./figmaUtils/processSlots/isLayoutWithDefaultSlot";
 import getComponentDefinition from "./utils/getComponentDefinition";
 import getComponentDefinitionTokenLookup from "./utils/getComponentDefinitionTokenLookup";
@@ -81,8 +80,6 @@ export default async function definitionInstanceToFigmaInstance(
     if (onCreatedFunk) {
         onCreatedFunk(figmaInstance);
     }
-
-
     
     // Update Figma Instance Properties
     applyProperties(

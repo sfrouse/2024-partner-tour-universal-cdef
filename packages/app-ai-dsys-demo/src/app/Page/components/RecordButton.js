@@ -1,71 +1,60 @@
-
-
+import { useRef, useState } from "react";
+import startVoiceRecognition, { stopVoiceRecognition } from '../utils/speechToText';
 
 export default function RecordButton ({
-    isRecording,
-    startVoiceRecognition,
-    updateScratchPad,
-    setIsRecording,
-    stopVoiceRecognition
+    onDone
 }) {
+
+    const [transcription, setTranscription] = useState('');
+    const [isRecording, setIsRecording] = useState(false);
+    const transcriptionRef = useRef(transcription); // Create a ref for transcription
+
+    // Update the ref whenever transcription changes
+    transcriptionRef.current = transcription;
 
     return (
         <div
             className={`page-prompt-button speech ${isRecording ? 'recording' : ''}`}
+            style={{minWidth: 0}}
             onMouseDown={() => {
                 // Start recording when mouse button is pressed
                 if (!isRecording) {
-                startVoiceRecognition(
-                    (transcription) => {
-                    updateScratchPad(transcription);
-                    },
-                    isRecording,
-                    setIsRecording,
-                );
+                    onDone('');
+                    setTranscription('');
+                    console.log('WHER');
+                    startVoiceRecognition(
+                        (newTranscription) => {
+                            const cleanTranscription = newTranscription.replace(/\s+/g, ' ').trim();
+                            const fullTranscription = `${transcriptionRef.current} ${cleanTranscription}`.replace(/\s+/g, ' ').trim();
+                            setTranscription(fullTranscription);
+                            onDone(fullTranscription);
+                        },
+                        isRecording,
+                        setIsRecording,
+                    );
                 }
             }}
             onMouseUp={() => {
                 // Stop recording when mouse button is released
                 if (isRecording) {
-                stopVoiceRecognition(setIsRecording);
+                    stopVoiceRecognition(setIsRecording);
                 }
-            }}
-            onTouchStart={() => {
-                // Start recording for touch devices
-                if (!isRecording) {
-                startVoiceRecognition(
-                    (transcription) => {
-                    updateScratchPad(transcription);
-                    },
-                    isRecording,
-                    setIsRecording,
-                );
-                }
-            }}
-            onTouchEnd={() => {
-                // Stop recording for touch devices
-                if (isRecording) {
-                stopVoiceRecognition(setIsRecording);
-                }
-            }}
-            >
+            }}>
             {isRecording ? (
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 384 512"
-                width="20"
-                height="20"
-                >
-                <path d="M256 96l0 160c0 35.3-28.7 64-64 64s-64-28.7-64-64l0-160c0-35.3 28.7-64 64-64s64 28.7 64 64zM96 96l0 160c0 53 43 96 96 96s96-43 96-96l0-160c0-53-43-96-96-96S96 43 96 96zM64 208c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 83 63.1 151.2 144 159.2l0 64.8-64 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l80 0 80 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-64 0 0-64.8c80.9-8 144-76.2 144-159.2l0-48c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 70.7-57.3 128-128 128s-128-57.3-128-128l0-48z" />
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 384 512"
+                    width="20"
+                    height="20">
+                    <path d="M256 96l0 160c0 35.3-28.7 64-64 64s-64-28.7-64-64l0-160c0-35.3 28.7-64 64-64s64 28.7 64 64zM96 96l0 160c0 53 43 96 96 96s96-43 96-96l0-160c0-53-43-96-96-96S96 43 96 96zM64 208c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 83 63.1 151.2 144 159.2l0 64.8-64 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l80 0 80 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-64 0 0-64.8c80.9-8 144-76.2 144-159.2l0-48c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 70.7-57.3 128-128 128s-128-57.3-128-128l0-48z" />
                 </svg>
             ) : (
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 384 512"
-                width="20"
-                height="20"
-                >
-                <path d="M256 96l0 160c0 35.3-28.7 64-64 64s-64-28.7-64-64l0-160c0-35.3 28.7-64 64-64s64 28.7 64 64zM96 96l0 160c0 53 43 96 96 96s96-43 96-96l0-160c0-53-43-96-96-96S96 43 96 96zM64 208c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 83 63.1 151.2 144 159.2l0 64.8-64 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l80 0 80 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-64 0 0-64.8c80.9-8 144-76.2 144-159.2l0-48c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 70.7-57.3 128-128 128s-128-57.3-128-128l0-48z" />
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 384 512"
+                    width="20"
+                    height="20">
+                    <path d="M256 96l0 160c0 35.3-28.7 64-64 64s-64-28.7-64-64l0-160c0-35.3 28.7-64 64-64s64 28.7 64 64zM96 96l0 160c0 53 43 96 96 96s96-43 96-96l0-160c0-53-43-96-96-96S96 43 96 96zM64 208c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 83 63.1 151.2 144 159.2l0 64.8-64 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l80 0 80 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-64 0 0-64.8c80.9-8 144-76.2 144-159.2l0-48c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 48c0 70.7-57.3 128-128 128s-128-57.3-128-128l0-48z" />
                 </svg>
             )}
         </div>

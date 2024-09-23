@@ -1,3 +1,0 @@
-[
-  "<dmo-button\n    id=\"myButton\"\n    emphasis=\"bold\"\n    design=\"primary\"\n    label=\"Click Me\"\n    target=\"_blank\"\n    url=\"https://example.com\">\n    Click Me\n</dmo-button>\n<script>\n    document.getElementById('myButton').addEventListener('click', () => {\n        alert('hello, world');\n    });\n</script>"
-]

@@ -8,6 +8,7 @@ export default async function aiApi(
 ) {
     const allPrompts = await action.prompts();
     const results = [];
+    let usage = {};
     const conversationHistory = [];
     for (const prompt of allPrompts) {
         const type = prompt.type;
@@ -25,8 +26,13 @@ export default async function aiApi(
           results.push(prompt.message);
         }else{
           const result = await runOpenAI(newPrompt, conversationHistory);
-          conversationHistory.push(result);
-          results.push(result.content);
+          conversationHistory.push(
+            result.message
+          );
+          results.push(
+            result.message.content
+          );
+          usage = result.usage;
         }
     }
     const outputFile = `./src/generatedCode/${action.id}.json`;
@@ -34,5 +40,21 @@ export default async function aiApi(
       outputFile,
       JSON.stringify(results, null, 2)
     );
+
+    const usageOutputFile = `./src/generatedCode/${action.id}.usage.json`;
+    await writeStringToFile(
+      usageOutputFile,
+      JSON.stringify(usage, null, 2)
+    );
+
+    const latestUsageOutputFile = `./src/generatedCode/latest.usage.json`;
+    await writeStringToFile(
+      latestUsageOutputFile,
+      JSON.stringify({
+        ...usage,
+        timestamp: Date.now()
+      }, null, 2)
+    );
+
     return results;
   }
