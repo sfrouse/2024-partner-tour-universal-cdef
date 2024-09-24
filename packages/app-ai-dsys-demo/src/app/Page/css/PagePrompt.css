@@ -8,8 +8,8 @@
 
     width: 440px;
     
-    h2 {
-        margin-bottom: 10px;
+    .page-prompt-header {
+        height: 40px;
     }
 }
 

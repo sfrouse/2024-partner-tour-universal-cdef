@@ -298,7 +298,9 @@ function Page() {
         <div className="Page">
           {/* PROMPTS */}
           <div className="page-prompt-box">
-              <h2>Prompt</h2>
+              <div className="page-prompt-header">
+                <h2>Prompt</h2>
+              </div>
               <div className="page-prompt-display-canned">
                 <div className="page-prompt-display-header">
                   <ActionSelect

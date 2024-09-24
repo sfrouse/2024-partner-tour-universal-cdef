@@ -39,7 +39,7 @@ const imageWebCompsToSingleComp = {
                 Make sure to create attributes for each piece of text content you find.
               
                 \`\`\`
-                ${imageToHTML.default[0]}
+                ${imageToHTML.default[imageToHTML.default.length-1]}
                 \`\`\`
                 
                 `,
