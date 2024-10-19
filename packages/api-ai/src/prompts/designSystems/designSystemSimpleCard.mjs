@@ -14,7 +14,10 @@ const designSystemSimpleCard = {
                 await designSystemComponentsSystem.prompt(),
                 {
                     "role": "user",
-                    "content": `Create a simple card component.`,
+                    "content": [
+                      `Create a simple card component.`,
+                      `Include a header, description, and a button call to action.`,
+                    ].join(" "),
                 }
             ],
             temperature: config.OPEN_AI_TEMPERATURE,

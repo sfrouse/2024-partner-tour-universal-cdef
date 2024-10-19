@@ -1,7 +1,7 @@
 import processImageToHTMLSystem from "../../systems/systems/processImageToHTMLSystem.mjs";
 
 const imageToHTML = {
-    name: 'Image to HTML (claude)',
+    name: 'Image to Card (claude)',
     id: 'imageToHTML',
     prompts: async () => {
         return [

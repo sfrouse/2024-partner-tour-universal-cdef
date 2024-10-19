@@ -1,0 +1,51 @@
+{
+  "$id": "dmo-button.cdef.json",
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "x-cdef": {
+    "name": "Demo Button",
+    "tag": "dmo-button",
+    "className": "DMOButton",
+    "figmaComponent": "https://www.figma.com/file/[xyz]/?node-id=[xyz]"
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "$identifier": {
+      "type": ["string", "object"]
+    },
+    "design": {
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "title": "Design",
+      "type": "string",
+      "description": "This controls the visual appearance of the button.",
+      "default": "primary",
+      "x-cdef": {
+        "purpose": "design",
+        "inputType": "select",
+        "enumNames": ["Primary", "Secondary"]
+      },
+      "enum": ["primary", "secondary"]
+    },
+    "disabled": {
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "x-cdef": {
+        "purpose": "behavior",
+        "input": "radio"
+      }
+    },
+    "label": {
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "title": "Label",
+      "type": "string",
+      "default": "",
+      "x-cdef": {
+        "purpose": "content",
+        "input": "text"
+      }
+    }
+  }
+}

@@ -1,7 +1,10 @@
 {
   "prompt_tokens": 1463,
-  "completion_tokens": 87,
-  "total_tokens": 1550,
+  "completion_tokens": 88,
+  "total_tokens": 1551,
+  "prompt_tokens_details": {
+    "cached_tokens": 0
+  },
   "completion_tokens_details": {
     "reasoning_tokens": 0
   },
@@ -11,6 +14,6 @@
   "ratelimit_remaining_tokens": 798403,
   "rate_limit_reset_requests": "12ms",
   "rate_limit_reset_tokens": "119ms",
-  "time_taken": 2142,
+  "time_taken": 1590,
   "model": "gpt-4o"
 }

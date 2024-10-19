@@ -16,6 +16,8 @@
     "local:server:web-components": "yarn workspace @contentful-demos/web-components run server",
     "local:start:web-components": "yarn workspace @contentful-demos/web-components run start",
     "local:start:web-socket": "yarn workspace web-socket run start",
+    "local:start:ctf-web-comps-app": "cd ./otherPackages/contentful-web-components-app && npm run start",
+    "local:start:figma-widget-cdef": "cd ./otherPackages/figma-widget-cdef && npm run start",
     "local": "concurrently \"yarn local:dev:api-ai\" \"yarn local:dev:component-definitions\" \"yarn local:start:app-ai-dsys-demo\" \"yarn local:server:web-components\" \"yarn local:start:web-components\" \"yarn local:start:web-socket\""
   },
   "author": "",

@@ -5,7 +5,7 @@ import config from "../../config.mjs";
 import getTokensPrompt from "../../utils/tokens/getTokensPrompt.mjs";
 
 const imageToHTMLToTokens = {
-    name: 'Image Results to Tokens (Simple)',
+    name: 'Card to Tokens (Simple)',
     id: 'imageToHTMLToTokens',
     prompts: async () => {
 

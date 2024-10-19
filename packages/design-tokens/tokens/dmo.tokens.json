@@ -2292,8 +2292,8 @@
               "type": "ALIAS",
               "value": {
                 "type": "VARIABLE_ALIAS",
-                "id": "VariableID:34:4135",
-                "variableName": "color/neutral/500",
+                "id": "VariableID:34:4138",
+                "variableName": "color/neutral/800",
                 "collectionName": "primitives"
               }
             },
@@ -3516,8 +3516,8 @@
               "type": "ALIAS",
               "value": {
                 "type": "VARIABLE_ALIAS",
-                "id": "VariableID:34:4135",
-                "variableName": "color/neutral/500",
+                "id": "VariableID:34:4134",
+                "variableName": "color/neutral/400",
                 "collectionName": "primitives"
               }
             },

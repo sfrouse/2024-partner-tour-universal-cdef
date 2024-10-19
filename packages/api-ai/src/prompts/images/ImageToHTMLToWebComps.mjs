@@ -1,11 +1,10 @@
 import config from "../../config.mjs";
 import designSystemComponentsSystem from "../../systems/systems/designSystem/designSystemComponentsSystem.mjs";
 import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
-import getCDefsPrompt from "../../utils/getCDefsPrompt.mjs";
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageToHTMLToWebComps = {
-    name: 'Image Results to Web Comps',
+    name: 'Card to Web Comps',
     id: 'imageToHTMLToWebComps',
     prompts: async () => {
 

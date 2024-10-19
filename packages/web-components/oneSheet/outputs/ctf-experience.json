@@ -1,0 +1,226 @@
+{
+    "metadata": {
+        "tags": [],
+        "concepts": []
+    },
+    "sys": {
+        "space": {
+            "sys": {
+                "type": "Link",
+                "linkType": "Space",
+                "id": "3r8djtzjmkjx"
+            }
+        },
+        "id": "1gx2h7wOhgsYNQ8oBPwcJO",
+        "type": "Entry",
+        "createdAt": "2024-10-08T21:05:13.944Z",
+        "updatedAt": "2024-10-08T21:07:20.488Z",
+        "environment": {
+            "sys": {
+                "id": "master",
+                "type": "Link",
+                "linkType": "Environment"
+            }
+        },
+        "revision": 2,
+        "contentType": {
+            "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "landingPageStudio"
+            }
+        },
+        "locale": "en-US"
+    },
+    "fields": {
+        "title": "yousebasic",
+        "slug": "yousebasic",
+        "componentTree": {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "variables": {
+                                "url": {
+                                    "key": "Qxv-3GItDiGTf5dEMaxAw",
+                                    "type": "UnboundValue"
+                                },
+                                "icon": {
+                                    "type": "DesignValue",
+                                    "valuesByBreakpoint": {
+                                        "desktop": "none"
+                                    }
+                                },
+                                "label": {
+                                    "key": "4T_LCVzdu-Ws5iTQqZKc6",
+                                    "type": "UnboundValue"
+                                },
+                                "design": {
+                                    "type": "DesignValue",
+                                    "valuesByBreakpoint": {
+                                        "desktop": "primary"
+                                    }
+                                },
+                                "target": {
+                                    "type": "DesignValue",
+                                    "valuesByBreakpoint": {
+                                        "desktop": "_self"
+                                    }
+                                },
+                                "emphasis": {
+                                    "type": "DesignValue",
+                                    "valuesByBreakpoint": {
+                                        "desktop": "bold"
+                                    }
+                                }
+                            },
+                            "displayName": "Button Branded",
+                            "definitionId": "dmo-button"
+                        }
+                    ],
+                    "variables": {
+                        "cfGap": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "0px"
+                            }
+                        },
+                        "cfWidth": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "100%"
+                            }
+                        },
+                        "cfBorder": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "0px solid rgba(0, 0, 0, 0)"
+                            }
+                        },
+                        "cfHeight": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "fit-content"
+                            }
+                        },
+                        "cfMargin": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "0 0 0 0"
+                            }
+                        },
+                        "cfPadding": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "0 0 0 0"
+                            }
+                        },
+                        "cfFlexWrap": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "nowrap"
+                            }
+                        },
+                        "cfMaxWidth": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "none"
+                            }
+                        },
+                        "cfHyperlink": {
+                            "key": "NX5B81xr46bYCeikjBo_d",
+                            "type": "UnboundValue"
+                        },
+                        "cfBorderRadius": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "0px"
+                            }
+                        },
+                        "cfOpenInNewTab": {
+                            "key": "48U4r-Z7r38ibw-gKPl3T",
+                            "type": "UnboundValue"
+                        },
+                        "cfFlexDirection": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "column"
+                            }
+                        },
+                        "cfBackgroundColor": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {}
+                        },
+                        "cfVerticalAlignment": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "center"
+                            }
+                        },
+                        "cfBackgroundImageUrl": {
+                            "key": "mQ7m0rVib5NkubIjQKOtn",
+                            "type": "UnboundValue"
+                        },
+                        "cfHorizontalAlignment": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": "center"
+                            }
+                        },
+                        "cfBackgroundImageOptions": {
+                            "type": "DesignValue",
+                            "valuesByBreakpoint": {
+                                "desktop": {
+                                    "scaling": "fill",
+                                    "alignment": "left top",
+                                    "targetSize": "2000px"
+                                }
+                            }
+                        }
+                    },
+                    "displayName": "Section",
+                    "definitionId": "contentful-section"
+                }
+            ],
+            "breakpoints": [
+                {
+                    "id": "desktop",
+                    "query": "*",
+                    "displayIcon": "desktop",
+                    "displayName": "All Sizes",
+                    "previewSize": "100%"
+                },
+                {
+                    "id": "tablet",
+                    "query": "<992px",
+                    "displayIcon": "tablet",
+                    "displayName": "Tablet",
+                    "previewSize": "820px"
+                },
+                {
+                    "id": "mobile",
+                    "query": "<576px",
+                    "displayIcon": "mobile",
+                    "displayName": "Mobile",
+                    "previewSize": "390px"
+                }
+            ],
+            "schemaVersion": "2023-09-28"
+        },
+        "dataSource": {},
+        "unboundValues": {
+            "48U4r-Z7r38ibw-gKPl3T": {
+                "value": false
+            },
+            "4T_LCVzdu-Ws5iTQqZKc6": {
+                "value": "Test"
+            },
+            "NX5B81xr46bYCeikjBo_d": {
+                "value": ""
+            },
+            "Qxv-3GItDiGTf5dEMaxAw": {},
+            "mQ7m0rVib5NkubIjQKOtn": {}
+        }
+    }
+}

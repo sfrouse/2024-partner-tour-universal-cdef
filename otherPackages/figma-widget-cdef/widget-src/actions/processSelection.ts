@@ -6,6 +6,7 @@ import { MessageRequest } from "../../shared-src/types.js";
 export default async function processSelection(
   widgetNodeId: string,
 ) {
+  console.log('figma.currentPage.selection', figma.currentPage.selection);
   if (figma.currentPage.selection && figma.currentPage.selection.length === 0) {
     figma.ui.postMessage({
       request: MessageRequest.selectionChange,

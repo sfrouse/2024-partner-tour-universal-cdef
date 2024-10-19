@@ -90,6 +90,7 @@
                 font-size: 12px;
                 color: #aaa;
                 margin-right: 10px;
+                min-width: 40px;
             }
 
             .page-result-websocket-status {

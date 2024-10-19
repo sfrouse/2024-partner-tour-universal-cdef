@@ -5,6 +5,7 @@
   "proxy": "https://web-components.colorfuldemo.com/",
   "scripts": {
     "start": "cross-env BROWSER=none craco start",
+    "dev": "npm run start",
     "build": "craco build",
     "build:tokens": "node ./scripts/tokens/buildTokens.mjs",
     "test": "craco test",

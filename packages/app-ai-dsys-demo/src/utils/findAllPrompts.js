@@ -11,7 +11,7 @@ export default function findAllPrompts(action) {
                 return false;
             }
 
-            prompt.messages.map((msg) => {
+            prompt.messages?.map((msg) => {
                 prompts.push(msg.content);
                 return false;
             });

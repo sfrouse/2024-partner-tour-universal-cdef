@@ -1,0 +1,6 @@
+{
+  "$schema": "../../dmo-button.cdef.json",
+  "disabled": false,
+  "design": "primary",
+  "label": "test"
+}

@@ -5,7 +5,7 @@ import designSystemTemplate from "../../templates/designSystemTemplate.mjs";
 import renderFollowUpResults from "../utils/renderFollowUpResults.mjs";
 
 const imageWebCompsToSingleComp = {
-    name: 'Image Web Comps to Single Comp',
+    name: 'Recipe to Single Component',
     id: 'imageWebCompsToSingleComp',
     prompts: async () => {
 

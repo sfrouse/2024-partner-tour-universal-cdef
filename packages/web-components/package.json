@@ -21,6 +21,7 @@
     "storybook": "storybook dev -p 6006",
     "start": "npm run watch",
     "dev": "npm run watch",
+    "test:exp": "node ./oneSheet/outputs/ctf-experience.js",
     "watch": "npm run build:tokens && npm run build:preview && nodemon --watch ./src --watch ./www -e ts,html,scss,mjs --exec \"npm run build:preview && npm run build:comps\""
   },
   "author": "",

@@ -4,7 +4,7 @@ import loadFileAsText from "../prompts/utils/loadFileAsText.mjs";
 export default async function getAction(actionId, res) {
     const action = actionsIndex.find(action => action.id === actionId);
     if (action) {
-      let results = '';
+      let results = [];
       try {
         const contentResults = await loadFileAsText(
           `./src/generatedCode/${action.id}.json`

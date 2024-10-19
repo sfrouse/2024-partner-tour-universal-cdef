@@ -1,0 +1,6 @@
+{
+  "$schema": "cdef-button.json",
+  "disabled": "yes",
+  "label": "test",
+  "url": "https://www.google.com"
+}

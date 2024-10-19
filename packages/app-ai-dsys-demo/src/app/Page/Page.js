@@ -81,30 +81,6 @@ function Page() {
         setWebsocketStatus('connected');
       };
 
-      ws.onmessage = async (event) => {
-        try {
-          const msg = JSON.parse(event.data);
-          if (msg) {
-            switch (msg.type) {
-              case "figma-export" : {
-                await updateCode(
-                  action.id,
-                  `${msg.code}`,
-                  setError,
-                  setLoading
-                );
-                setInvalidate(Date.now());
-                return;
-              }
-              default: {}
-            }
-          }
-          
-        }catch(err) {
-          console.error(err);
-        }
-      };
-
       ws.onclose = () => {
         console.log('Disconnected from the WebSocket server');
         setWebsocketStatus('disconnected');
@@ -132,7 +108,33 @@ function Page() {
     useEffect(() => {
       setActionSourceCode(action?.rendered);
       getLatestUsage(setLatestUsage);
-    }, [action]);
+
+      if (webSocket) {
+        webSocket.onmessage = async (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+            if (msg) {
+              switch (msg.type) {
+                case "figma-export" : {
+                  await updateCode(
+                    action.id,
+                    `${msg.code}`,
+                    setError,
+                    setLoading
+                  );
+                  setInvalidate(Date.now());
+                  return;
+                }
+                default: {}
+              }
+            }
+            
+          }catch(err) {
+            console.error(err);
+          }
+        };
+      }
+    }, [action, webSocket]);
 
     // Load Actions
     useEffect(() => {
@@ -191,7 +193,7 @@ function Page() {
       // Latest Usage
       getLatestUsage(setLatestUsage);
 
-    }, [invalidate, setSystem, systemId, setLatestUsage]);
+    }, [invalidate, systemId]);
 
     // System default
     useEffect(() => {
@@ -216,17 +218,16 @@ function Page() {
             const prompts = findActionPrompts(action);
             setPrompts(prompts);
             // Count tokens
-            setPromtTokenCount( await countTokens(findAllPrompts(action)) );
+            const tokenCount = await countTokens(findAllPrompts(action));
+            setPromtTokenCount( tokenCount );
           })
           .catch((error) => {
             setIsRunning(false);
-            setError(`result: ${error} ${apiResultUrl}`);
+            setError(`[Load Action]: ${error} ${apiResultUrl}`);
           });
       }
     }, [
       actionId,
-      setPrompts,
-      setAction,
       invalidate
     ]);
 
@@ -265,20 +266,12 @@ function Page() {
             });
       }
     }, [
-      actionToReset,
-      setActionToReset,
-      setIsRunning,
-      setError,
-      setLoading
+      actionToReset
     ]);
 
     if (loading) {
       return <div>Loading...</div>;
     }
-
-    // if (error) {
-    //   return <div>Error: {error}</div>;
-    // }
 
     const updateScratchPad = async ( newScratch ) => {
       localStorage.setItem('scratchPad', newScratch);
@@ -367,9 +360,15 @@ function Page() {
                 <div className="page-prompt-button clear"
                   onClick={() => {
                     setActionToReset(actionId);
-                    setTimeout(() => invalidatePage(), 500);
+                    setTimeout(() => {
+                      setIsRunning(true);
+                    }, 100);
+                    setTimeout(() => {
+                      invalidatePage();
+                      setIsRunning(false);
+                    }, 1500);
                   }}>
-                  Clear
+                  Delete
                 </div>
                 <div className="page-prompt-button upload">
                    <ImageUploader onSuccess={(result) => {
@@ -584,9 +583,9 @@ function Page() {
           </div>
           {error ? (
             <div className="error-modal">
-              <div class="content">
-                <span class="close" onClick={() => setError('')}>&times;</span>
-                <div class="message">{error}</div>
+              <div className="content">
+                <span className="close" onClick={() => setError('')}>&times;</span>
+                <div className="message">{error}</div>
               </div>
             </div>
           ) : ''}

@@ -5,7 +5,7 @@ import config from "../../config.mjs";
 import getTokensRawPrompt from "../../utils/tokens/getTokensRawPrompt.mjs";
 
 const imageToHTMLToRawTokens = {
-    name: 'Image Results to Tokens (Raw)',
+    name: 'Card to Tokens (Raw)',
     id: 'imageToHTMLToRawTokens',
     prompts: async () => {
 

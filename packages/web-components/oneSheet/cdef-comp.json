@@ -1,0 +1,19 @@
+{
+  "$id": "dmo-button.cdef.json",
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "x-cdef": {
+    "name": "Component Name",
+    "tag": "dmo-button",
+    "className": "DMOButton",
+    "examples": [
+      {
+        "name": "Simple Button",
+        "description": "Simple example of a button",
+        "$id": "examples/dmo-button-simple.inst.json"
+      }
+    ],
+    "figmaComponent": "https://www.figma.com/..."
+  }
+}

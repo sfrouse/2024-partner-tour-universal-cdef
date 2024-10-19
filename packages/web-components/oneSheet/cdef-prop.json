@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Emphasis",
+  "type": "string",
+  "description": "This does...",
+  "default": "bold",
+  "enum": ["bold", "subtle", "minimal"],
+  "x-cdef": {
+    "purpose": "design",
+    "input": "text",
+    "enumNames": ["Bold", "Subtle"],
+    "ignore": true
+  }
+}

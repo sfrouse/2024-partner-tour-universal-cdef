@@ -1,0 +1,19 @@
+{
+  "displayName": "Button Branded",
+  "definitionId": "dmo-button",
+  "variables": {
+    "label": {
+      "type": "UnboundValue",
+      "key": {
+        "value": "Test"
+      }
+    },
+    "design": {
+      "type": "DesignValue",
+      "valuesByBreakpoint": {
+        "desktop": "primary"
+      }
+    }
+  },
+  "children": []
+}

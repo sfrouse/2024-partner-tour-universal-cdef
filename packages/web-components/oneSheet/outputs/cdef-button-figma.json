@@ -1,0 +1,18 @@
+{
+  "componentProperties": {
+    "label#39:22": {
+      "value": "test",
+      "type": "TEXT"
+    },
+    "design": {
+      "value": "primary",
+      "type": "VARIANT",
+      "boundVariables": {}
+    },
+    "disabled": {
+      "value": "false",
+      "type": "VARIANT",
+      "boundVariables": {}
+    }
+  }
+}

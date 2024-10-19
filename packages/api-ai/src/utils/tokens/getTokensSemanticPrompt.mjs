@@ -1,7 +1,7 @@
 import loadImportFileAsText from '../../prompts/utils/loadImportFileAsText.mjs';
 
 export default async function getTokensSemanticPrompt() {
-    const tokens = await loadImportFileAsText('@contentful-demos', 'design-tokens/dist/tokens.semantic.simple.txt');
+    const tokens = await getSemanticTokensAlone();
     return `${[
         `This is a list of css custom properties organized by where they should be applied.`,
         `For instance 'type_family' should only be used for typography and 'border' is the color of borders.`,
@@ -17,4 +17,8 @@ export default async function getTokensSemanticPrompt() {
 ${tokens}
 \`\`\`
 `;
+}
+
+export async function getSemanticTokensAlone() {
+    return await loadImportFileAsText('@contentful-demos', 'design-tokens/dist/tokens.semantic.simple.txt');
 }

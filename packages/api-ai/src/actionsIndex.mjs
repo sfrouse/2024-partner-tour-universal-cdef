@@ -5,33 +5,29 @@ import ImageToHTMLToSemanticTokens from './prompts/images/ImageToHTMLToSemanticT
 import imageToHTMLToTokens from './prompts/images/ImageToHTMLToTokens.mjs';
 import imageToHTMLToWebComps from './prompts/images/ImageToHTMLToWebComps.mjs';
 import imageWebCompsToSingleComp from './prompts/images/ImageWebCompsToSingleComp.mjs';
+import primitiveToSemanticAction from './prompts/macros/primitiveToSemanticAction.mjs';
 import test from './prompts/tests/test.mjs';
 import webComp from './prompts/webComps/webcomp.mjs';
 import webcompCDef from './prompts/webComps/webcompCDef.mjs';
 
 const actionsIndex = [
-    {
-        group: "Text",
-    },
-    test,
-    {
-        group: "Image to HTML",
-    },
-    imageToHTML,
-    imageToHTMLToRawTokens,
-    imageToHTMLToTokens,
-    ImageToHTMLToSemanticTokens,
-    imageToHTMLToWebComps,
-    imageWebCompsToSingleComp,
-    {
-        group: "Web Components",
-    },
-    webComp,
-    webcompCDef,
-    {
-        group: "Design System",
-    },
-    designSystemSimpleCard
+    {group: "Demo App Intro"},
+        test,
+    {group: "Design Sandbox"},
+        webComp,
+    {group: "AI Ready DSys - Tokens"},
+        imageToHTML,
+        imageToHTMLToRawTokens,
+        imageToHTMLToTokens,
+        ImageToHTMLToSemanticTokens,
+    {group: "AI Ready DSys - CDefs"},
+        webcompCDef,
+        imageToHTMLToWebComps,
+        imageWebCompsToSingleComp,
+    {group: "Macros"},
+        primitiveToSemanticAction,
+        designSystemSimpleCard,
+
 ];
 
 export default actionsIndex;

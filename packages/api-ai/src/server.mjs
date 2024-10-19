@@ -103,6 +103,7 @@ app.post('/token-count', async (req, res) => {
 
 // RUN AI
 app.get('/ai/:actionId', async (req, res) => {
+    
     const action = actionsIndex.find(action => action.id === req.params.actionId);
     const allPrompts = findAllPrompts({
       ...action,
@@ -158,8 +159,8 @@ app.post('/ai-convo/:actionId', async (req, res) => {
   const newAction = {
     ...action,
     prompts: async() => {
-      const previousPrompts = await ogPrompts()
-      previousPrompts.map((prompt, index) => {
+      const previousPrompts = await ogPrompts();
+      previousPrompts?.map((prompt, index) => {
         prompt.messages.push({
           role: "assistant",
           content: actionRendered.results[index]
@@ -210,7 +211,7 @@ app.post('/action-code-update/:actionId', async (req, res) => {
 
 app.get('/resetlist', async (req, res) => {
   const output = [`<a href="/reset">ALL</a>`];
-  actionsIndex.map((action) => {
+  actionsIndex?.map((action) => {
     if (action.group) {
       output.push(`<div style="margin-top: 20px;">${action.group}</div>`);
       return false;

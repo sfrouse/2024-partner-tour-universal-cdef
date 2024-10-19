@@ -5,7 +5,7 @@ import config from "../../config.mjs";
 import getTokensSemanticPrompt from "../../utils/tokens/getTokensSemanticPrompt.mjs";
 
 const ImageToHTMLToSemanticTokens = {
-    name: 'Image Results to Tokens (Semantic)',
+    name: 'Card to Tokens (Semantic)',
     id: 'imageToHTMLToSemanticTokens',
     prompts: async () => {
 
