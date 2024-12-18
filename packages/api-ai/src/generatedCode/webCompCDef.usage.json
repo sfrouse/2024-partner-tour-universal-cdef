@@ -1,12 +1,16 @@
 {
   "prompt_tokens": 1463,
-  "completion_tokens": 88,
-  "total_tokens": 1551,
+  "completion_tokens": 84,
+  "total_tokens": 1547,
   "prompt_tokens_details": {
-    "cached_tokens": 0
+    "cached_tokens": 0,
+    "audio_tokens": 0
   },
   "completion_tokens_details": {
-    "reasoning_tokens": 0
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
   },
   "rate_limit_limit_requests": 5000,
   "rate_limit_remaining_requests": 4999,
@@ -14,6 +18,6 @@
   "ratelimit_remaining_tokens": 798403,
   "rate_limit_reset_requests": "12ms",
   "rate_limit_reset_tokens": "119ms",
-  "time_taken": 1590,
+  "time_taken": 1423,
   "model": "gpt-4o"
 }

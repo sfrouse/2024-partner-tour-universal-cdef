@@ -1,20 +1,24 @@
 {
-  "prompt_tokens": 735,
-  "completion_tokens": 664,
-  "total_tokens": 1399,
+  "prompt_tokens": 431,
+  "completion_tokens": 54,
+  "total_tokens": 485,
   "prompt_tokens_details": {
-    "cached_tokens": 0
+    "cached_tokens": 0,
+    "audio_tokens": 0
   },
   "completion_tokens_details": {
-    "reasoning_tokens": 0
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
   },
   "rate_limit_limit_requests": 5000,
   "rate_limit_remaining_requests": 4999,
   "ratelimit_limit_tokens": 800000,
-  "ratelimit_remaining_tokens": 799160,
+  "ratelimit_remaining_tokens": 799482,
   "rate_limit_reset_requests": "12ms",
-  "rate_limit_reset_tokens": "62ms",
-  "time_taken": 9827,
+  "rate_limit_reset_tokens": "38ms",
+  "time_taken": 1190,
   "model": "gpt-4o",
-  "timestamp": 1728489048164
+  "timestamp": 1734115870666
 }

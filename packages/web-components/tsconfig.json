@@ -34,6 +34,7 @@
       "noUnusedParameters": true, // Report errors on unused parameters in functions
 
       "experimentalDecorators": true,
+      "resolveJsonModule": true,
 
       "typeRoots": [
         "./node_modules/@figma",

@@ -1,10 +1,10 @@
 
-import tokensLookup from '../../dist/tokens/tokensLookup';
+import tokensLookup from '../../dist/tokens/tokensLookup.json' assert { type: 'json' };
 
 export default function getCSSProp(tokenKey: string | null | undefined) {
     if (!tokenKey) return undefined;
 
-    const lookupIndex = tokensLookup.lookup[tokenKey];
+    const lookupIndex = (tokensLookup as any).lookup[tokenKey];
     if (lookupIndex === undefined) return tokenKey;// it's a raw value
 
     const token = tokensLookup.tokens[lookupIndex];
