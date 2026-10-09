@@ -194,7 +194,13 @@ function App() {
             accessToken: storedProps.ctflCMAKey
         });
         const space = await client.getSpace(widgetStoredProps.spaceId).catch(
-          err => setErrorMsg(err.message)
+          (err: any) => {
+            let message = 'Could not open the saved Contentful space.';
+            try {
+              message = JSON.parse(err?.message || '{}').message || message;
+            } catch { /* keep fallback */ }
+            setErrorMsg(message);
+          }
         );
         if (space) {
           const environment = await space.getEnvironment(widgetStoredProps.environmentId).catch(

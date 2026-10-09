@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import OpenAI from "openai";
 import config from '../config.mjs';
 
 export async function runOpenAI(

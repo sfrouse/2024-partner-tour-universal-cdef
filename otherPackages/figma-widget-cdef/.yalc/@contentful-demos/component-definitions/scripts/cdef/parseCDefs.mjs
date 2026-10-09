@@ -7,6 +7,8 @@ import createDir from "./workers/createDir.mjs";
 import compDefitionToFigmaCodeConnect from "./transformers/compDefinitionToFigmaCodeConnect.mjs";
 import compDefitionToStorybook from "./transformers/compDefinitionToStorybook.mjs";
 import { logDone, logStart } from "../log.mjs";
+import compDefitionToReactJS from "./transformers/compDefinitionToReactJS.mjs";
+import { CTFStudioManifest } from "./transformers/compDefinitionsToCTFStudioManifest.mjs";
 import compDefitionToAI from "./transformers/compDefinitionToAI.mjs";
 
 export default async function parseCDefs(
@@ -38,7 +40,7 @@ export default async function parseCDefs(
         "definitions": {}
     };
 
-    // const promiseArr = [];
+    const studioManifest = new CTFStudioManifest();
     for (const sourceFile of sourceFiles) {
         const classes = sourceFile.getClasses();
         const sourceFilePath = sourceFile.getFilePath();
@@ -72,18 +74,19 @@ export default async function parseCDefs(
                 const classDestFolder = `${compDest}/${tagName}`;
                 await createDir(classDestFolder);
                 
-                // CTF Studio
+                // ========== CTF Studio =================
                 logStart('Contentful Studio CDef', true);
                 const ctfStudioCDef = compDefitionToCTFStudio(cdef, className);
                 if (ctfStudioCDef) {
                     await writeFile(
-                        `${classDestFolder}/${className}.studio.ts`,
+                        `${classDestFolder}/${className}.studio.js`,
                         ctfStudioCDef
                     );
                 }
+                studioManifest.processCompDefinition(className, tagName);
                 logDone('Contentful Studio CDef', true);
 
-                // Figma Code Connect
+                // ========== Figma Code Connect ==========
                 logStart('Figma Code Connect', true);
                 const relativePath = path.relative(
                     path.resolve(classDestFolder),
@@ -102,7 +105,7 @@ export default async function parseCDefs(
                 }
                 logDone('Figma Code Connect', true);
 
-                // Storybook
+                // ========== Storybook ===================
                 logStart('Storybook', true);
                 const storybookCDef = compDefitionToStorybook(
                     cdef,
@@ -118,7 +121,18 @@ export default async function parseCDefs(
                 }
                 logDone('Storybook', true);
 
-                // AI
+                // ========== CTF Studio =================
+                logStart('React Component', true);
+                const reactComponent = compDefitionToReactJS(cdef, className);
+                if (ctfStudioCDef) {
+                    await writeFile(
+                        `${classDestFolder}/${className}.react.js`,
+                        reactComponent
+                    );
+                }
+                logDone('React Component', true);
+
+                // ========== AI =========================
                 logStart('AI CDef', true);
                 const aiCDef = compDefitionToAI(cdef, className);
                 if (aiCDef) {
@@ -129,7 +143,7 @@ export default async function parseCDefs(
                 }
                 logDone('AI CDef', true);
 
-                // Add to Manifest
+                // ============= Manifest ================
                 manifest.definitions[tagName] = {
                     id: cdef['$id'],
                     examplesManifest: examplesResults?.manifest || undefined
@@ -145,6 +159,16 @@ export default async function parseCDefs(
         JSON.stringify(manifest, null, 2)
     );
     logDone('Manifest');
+
+    // Studio File
+    logStart('Studio Register Components');
+    await writeFile(
+        `${destPath}/register-studio-components.js`,
+        studioManifest.render()
+    );
+    logDone('Studio Register Components');
+
+    // Final Done
     logDone('CDefs');
 }
 

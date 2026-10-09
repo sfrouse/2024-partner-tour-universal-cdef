@@ -1,7 +1,7 @@
 {
-  "prompt_tokens": 431,
-  "completion_tokens": 54,
-  "total_tokens": 485,
+  "prompt_tokens": 1542,
+  "completion_tokens": 248,
+  "total_tokens": 1790,
   "prompt_tokens_details": {
     "cached_tokens": 0,
     "audio_tokens": 0
@@ -12,13 +12,13 @@
     "accepted_prediction_tokens": 0,
     "rejected_prediction_tokens": 0
   },
-  "rate_limit_limit_requests": 5000,
-  "rate_limit_remaining_requests": 4999,
-  "ratelimit_limit_tokens": 800000,
-  "ratelimit_remaining_tokens": 799482,
-  "rate_limit_reset_requests": "12ms",
-  "rate_limit_reset_tokens": "38ms",
-  "time_taken": 1190,
+  "rate_limit_limit_requests": 10000,
+  "rate_limit_remaining_requests": 9999,
+  "ratelimit_limit_tokens": 2000000,
+  "ratelimit_remaining_tokens": 1998392,
+  "rate_limit_reset_requests": "6ms",
+  "rate_limit_reset_tokens": "48ms",
+  "time_taken": 3413,
   "model": "gpt-4o",
-  "timestamp": 1734115870666
+  "timestamp": 1791416341449
 }

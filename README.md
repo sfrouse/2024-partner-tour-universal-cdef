@@ -1,9 +1,10 @@
 # 2024 Partner Tour Demo
 
 ## Servers / Watches
+
 ```
 # http://localhost:3005
-npm run local:start:api-ai
+npm run local:dev:api-ai
 
 # http://localhost:3080
 npm run local:start:app-ai-dsys-demo
@@ -12,31 +13,36 @@ npm run local:start:app-ai-dsys-demo
 npm run local:server:web-components
 
 # http://localhost:3000
-npm run local:start:contentful-web-components-app
+npm run local:start:ctf-web-comps-app
 
 # web-socket (communicate between Figma and App)
 npm run local:start:web-socket
 
 ### Optional Watches
 ```
-# http://localhost:3001   (?)
+
+# http://localhost:3001 (?)
+
 npm run local:start:figma-widget-cdef
 
 npm run local:start:web-components
+
 ```
 
 ### Builds
 ```
+
 cd ./packages/component-definitions
 npm run build
 
 cd ./packages/design-tokens
 npm run build
+
 ```
 
 
 ## Packages
-### app-ai-dsys-demo 
+### app-ai-dsys-demo
 The actual demo presented during presentation
 
 ### api-ai
@@ -60,3 +66,4 @@ This shows up in Contentful, it knows how to render the inputs for component def
 ### figam-widget-cdef
 The Figma widget that manages component defintion stuff.
 
+```

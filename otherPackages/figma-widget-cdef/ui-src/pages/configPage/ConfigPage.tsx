@@ -123,14 +123,22 @@ const ConfigPage = (
                 }
 
                 if (!environments && localSpaceId) {
-                    const space = await client.getSpace(localSpaceId);
-                    const envResults = await space.getEnvironments();
-                    if (envResults && envResults.total > 0) {
-                        const environmentSelections: {[key:string]: string} = {"Choose Environment": ''};
-                        envResults.items.map(env => {
-                            environmentSelections[env.name] = env.sys.id;
-                        });
-                        setEnvironments(environmentSelections);
+                    try {
+                        const space = await client.getSpace(localSpaceId);
+                        const envResults = await space.getEnvironments();
+                        if (envResults && envResults.total > 0) {
+                            const environmentSelections: {[key:string]: string} = {"Choose Environment": ''};
+                            envResults.items.map(env => {
+                                environmentSelections[env.name] = env.sys.id;
+                            });
+                            setEnvironments(environmentSelections);
+                        }
+                    } catch (err: any) {
+                        let message = 'Could not open this Contentful space.';
+                        try {
+                            message = JSON.parse(err?.message || '{}').message || message;
+                        } catch { /* keep fallback */ }
+                        setError(message);
                     }
                 }
 

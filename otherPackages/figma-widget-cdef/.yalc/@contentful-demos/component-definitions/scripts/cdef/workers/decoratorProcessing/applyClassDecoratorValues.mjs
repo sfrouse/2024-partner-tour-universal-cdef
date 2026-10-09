@@ -400,4 +400,11 @@ export default function applyClassDecoratorValues(
     if (decoratorResults.import) {
       compDefinition['x-cdef'].import = decoratorResults.import;
     }
+
+    if (decoratorResults.contentful?.builtInStyles) {
+      compDefinition['x-cdef'].content = {
+        ...compDefinition['x-cdef'].content,
+        contentfulBuiltInStyles: decoratorResults.contentful.builtInStyles
+      }
+    }
 }

@@ -20,6 +20,7 @@ export default function getDefineComponentDecorator(cls) {
         designProperties: [],
         slots: [],
         import: undefined,
+        contentful: { builtInStyles: [] }
     }
 
     if (!decorator) return decoratorResults;

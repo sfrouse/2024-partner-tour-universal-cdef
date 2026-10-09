@@ -33,7 +33,7 @@ export default function propertyParse(
 
     // Content Flag
     if (defineInfo.content) {
-        propertyDef["x-cdef"].output.content = {content: defineInfo.content}; 
+        propertyDef["x-cdef"].content = {content: defineInfo.content}; 
     }
 
     // Default Value
